@@ -1,0 +1,131 @@
+---
+import type { NavItem } from '../lib/types';
+import { primaryCta, site } from '../data/site';
+import Button from './Button.astro';
+
+type Props = { items: NavItem[] };
+
+const { items } = Astro.props;
+---
+
+<header class="site-header">
+	<div class="container site-header__inner">
+		<a class="wordmark" href="/" aria-label={`${site.name} — home`}>{site.wordmark}</a>
+		<p class="site-header__status">
+			<img src="/icons/status-dot.svg" alt="" width="9" height="9" />
+			{site.availability}
+		</p>
+		<nav class="site-header__nav" aria-label="Primary">
+			<ul class="site-header__list">
+				{
+					items.map((item) => (
+						<li>
+							<a class="site-header__link" href={item.href}>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<Button href={primaryCta.href}>{primaryCta.label}</Button>
+		</nav>
+	</div>
+</header>
+
+<style>
+	.site-header__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-5);
+		padding-block: var(--space-5);
+	}
+
+	.wordmark {
+		font-size: var(--text-wordmark);
+		letter-spacing: var(--tracking-wordmark);
+		line-height: normal;
+		color: var(--color-text);
+		white-space: nowrap;
+	}
+
+	.site-header__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: var(--text-small);
+		line-height: normal;
+		white-space: nowrap;
+	}
+
+	.site-header__status img {
+		/* 6px dot; SVG includes a 1.5px halo stroke */
+		margin: -1.5px;
+	}
+
+	.site-header__nav {
+		display: flex;
+		align-items: center;
+		gap: 40px;
+	}
+
+	.site-header__list {
+		display: flex;
+		gap: var(--space-6);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.site-header__link {
+		font-size: var(--text-small);
+		line-height: normal;
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.site-header__link:hover {
+			color: var(--color-accent);
+		}
+	}
+
+	@media (max-width: 60rem) {
+		.site-header__status {
+			display: none;
+		}
+	}
+
+	/* Mobile: wordmark + CTA on top, section links spread underneath */
+	@media (max-width: 47.99rem) {
+		.site-header__inner {
+			flex-wrap: wrap;
+			gap: 22px 0;
+			padding-block: 20px 16px;
+		}
+
+		.site-header__nav {
+			display: contents;
+		}
+
+		.site-header__list {
+			order: 3;
+			flex-basis: 100%;
+			justify-content: space-between;
+			gap: 0;
+		}
+
+		.site-header__link {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 44px;
+			height: 44px;
+		}
+	}
+
+	@media (max-width: 22rem) {
+		.site-header__nav :global(.ds-button) {
+			min-width: 0;
+		}
+	}
+</style>

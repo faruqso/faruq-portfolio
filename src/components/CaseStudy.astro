@@ -1,0 +1,633 @@
+---
+import Button from './Button.astro';
+import type { CaseStudy as CaseStudyData } from '../data/caseStudies';
+import type { Project } from '../lib/types';
+import { primaryCta } from '../data/site';
+
+type Props = {
+	study: CaseStudyData;
+	project: Project;
+	next: CaseStudyData;
+};
+
+const { study, project, next } = Astro.props;
+const headingId = `case-${study.slug}-title`;
+---
+
+<article class="cs" data-case-panel={study.slug} aria-labelledby={headingId} hidden>
+	<!-- Introduction -->
+	<header class="container cs-intro">
+		<button type="button" class="cs-back" data-sheet-close>
+			<img src="/icons/arrow-right.svg" alt="" width="24" height="24" />
+			Back to work
+		</button>
+		<p class="eyebrow">Selected work / {study.label}</p>
+		<h2 id={headingId} class="cs-intro__title">{study.title}</h2>
+		<p class="cs-intro__summary">{study.summary}</p>
+		{
+			study.facts && (
+				<dl class="cs-facts">
+					{study.facts.map((fact) => (
+						<div>
+							<dt class="cs-meta">{fact.label}</dt>
+							<dd>{fact.value}</dd>
+						</div>
+					))}
+				</dl>
+			)
+		}
+		<div class="cs-credits">
+			<div class="cs-credits__role">
+				<p class="cs-meta">My role / scope</p>
+				<p class="cs-credits__text">{study.role}</p>
+			</div>
+			<div class="cs-credits__tools">
+				<p class="cs-meta">Tools / implementation</p>
+				{
+					study.tools ? (
+						<>
+							<p class="cs-credits__text">{study.tools.primary}</p>
+							{study.tools.note && <p class="cs-credits__note">{study.tools.note}</p>}
+						</>
+					) : (
+						<div class="cs-pending">
+							<p class="cs-pending__label">Content pending</p>
+							<p class="cs-pending__text">[Add tools and who built it]</p>
+						</div>
+					)
+				}
+			</div>
+		</div>
+	</header>
+
+	<!-- Project visual -->
+	<div class="container cs-visual">
+		<picture>
+			<source media="(max-width: 47.99rem)" srcset={project.imageMobile} width="342" height="360" />
+			<img src={project.image} alt={`${study.title} — concept preview`} width="1280" height="570" loading="lazy" decoding="async" />
+		</picture>
+	</div>
+
+	<!-- Problem and decision -->
+	<div class="container cs-pair">
+		{
+			[
+				{ label: '01 / The problem', title: 'The context', block: study.problem },
+				{ label: '02 / The decision', title: 'The design thinking', block: study.decision },
+			].map((item) => (
+				<section class="cs-pair__item">
+					<p class="eyebrow">{item.label}</p>
+					<h3 class="text-display">{item.title}</h3>
+					<p class="text-lead">{item.block.text}</p>
+					{item.block.pending && (
+						<div class="cs-pending">
+							<p class="cs-pending__label">Content pending</p>
+							<p class="cs-pending__text">{item.block.pending}</p>
+						</div>
+					)}
+				</section>
+			))
+		}
+	</div>
+
+	<!-- Delivered work -->
+	<section class="cs-work">
+		<div class="container cs-work__inner">
+			<div class="section-intro">
+				<p class="eyebrow">The work</p>
+				<h3 class="text-display">What I delivered</h3>
+			</div>
+			<ol class="cs-deliverables" style={`--cols: ${study.deliverables.length}`}>
+				{
+					study.deliverables.map((item, index) => (
+						<li class="cs-deliverable">
+							<span class="cs-deliverable__number">{String(index + 1).padStart(2, '0')}</span>
+							<h4 class="cs-deliverable__title">{item.title}</h4>
+							<p class="cs-deliverable__text">{item.description}</p>
+						</li>
+					))
+				}
+			</ol>
+
+			{
+				study.gallery && (
+					<div class="cs-gallery">
+						{study.gallery.map((image) => (
+							<figure class:list={['cs-shot', { 'cs-shot--wide': image.wide }]}>
+								<img
+									src={image.src}
+									alt={image.alt}
+									width={image.width}
+									height={image.height}
+									loading="lazy"
+									decoding="async"
+								/>
+								<figcaption>{image.caption}</figcaption>
+							</figure>
+						))}
+					</div>
+				)
+			}
+		</div>
+	</section>
+
+	<!-- Result -->
+	<section class="container cs-result">
+		<div class="cs-result__intro">
+			<p class="eyebrow">03 / The result</p>
+			<h3 class="text-display">Delivered, not overstated.</h3>
+		</div>
+		<div class="cs-result__body">
+			<p class="text-lead">{study.result.text}</p>
+			{
+				study.result.pending && (
+					<div class="cs-pending">
+						<p class="cs-pending__label">Content pending</p>
+						<p class="cs-pending__text">{study.result.pending}</p>
+					</div>
+				)
+			}
+			{study.result.note && <p class="cs-result__note">{study.result.note}</p>}
+		</div>
+	</section>
+
+	<!-- Next project -->
+	<a class="cs-next" href={`#case-${next.slug}`} data-case-study={next.slug}>
+		<span class="container cs-next__inner">
+			<span class="cs-next__details">
+				<span class="eyebrow">Next project</span>
+				<span class="cs-next__name">{next.title}</span>
+				<span class="cs-next__line">{next.nextLine}</span>
+			</span>
+			<span class="cs-next__cta">
+				View case study
+				<img src="/icons/arrow-up-right-accent.svg" alt="" width="24" height="24" />
+			</span>
+		</span>
+	</a>
+
+	<!-- Close -->
+	<div class="container cs-close">
+		<div class="cs-close__copy">
+			<h3 class="text-display">Have a launch coming up?</h3>
+			<p class="text-lead">Tell me about your project.</p>
+		</div>
+		<span data-sheet-cta>
+			<Button href={primaryCta.href}>{primaryCta.label}</Button>
+		</span>
+	</div>
+</article>
+
+<style>
+	.cs {
+		padding-bottom: 40px;
+	}
+
+	/* Intro */
+	.cs-intro {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 36px;
+		padding-block: 56px 64px;
+	}
+
+	.cs-back {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		height: 48px;
+		padding: 0;
+		border: 0;
+		background: none;
+		font: inherit;
+		font-size: var(--text-small);
+		color: var(--color-text);
+		cursor: pointer;
+	}
+
+	.cs-back img {
+		transform: rotate(180deg);
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.cs-back:hover img {
+			transform: rotate(180deg) translateX(3px);
+		}
+	}
+
+	.cs-intro__title {
+		font-size: clamp(3rem, 7vw, 6.25rem);
+		line-height: 1.02;
+		letter-spacing: -0.055em;
+	}
+
+	.cs-intro__summary {
+		max-width: 1050px;
+		font-size: clamp(1.625rem, 3.4vw, 3rem);
+		line-height: 1.12;
+		letter-spacing: -0.04em;
+		color: var(--color-text-secondary);
+	}
+
+	.cs-credits {
+		display: flex;
+		gap: var(--space-8);
+		width: 100%;
+		padding-top: var(--space-5);
+	}
+
+	.cs-credits__role {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		flex: 0 1 650px;
+	}
+
+	.cs-credits__tools {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.cs-meta {
+		font-size: 0.6875rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		line-height: normal;
+		color: var(--color-text-secondary);
+	}
+
+	.cs-credits__text {
+		font-size: var(--text-body-lg);
+		line-height: var(--leading-relaxed);
+	}
+
+	.cs-credits__note {
+		font-size: var(--text-small);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	/* Pending box */
+	.cs-pending {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		width: 100%;
+		padding: var(--space-4);
+		border-radius: 8px;
+		background: var(--color-surface-warm);
+		color: var(--color-text-warm);
+	}
+
+	.cs-pending__label {
+		font-size: var(--text-micro);
+		font-weight: 600;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		line-height: normal;
+	}
+
+	.cs-pending__text {
+		font-size: var(--text-small);
+		line-height: 1.5;
+	}
+
+	/* Visual */
+	.cs-visual {
+		padding-bottom: var(--space-9);
+	}
+
+	.cs-visual img {
+		width: 100%;
+		height: auto;
+	}
+
+	/* Problem / decision */
+	.cs-pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 80px;
+		padding-bottom: var(--space-9);
+	}
+
+	.cs-pair__item {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+	}
+
+	/* Delivered work */
+	.cs-work {
+		padding-block: var(--space-9);
+		background: var(--color-bg-subtle);
+	}
+
+	.cs-work__inner {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-7);
+	}
+
+	.cs-deliverables {
+		display: grid;
+		grid-template-columns: repeat(var(--cols, 3), 1fr);
+		gap: 40px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.cs-deliverable {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		padding-top: 18px;
+		border-top: 1px solid var(--color-border);
+	}
+
+	.cs-deliverable__number {
+		font-size: var(--text-caption);
+		line-height: normal;
+		color: var(--color-accent);
+	}
+
+	.cs-deliverable__title {
+		font-size: 1.625rem;
+		font-weight: 400;
+		letter-spacing: -0.7px;
+		line-height: normal;
+		margin: 0;
+	}
+
+	.cs-deliverable__text {
+		font-size: var(--text-body);
+		line-height: var(--leading-relaxed);
+		color: var(--color-text-secondary);
+	}
+
+	/* Facts */
+	.cs-facts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-4) var(--space-8);
+		margin: 0;
+	}
+
+	.cs-facts div {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.cs-facts dd {
+		margin: 0;
+		font-size: var(--text-body);
+		line-height: normal;
+	}
+
+	/* Gallery */
+	.cs-gallery {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-5);
+	}
+
+	.cs-shot {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		margin: 0;
+	}
+
+	.cs-shot--wide {
+		grid-column: 1 / -1;
+	}
+
+	.cs-shot img {
+		width: 100%;
+		height: auto;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-solid);
+	}
+
+	.cs-shot figcaption {
+		font-size: var(--text-caption);
+		line-height: 1.5;
+		color: var(--color-text-secondary);
+	}
+
+	/* Result */
+	.cs-result {
+		display: flex;
+		gap: 100px;
+		padding-block: var(--space-10);
+	}
+
+	.cs-result__intro {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		flex: 0 0 480px;
+	}
+
+	.cs-result__body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.cs-result__note {
+		font-size: var(--text-caption);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	/* Next project */
+	.cs-next {
+		display: block;
+		padding-block: 56px;
+		background: var(--color-bg-subtle);
+	}
+
+	.cs-next__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-5);
+	}
+
+	.cs-next__details {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		min-width: 0;
+	}
+
+	.cs-next__name {
+		font-size: clamp(2.5rem, 4vw, 3.5rem);
+		letter-spacing: -2.5px;
+		line-height: normal;
+	}
+
+	.cs-next__line {
+		font-size: var(--text-body);
+		line-height: normal;
+		color: var(--color-text-secondary);
+	}
+
+	.cs-next__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-3);
+		height: 56px;
+		flex-shrink: 0;
+		color: var(--color-accent);
+		white-space: nowrap;
+	}
+
+	.cs-next__cta img {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.cs-next:hover .cs-next__cta img {
+			transform: translate(2px, -2px);
+		}
+	}
+
+	/* Close */
+	.cs-close {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-6);
+		padding-top: var(--space-9);
+	}
+
+	.cs-close__copy {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		max-width: 850px;
+	}
+
+	/* Tablet */
+	@media (max-width: 64rem) {
+		.cs-pair {
+			gap: var(--space-7);
+		}
+
+		.cs-deliverables {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.cs-result {
+			flex-direction: column;
+			gap: var(--space-6);
+		}
+
+		.cs-result__intro {
+			flex-basis: auto;
+		}
+	}
+
+	/* Mobile */
+	@media (max-width: 47.99rem) {
+		.cs-intro {
+			gap: var(--space-5);
+			padding-block: var(--space-4) 48px;
+		}
+
+		.cs-intro__title {
+			letter-spacing: -2px;
+		}
+
+		.cs-credits {
+			flex-direction: column;
+			gap: var(--space-6);
+			padding-top: 0;
+		}
+
+		.cs-credits__role {
+			flex-basis: auto;
+		}
+
+		.cs-credits__text {
+			font-size: var(--text-body);
+		}
+
+		.cs-visual,
+		.cs-pair {
+			padding-bottom: var(--space-10);
+		}
+
+		.cs-pair {
+			grid-template-columns: 1fr;
+			gap: 48px;
+		}
+
+		.cs-work {
+			padding-block: var(--space-10);
+		}
+
+		.cs-work__inner {
+			gap: 36px;
+		}
+
+		.cs-deliverables {
+			grid-template-columns: 1fr;
+			gap: 28px;
+		}
+
+		.cs-deliverable {
+			gap: var(--space-4);
+			padding-top: var(--space-4);
+		}
+
+		.cs-deliverable__title {
+			font-size: var(--text-step);
+		}
+
+		.cs-gallery {
+			grid-template-columns: 1fr;
+			gap: var(--space-6);
+		}
+
+		.cs-facts {
+			gap: var(--space-4) var(--space-6);
+		}
+
+		.cs-next {
+			padding-block: 40px;
+		}
+
+		.cs-next__inner {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: var(--space-3);
+		}
+
+		.cs-next__name {
+			letter-spacing: -1.5px;
+		}
+
+		.cs-close {
+			flex-direction: column;
+			align-items: stretch;
+			gap: var(--space-6);
+			padding-top: var(--space-10);
+		}
+
+		.cs-close :global(.ds-button) {
+			width: 100%;
+		}
+	}
+</style>

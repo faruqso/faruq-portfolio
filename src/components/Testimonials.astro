@@ -1,0 +1,80 @@
+---
+import { testimonials } from '../data/site';
+---
+
+<section class="testimonials" aria-labelledby="testimonials-heading">
+	<div class="container testimonials__inner">
+		<div class="section-intro">
+			<p class="eyebrow">{testimonials.eyebrow}</p>
+			<h2 id="testimonials-heading" class="text-display">{testimonials.title}</h2>
+		</div>
+
+		<div class="testimonials__list">
+			{
+				testimonials.items.map((item) => (
+					<figure class="testimonial">
+						<figcaption class="testimonial__source">{item.source}</figcaption>
+						<blockquote class="testimonial__quote">
+							<p>“{item.quote}”</p>
+						</blockquote>
+					</figure>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.testimonials {
+		padding-bottom: var(--space-10);
+	}
+
+	.testimonials__inner {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+	}
+
+	.testimonials__list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+	}
+
+	.testimonial {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		margin: 0;
+		padding: var(--space-6);
+		border: 1px solid var(--color-border-warm);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-warm);
+	}
+
+	.testimonial__source {
+		font-size: var(--text-caption);
+		letter-spacing: var(--tracking-eyebrow);
+		line-height: normal;
+		color: var(--color-text-warm);
+	}
+
+	.testimonial__quote {
+		margin: 0;
+		font-size: var(--text-quote);
+		line-height: var(--leading-snug);
+		letter-spacing: -0.5px;
+	}
+
+	@media (max-width: 47.99rem) {
+		.testimonial {
+			padding: var(--space-5);
+		}
+
+		.testimonial__source {
+			font-size: 0.6875rem;
+			letter-spacing: 0;
+			line-height: 1.5;
+		}
+	}
+</style>

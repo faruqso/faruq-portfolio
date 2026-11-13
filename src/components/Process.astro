@@ -1,0 +1,128 @@
+---
+import { process } from '../data/site';
+---
+
+<section id="process" class="section" aria-labelledby="process-heading">
+	<div class="container process">
+		<div class="section-intro">
+			<p class="eyebrow">{process.eyebrow}</p>
+			<h2 id="process-heading" class="text-display">{process.title}</h2>
+		</div>
+
+		<ol class="process__steps">
+			{
+				process.steps.map((step) => (
+					<li class="step">
+						<span class="step__number">{step.number}</span>
+						<h3 class="step__title">{step.title}</h3>
+						<p class="step__description">{step.description}</p>
+					</li>
+				))
+			}
+		</ol>
+
+		<div class="ai-note">
+			<p class="ai-note__label">{process.aiNote.label}</p>
+			<p class="ai-note__text">{process.aiNote.text}</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	.process {
+		display: flex;
+		flex-direction: column;
+		gap: 56px;
+	}
+
+	.process__steps {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 36px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.step {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		padding-top: var(--space-5);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.step__number {
+		font-size: var(--text-caption);
+		line-height: normal;
+		color: var(--color-accent);
+	}
+
+	.step__title {
+		font-size: var(--text-step);
+		letter-spacing: -0.029em;
+		line-height: normal;
+	}
+
+	.step__description {
+		font-size: var(--text-body);
+		line-height: var(--leading-relaxed);
+		color: var(--color-text-secondary);
+	}
+
+	.ai-note {
+		display: flex;
+		align-items: center;
+		gap: 28px;
+		padding: 28px;
+		border-radius: var(--radius-md);
+		background: var(--color-bg-subtle);
+	}
+
+	.ai-note__label {
+		flex-shrink: 0;
+		font-size: var(--text-caption);
+		font-weight: 600;
+		line-height: normal;
+		color: var(--color-accent);
+		white-space: nowrap;
+	}
+
+	.ai-note__text {
+		font-size: var(--text-body);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	@media (max-width: 64rem) {
+		.process__steps {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.process {
+			gap: 36px;
+		}
+
+		.process__steps {
+			grid-template-columns: 1fr;
+			gap: 28px;
+		}
+
+		.step {
+			gap: var(--space-4);
+			padding-top: var(--space-4);
+		}
+
+		.ai-note {
+			align-items: flex-start;
+			gap: var(--space-4);
+			padding: 20px;
+		}
+
+		.ai-note__text {
+			font-size: var(--text-small);
+		}
+	}
+</style>

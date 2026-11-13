@@ -1,0 +1,190 @@
+---
+import Button from './Button.astro';
+import { primaryCta, services } from '../data/site';
+---
+
+<section id="services" class="section section--band" aria-labelledby="services-heading">
+	<div class="container services">
+		<div class="section-intro">
+			<p class="eyebrow">{services.eyebrow}</p>
+			<h2 id="services-heading" class="text-display">{services.title}</h2>
+		</div>
+
+		<div class="services__grid">
+			<div class="featured">
+				<p class="featured__eyebrow">{services.featured.eyebrow}</p>
+				<h3 class="featured__title">{services.featured.title}</h3>
+				<p class="featured__description">{services.featured.description}</p>
+				<p class="featured__price">{services.featured.price}</p>
+				<Button href={primaryCta.href}>{primaryCta.label}</Button>
+			</div>
+
+			<ul class="services__list">
+				{
+					services.items.map((service) => (
+						<li>
+							<a class="service" href={service.href}>
+								<span class="service__heading">
+									<h3 class="service__title">{service.title}</h3>
+									<span class="service__arrow" aria-hidden="true">↗</span>
+								</span>
+								<p class="service__description">{service.description}</p>
+								<p class="service__note">{service.note}</p>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</div>
+</section>
+
+<style>
+	.services {
+		display: flex;
+		flex-direction: column;
+		gap: 56px;
+	}
+
+	.services__grid {
+		display: flex;
+		align-items: flex-start;
+		gap: var(--space-5);
+	}
+
+	.featured {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-6);
+		flex: 0 0 540px;
+		padding: 40px;
+		border-radius: var(--radius-xl);
+		background: var(--color-surface-inverse);
+		color: #ffffff;
+	}
+
+	.featured__eyebrow {
+		font-size: 0.6875rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		line-height: normal;
+		color: var(--color-text-on-inverse);
+	}
+
+	.featured__title {
+		font-size: var(--text-stat);
+		letter-spacing: -0.036em;
+		line-height: normal;
+	}
+
+	.featured__description {
+		font-size: var(--text-lead);
+		line-height: var(--leading-body);
+		color: var(--color-text-on-inverse);
+	}
+
+	.featured__price {
+		padding-block: var(--space-4);
+		font-size: var(--text-lead);
+		line-height: normal;
+	}
+
+	.services__list {
+		flex: 1 1 0;
+		min-width: 0;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.service {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding: 30px var(--space-5);
+		border-bottom: 1px solid var(--color-border);
+		transition: background-color var(--duration-fast) var(--ease-out);
+	}
+
+	.service__heading {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--space-4);
+	}
+
+	.service__title {
+		font-size: var(--text-service);
+		letter-spacing: -0.029em;
+		line-height: normal;
+	}
+
+	.service__arrow {
+		font-size: var(--text-step);
+		line-height: normal;
+		color: var(--color-accent);
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	.service__description {
+		font-size: var(--text-body);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.service__note {
+		font-size: var(--text-caption);
+		line-height: normal;
+	}
+
+	@media (hover: hover) {
+		.service:hover {
+			background: color-mix(in oklab, var(--color-bg) 60%, transparent);
+		}
+
+		.service:hover .service__arrow {
+			transform: translate(2px, -2px);
+		}
+	}
+
+	@media (max-width: 64rem) {
+		.services__grid {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.featured {
+			flex-basis: auto;
+			padding: var(--space-6);
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.services {
+			gap: 36px;
+		}
+
+		.featured {
+			gap: var(--space-5);
+			padding: 28px;
+		}
+
+		.featured__title {
+			font-size: 2rem;
+			letter-spacing: -1.5px;
+		}
+
+		.featured__description {
+			font-size: var(--text-body);
+		}
+
+		.featured__price {
+			font-size: 1.125rem;
+		}
+
+		.service {
+			padding: 28px 0;
+		}
+	}
+</style>

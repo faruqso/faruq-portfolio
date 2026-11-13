@@ -1,0 +1,109 @@
+/**
+ * Design tokens — single source of truth for the portfolio design system.
+ * Values mirror the Figma file "My Portfolio" → "Faruq — Homepage desktop" (node 4042:185337).
+ */
+
+:root {
+	/* Color — semantic */
+	--color-bg: #fafaf8; /* page canvas */
+	--color-bg-subtle: #f0f1ed; /* alternating section band (Services, About, AI note) */
+	--color-surface-solid: #ffffff; /* form fields, logo chips */
+	--color-surface-inverse: #181a1b; /* featured service card */
+	--color-surface-warm: #f1eee6; /* testimonial cards */
+	--color-border: #dcddda; /* dividers, field borders */
+	--color-border-warm: #d6d1c5;
+	--color-text: #181a1b;
+	--color-text-secondary: #656968;
+	--color-text-warm: #777363;
+	--color-text-on-inverse: #b8beca;
+	--color-accent: #294fe8;
+	--color-accent-hover: #1f41cc;
+	--color-accent-border: #2b2585;
+	--color-accent-soft: rgba(41, 79, 232, 0.32);
+	--color-focus-ring: rgba(41, 79, 232, 0.45);
+
+	/* Typography */
+	--font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+	--text-hero: clamp(2.75rem, 5.7vw, 5.125rem); /* 82px */
+	--text-display: clamp(2.25rem, 3.6vw, 3.25rem); /* 52px */
+	--text-stat: clamp(2.25rem, 3vw, 2.625rem); /* 42px */
+	--text-project: clamp(1.875rem, 2.5vw, 2.25rem); /* 36px */
+	--text-wordmark: 1.75rem; /* 28px */
+	--text-service: clamp(1.375rem, 2vw, 1.75rem); /* 28px */
+	--text-quote: clamp(1.25rem, 1.8vw, 1.625rem); /* 26px */
+	--text-step: 1.5rem; /* 24px */
+	--text-lead: 1.125rem; /* 18px */
+	--text-body-lg: 1.0625rem; /* 17px */
+	--text-body: 1rem; /* 16px */
+	--text-button: 0.9375rem; /* 15px */
+	--text-small: 0.875rem; /* 14px */
+	--text-label: 0.8125rem; /* 13px */
+	--text-caption: 0.75rem; /* 12px */
+	--text-micro: 0.625rem; /* 10px */
+
+	--leading-hero: 1.04;
+	--leading-display: 1.08;
+	--leading-tight: 1.05;
+	--leading-snug: 1.3;
+	--leading-body: 1.6;
+	--leading-relaxed: 1.65;
+
+	--tracking-hero: -0.0512em; /* -4.2px @ 82px */
+	--tracking-display: -0.0423em; /* -2.2px @ 52px */
+	--tracking-stat: -0.04em;
+	--tracking-wordmark: -0.043em;
+	--tracking-title: -0.03em;
+	--tracking-eyebrow: 0.083em; /* 1px @ 12px */
+
+	/* Spacing */
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-5: 1.5rem;
+	--space-6: 2rem;
+	--space-7: 3rem;
+	--space-8: 4rem;
+	--space-9: 6rem;
+	--space-10: 7rem; /* 112px section padding */
+
+	--container-max: 80rem; /* 1280px */
+	--container-padding: clamp(1.25rem, 5.5vw, 5rem); /* 80px at 1440 */
+
+	/* Radius */
+	--radius-sm: 0.625rem; /* 10px fields */
+	--radius-md: 0.75rem; /* 12px buttons */
+	--radius-lg: 1rem; /* 16px testimonial */
+	--radius-xl: 1.25rem; /* 20px featured card */
+	--radius-pill: 999px;
+
+	/* Motion */
+	--duration-instant: 100ms;
+	--duration-fast: 200ms;
+	--duration-standard: 320ms;
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+	color-scheme: light;
+}
+
+/* Mobile — Figma "Faruq — Homepage mobile" (node 4042:185688, 390 wide) */
+@media (max-width: 47.99rem) {
+	:root {
+		--text-hero: 2.6875rem; /* 43px */
+		--tracking-hero: -0.0442em; /* -1.9px */
+		--text-display: 2.125rem; /* 34px */
+		--tracking-display: -0.0382em; /* -1.3px */
+		--text-stat: 2.25rem; /* 36px */
+		--text-project: 1.875rem; /* 30px */
+		--text-wordmark: 1.625rem; /* 26px */
+		--text-service: 1.5rem; /* 24px */
+		--text-step: 1.5625rem; /* 25px */
+		--text-quote: 1.3125rem; /* 21px */
+		--text-lead: 1rem; /* 16px */
+		--text-body-lg: 0.9375rem; /* 15px */
+
+		--space-10: 4.5rem; /* 72px section padding */
+		--container-padding: 1.5rem; /* 24px */
+	}
+}

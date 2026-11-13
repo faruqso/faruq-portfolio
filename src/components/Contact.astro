@@ -1,0 +1,304 @@
+---
+import Button from './Button.astro';
+import { contact, email, formAccessKey, primaryCta, site } from '../data/site';
+---
+
+<section id="contact" class="contact" aria-labelledby="contact-heading">
+	<div class="container contact__inner">
+		<div class="contact__intro">
+			<p class="eyebrow">{contact.eyebrow}</p>
+			<h2 id="contact-heading" class="text-display">{contact.title}</h2>
+			<p class="text-lead">{contact.description}</p>
+		</div>
+
+		<form
+			class="enquiry"
+			method={formAccessKey ? 'POST' : undefined}
+			action={formAccessKey ? 'https://api.web3forms.com/submit' : undefined}
+			data-enquiry-form
+			data-email={email}
+			data-sending={contact.formSending}
+			data-success={contact.formSuccess}
+			data-error={contact.formError}
+		>
+			{
+				formAccessKey && (
+					<>
+						<input type="hidden" name="access_key" value={formAccessKey} />
+						<input type="hidden" name="from_name" value={`${site.name} — website enquiry`} />
+						<input type="hidden" name="subject" value="New project enquiry from your website" />
+						{/* Spam honeypot: real people never fill this in. */}
+						<input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" />
+					</>
+				)
+			}
+
+			<div class="enquiry__row">
+				<label class="field">
+					<span class="field__label">Name</span>
+					<input class="field__input" type="text" name="name" placeholder="Your name" autocomplete="name" required />
+				</label>
+				<label class="field">
+					<span class="field__label">Email</span>
+					<input
+						class="field__input"
+						type="email"
+						name="email"
+						placeholder="you@company.com"
+						autocomplete="email"
+						required
+					/>
+				</label>
+			</div>
+			<label class="field">
+				<span class="field__label">Company</span>
+				<input
+					class="field__input"
+					type="text"
+					name="company"
+					placeholder="Company name or website"
+					autocomplete="organization"
+				/>
+			</label>
+			<label class="field">
+				<span class="field__label">What do you need?</span>
+				<textarea
+					class="field__input field__input--area"
+					name="message"
+					placeholder="A little about your project and what you want to achieve…"
+					rows="4"></textarea>
+			</label>
+			<div class="enquiry__row">
+				<label class="field">
+					<span class="field__label">Budget range</span>
+					<span class="field__select">
+						<select class="field__input" name="budget">
+							{contact.budgetOptions.map((option) => <option>{option}</option>)}
+						</select>
+					</span>
+				</label>
+				<label class="field">
+					<span class="field__label">Timeline</span>
+					<span class="field__select">
+						<select class="field__input" name="timeline">
+							{contact.timelineOptions.map((option) => <option>{option}</option>)}
+						</select>
+					</span>
+				</label>
+			</div>
+			<div>
+				<Button type="submit">{primaryCta.label}</Button>
+			</div>
+			<!-- Empty until a submit has something to report; `:empty` keeps it out of the layout. -->
+			<p class="enquiry__note" role="status" data-enquiry-status></p>
+		</form>
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLFormElement>('[data-enquiry-form]').forEach((form) => {
+		const status = form.querySelector<HTMLElement>('[data-enquiry-status]');
+		const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+		const accessKey = form.querySelector<HTMLInputElement>('[name="access_key"]')?.value ?? '';
+
+		const say = (text: string, state?: 'ok' | 'error') => {
+			if (!status) return;
+			status.textContent = text;
+			status.dataset.state = state ?? '';
+		};
+
+		// Until a Web3Forms key is set, hand the enquiry to the visitor's email app.
+		const openMailClient = () => {
+			const data = new FormData(form);
+			const get = (key: string) => String(data.get(key) ?? '').trim();
+			const subject = `Project enquiry from ${get('name')}${get('company') ? ` (${get('company')})` : ''}`;
+			const body = [
+				get('message'),
+				'',
+				`Budget: ${get('budget')}`,
+				`Timeline: ${get('timeline')}`,
+				'',
+				`${get('name')} · ${get('email')}`,
+			].join('\n');
+			window.location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(
+				subject,
+			)}&body=${encodeURIComponent(body)}`;
+			say(`Opening your email app… If nothing happens, write to ${form.dataset.email}.`);
+		};
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+
+			if (!accessKey) return openMailClient();
+
+			if (submit) submit.disabled = true;
+			say(form.dataset.sending ?? 'Sending…');
+
+			try {
+				const response = await fetch(form.action, {
+					method: 'POST',
+					headers: { Accept: 'application/json' },
+					body: new FormData(form),
+				});
+				const result = await response.json().catch(() => ({}));
+
+				if (response.ok && result.success) {
+					form.reset();
+					say(form.dataset.success ?? 'Thanks — your message is on its way.', 'ok');
+				} else {
+					say(form.dataset.error ?? 'That didn’t send.', 'error');
+				}
+			} catch {
+				say(form.dataset.error ?? 'That didn’t send.', 'error');
+			} finally {
+				if (submit) submit.disabled = false;
+			}
+		});
+	});
+</script>
+
+<style>
+	.contact {
+		padding-top: var(--space-10);
+	}
+
+	.contact__inner {
+		display: flex;
+		align-items: flex-start;
+		gap: 100px;
+	}
+
+	.contact__intro {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		flex: 0 0 480px;
+	}
+
+	.enquiry {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.enquiry__row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.field__label {
+		font-size: var(--text-label);
+		line-height: normal;
+	}
+
+	.field__input {
+		width: 100%;
+		height: 56px;
+		padding: var(--space-4);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		background: var(--color-surface-solid);
+		font: inherit;
+		font-size: var(--text-small);
+		line-height: 1.5;
+		color: var(--color-text);
+		appearance: none;
+		transition: border-color var(--duration-fast) var(--ease-out);
+	}
+
+	.field__input::placeholder {
+		color: var(--color-text-secondary);
+		opacity: 1;
+	}
+
+	.field__input:focus {
+		outline: none;
+		border-color: var(--color-accent);
+		box-shadow: 0 0 0 3px var(--color-focus-ring);
+	}
+
+	.field__input--area {
+		height: 120px;
+		resize: vertical;
+	}
+
+	select.field__input {
+		color: var(--color-text-secondary);
+		padding-right: var(--space-7);
+		cursor: pointer;
+	}
+
+	.field__select {
+		position: relative;
+		display: block;
+	}
+
+	.field__select::after {
+		content: '⌄';
+		position: absolute;
+		right: var(--space-4);
+		top: 50%;
+		transform: translateY(-62%);
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+		pointer-events: none;
+	}
+
+	.enquiry__note {
+		font-size: var(--text-small);
+		line-height: 1.5;
+		color: var(--color-text-secondary);
+	}
+
+	.enquiry__note:empty {
+		display: none;
+	}
+
+	.enquiry__note[data-state='ok'] {
+		color: var(--color-accent);
+	}
+
+	.enquiry__note[data-state='error'] {
+		color: #b1293c;
+	}
+
+	.enquiry :global(.ds-button:disabled) {
+		opacity: 0.6;
+		cursor: progress;
+	}
+
+	@media (max-width: 64rem) {
+		.contact__inner {
+			flex-direction: column;
+			align-items: stretch;
+			gap: var(--space-7);
+		}
+
+		.contact__intro {
+			flex-basis: auto;
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.contact__inner {
+			gap: 36px;
+		}
+
+		.enquiry__row {
+			grid-template-columns: 1fr;
+		}
+
+		.enquiry :global(.ds-button) {
+			width: 100%;
+		}
+	}
+</style>

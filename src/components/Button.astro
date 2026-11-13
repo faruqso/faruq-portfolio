@@ -1,0 +1,78 @@
+---
+type Variant = 'primary' | 'secondary';
+
+type Props = {
+	href?: string;
+	variant?: Variant;
+	type?: 'button' | 'submit';
+	class?: string;
+};
+
+const { href, variant = 'primary', type = 'button', class: className = '' } = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const icon = variant === 'primary' ? '/icons/arrow-up-right-white.svg' : '/icons/arrow-up-right-dark.svg';
+---
+
+<Tag
+	class:list={['ds-button', `ds-button--${variant}`, className]}
+	href={href}
+	type={Tag === 'button' ? type : undefined}
+>
+	<span><slot /></span>
+	<img src={icon} alt="" width="24" height="24" class="ds-button__icon" />
+</Tag>
+
+<style>
+	.ds-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-2);
+		height: 56px;
+		min-width: 195px;
+		padding: 16px 18px 16px 24px;
+		border: 1px solid var(--color-accent-border);
+		border-radius: var(--radius-md);
+		font: inherit;
+		font-size: var(--text-button);
+		line-height: normal;
+		white-space: nowrap;
+		cursor: pointer;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-instant) var(--ease-out);
+	}
+
+	.ds-button__icon {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	.ds-button--primary {
+		background: var(--color-accent);
+		color: #ffffff;
+	}
+
+	.ds-button--secondary {
+		background: var(--color-bg);
+		color: var(--color-text);
+	}
+
+	@media (hover: hover) {
+		.ds-button--primary:hover {
+			background: var(--color-accent-hover);
+		}
+
+		.ds-button--secondary:hover {
+			background: var(--color-bg-subtle);
+		}
+
+		.ds-button:hover .ds-button__icon {
+			transform: translate(2px, -2px);
+		}
+	}
+
+	.ds-button:active {
+		transform: scale(0.97);
+	}
+</style>

@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Services from '../components/Services.astro';
+import Process from '../components/Process.astro';
+import Testimonials from '../components/Testimonials.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import CaseStudySheet from '../components/CaseStudySheet.astro';
+import { navItems, projects, site, work } from '../data/site';
+---
+
+<Layout title={site.title} description={site.description} navItems={navItems}>
+	<Hero />
+
+	<section id="work" class="work" aria-labelledby="work-heading">
+		<div class="container work__inner">
+			<div class="section-intro">
+				<p class="eyebrow">{work.eyebrow}</p>
+				<h2 id="work-heading" class="text-display">{work.title}</h2>
+				<p class="text-lead">{work.description}</p>
+			</div>
+			<div class="work__list">
+				{projects.map((project) => <ProjectCard project={project} />)}
+			</div>
+		</div>
+	</section>
+
+	<Services />
+	<Process />
+	<Testimonials />
+	<About />
+	<Contact />
+
+	<CaseStudySheet />
+</Layout>
+
+<style>
+	.work {
+		padding-block: var(--space-7) var(--space-10);
+	}
+
+	.work__inner {
+		display: flex;
+		flex-direction: column;
+		gap: 56px;
+	}
+
+	.work__list {
+		display: flex;
+		flex-direction: column;
+		gap: 72px;
+	}
+
+	@media (max-width: 47.99rem) {
+		.work {
+			padding-top: var(--space-6);
+		}
+
+		.work__inner {
+			gap: 40px;
+		}
+
+		.work__list {
+			gap: var(--space-7);
+		}
+	}
+</style>

@@ -1,0 +1,145 @@
+---
+import type { Project } from '../lib/types';
+
+type Props = { project: Project };
+
+const { project } = Astro.props;
+const caseHref = `#case-${project.slug}`;
+---
+
+<article class="project">
+	<a class="project__preview" href={caseHref} data-case-study={project.slug} tabindex="-1" aria-hidden="true">
+		<picture>
+			<source media="(max-width: 47.99rem)" srcset={project.imageMobile} width="342" height="360" />
+			<img src={project.image} alt="" width="1280" height="570" loading="lazy" decoding="async" />
+		</picture>
+	</a>
+	<div class="project__details">
+		<div class="project__identity">
+			<p class="project__label">{project.category}</p>
+			<h3 class="project__title">{project.title}</h3>
+			<p class="project__outcome">{project.outcome}</p>
+		</div>
+		<div class="project__role">
+			<p class="project__label">My role / scope</p>
+			<p class="project__scope">{project.scope}</p>
+			<a class="project__link" href={caseHref} data-case-study={project.slug} aria-haspopup="dialog">
+				View case study<span class="sr-only">: {project.title}</span>
+				<img src="/icons/arrow-up-right-accent.svg" alt="" width="24" height="24" />
+			</a>
+		</div>
+	</div>
+</article>
+
+<style>
+	.project {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+	}
+
+	.project__preview {
+		display: block;
+		overflow: hidden;
+	}
+
+	.project__preview img {
+		width: 100%;
+		height: auto;
+		transition: transform var(--duration-standard) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.project__preview:hover img {
+			transform: scale(1.01);
+		}
+
+		.project__link:hover img {
+			transform: translate(2px, -2px);
+		}
+	}
+
+	.project__details {
+		display: flex;
+		align-items: flex-start;
+		gap: 80px;
+	}
+
+	.project__identity {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		flex: 0 0 430px;
+	}
+
+	.project__role {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-3);
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.project__label {
+		font-size: var(--text-micro);
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		line-height: normal;
+		color: var(--color-text-secondary);
+	}
+
+	.project__title {
+		font-size: var(--text-project);
+		line-height: 1.1;
+		letter-spacing: -1.2px;
+	}
+
+	.project__outcome {
+		font-size: var(--text-body-lg);
+		line-height: 1.55;
+	}
+
+	.project__scope {
+		font-size: var(--text-body);
+		line-height: var(--leading-relaxed);
+		color: var(--color-text-secondary);
+	}
+
+	.project__link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		height: 48px;
+		color: var(--color-accent);
+	}
+
+	.project__link img {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	@media (max-width: 60rem) {
+		.project__details {
+			flex-direction: column;
+			gap: var(--space-5);
+		}
+
+		.project__identity {
+			flex-basis: auto;
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.project {
+			gap: var(--space-5);
+		}
+
+		.project__details {
+			gap: var(--space-4);
+		}
+
+		.project__scope {
+			font-size: var(--text-small);
+		}
+	}
+</style>

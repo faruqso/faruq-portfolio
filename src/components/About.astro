@@ -1,0 +1,105 @@
+---
+import { about } from '../data/site';
+---
+
+<section id="about" class="section section--band" aria-labelledby="about-heading">
+	<div class="container about">
+		<div class="about__intro">
+			<p class="eyebrow">{about.eyebrow}</p>
+			<h2 id="about-heading" class="text-display">
+				{about.greeting}<br class="about__break" /><span class="text-accent">{about.name}</span>.
+			</h2>
+		</div>
+		<div class="about__photo">
+			<img src={about.photo} alt={`Portrait of ${about.name}`} width="472" height="1080" loading="lazy" />
+		</div>
+		<div class="about__story">
+			<p class="about__body">{about.body}</p>
+			<p class="about__note">{about.note}</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	.about {
+		display: flex;
+		align-items: flex-start;
+		gap: 100px;
+	}
+
+	.about__intro {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		flex-shrink: 0;
+	}
+
+	/* 127×144 crop, matching the Figma frame (image is 143×328, offset -106px) */
+	.about__photo {
+		position: relative;
+		flex-shrink: 0;
+		width: 127px;
+		height: 144px;
+		border-radius: 48px;
+		overflow: hidden;
+	}
+
+	.about__photo img {
+		position: absolute;
+		left: calc(50% + 3.23px);
+		top: -106px;
+		width: 143.456px;
+		height: 328.246px;
+		max-width: none;
+		transform: translateX(-50%);
+		object-fit: cover;
+	}
+
+	.about__story {
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+		flex: 1 1 0;
+		min-width: 0;
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.about__body {
+		font-size: var(--text-lead);
+	}
+
+	.about__note {
+		font-size: var(--text-small);
+	}
+
+	@media (max-width: 64rem) {
+		.about {
+			flex-wrap: wrap;
+			gap: var(--space-7);
+		}
+
+		.about__story {
+			flex-basis: 100%;
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.about {
+			flex-direction: column;
+			gap: 0;
+		}
+
+		.about__break {
+			display: none;
+		}
+
+		.about__photo {
+			margin-top: var(--space-6); /* 24 gap + 8 top padding */
+		}
+
+		.about__story {
+			margin-top: 36px;
+		}
+	}
+</style>
