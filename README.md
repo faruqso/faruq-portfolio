@@ -31,6 +31,21 @@ static host. To switch it on:
 Until that key is set, the form falls back to opening the visitor's own email app.
 The key is safe to commit: it only ever delivers to the address it was issued for.
 
+## Deploying
+
+Live at https://faruq-portfolio.faruqso.workers.dev (Cloudflare Workers static assets,
+config in `wrangler.jsonc`).
+
+- **By hand:** `npm run deploy` builds and uploads in about 15 seconds.
+- **Automatically:** every push to `main` deploys via `.github/workflows/deploy.yml`, once the
+  `CLOUDFLARE_API_TOKEN` repository secret exists:
+  1. Cloudflare → My Profile → API Tokens → Create Token → **Edit Cloudflare Workers** template.
+     Account Resources: *Faruq.soremekun@gmail.com's Account*. Zone Resources: *All zones*.
+  2. Create it and copy the token (it is shown once).
+  3. In a terminal: `gh secret set CLOUDFLARE_API_TOKEN --repo faruqso/faruq-portfolio`,
+     then paste the token when asked.
+  4. Re-run the last workflow: `gh workflow run deploy.yml --repo faruqso/faruq-portfolio`.
+
 ## Next steps
 
 1. Write the remaining **case studies** in `src/data/caseStudies.ts` (only MightyOcto is complete).
