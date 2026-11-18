@@ -3,18 +3,43 @@ import type { NavItem } from '../lib/types';
 import { primaryCta, site } from '../data/site';
 import Button from './Button.astro';
 
-type Props = { items: NavItem[] };
+type Props = { items: NavItem[]; minimal?: boolean };
 
-const { items } = Astro.props;
+const { items, minimal = false } = Astro.props;
 ---
 
 <header class="site-header">
 	<div class="container site-header__inner">
-		<a class="wordmark" href="/" aria-label={`${site.name} — home`}>{site.wordmark}</a>
-		<p class="site-header__status">
-			<img src="/icons/status-dot.svg" alt="" width="9" height="9" />
-			{site.availability}
-		</p>
+		{
+			minimal ? (
+				<span class="site-header__brand">
+					<slot name="brand" />
+					<span class="wordmark wordmark--play" data-wordmark>
+						<span class="sr-only">{site.wordmark}</span>
+						<span aria-hidden="true">
+							{[...site.wordmark].map((char, i) => (
+								<span class="wordmark__char" style={`--i: ${i}`}>
+									{char === ' ' ? ' ' : char}
+								</span>
+							))}
+						</span>
+					</span>
+				</span>
+			) : (
+				<a class="wordmark" href="/" aria-label={`${site.name} — home`}>
+					{site.wordmark}
+				</a>
+			)
+		}
+		{
+			!minimal && (
+				<p class="site-header__status">
+					<img src="/icons/status-dot.svg" alt="" width="9" height="9" />
+					{site.availability}
+				</p>
+			)
+		}
+		{!minimal && (
 		<nav class="site-header__nav" aria-label="Primary">
 			<ul class="site-header__list">
 				{
@@ -29,8 +54,23 @@ const { items } = Astro.props;
 			</ul>
 			<Button href={primaryCta.href}>{primaryCta.label}</Button>
 		</nav>
+		)}
 	</div>
 </header>
+
+<script>
+	// Tap / click replays the wave (hover covers mouse users on its own).
+	document.querySelectorAll<HTMLElement>('[data-wordmark]').forEach((mark) => {
+		const last = mark.querySelector<HTMLElement>('.wordmark__char:last-child');
+		mark.addEventListener('click', () => {
+			mark.classList.remove('is-hopping');
+			void mark.offsetWidth; // restart the animation
+			mark.classList.add('is-hopping');
+			window.setTimeout(() => mark.classList.remove('is-hopping'), 1000);
+		});
+		last?.addEventListener('animationend', () => mark.classList.remove('is-hopping'));
+	});
+</script>
 
 <style>
 	.site-header__inner {
@@ -39,6 +79,48 @@ const { items } = Astro.props;
 		justify-content: space-between;
 		gap: var(--space-5);
 		padding-block: var(--space-5);
+	}
+
+	.site-header__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-3);
+	}
+
+	/* Landing-page wordmark: letters hop in a wave on hover or tap. */
+	.wordmark--play {
+		cursor: default;
+		user-select: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.wordmark__char {
+		display: inline-block;
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	@media (min-width: 48rem) {
+		.wordmark--play:hover .wordmark__char {
+			animation: hop 520ms var(--ease-out) calc(var(--i) * 32ms) both;
+		}
+	}
+
+	.wordmark--play.is-hopping .wordmark__char {
+		animation: hop 520ms var(--ease-out) calc(var(--i) * 32ms) both;
+	}
+
+	@keyframes hop {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		35% {
+			transform: translateY(-5px);
+			color: var(--color-accent);
+		}
+		65% {
+			transform: translateY(1px);
+		}
 	}
 
 	.wordmark {
@@ -83,7 +165,7 @@ const { items } = Astro.props;
 		transition: color var(--duration-fast) var(--ease-out);
 	}
 
-	@media (hover: hover) {
+	@media (min-width: 48rem) {
 		.site-header__link:hover {
 			color: var(--color-accent);
 		}

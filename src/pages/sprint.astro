@@ -1,0 +1,398 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Button from '../components/Button.astro';
+import { subpageNavItems, testimonials } from '../data/site';
+import { bookingUrl, sprint } from '../data/leads';
+
+// Until the Zeeg link is set, "Book a call" goes to the contact form.
+const callHref = bookingUrl || '/#contact';
+const callAttrs = bookingUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+// The quote about designing and building landing pages.
+const quote = testimonials.items[1];
+---
+
+<Layout
+	title="Launch Website Sprint — your startup site, designed and live in about 2 weeks"
+	description="For early-stage AI and SaaS founders: message, Figma design and a Framer build, live in about 2 weeks. From $2,000."
+	navItems={subpageNavItems}
+>
+	<div class="container page">
+		<PageIntro eyebrow={sprint.eyebrow} title={sprint.title} lead={sprint.lead}>
+			<a class="call ds-button ds-button--primary" href={callHref} {...callAttrs}>
+				<span>{sprint.callLabel}</span>
+				<img src="/icons/arrow-up-right-white.svg" alt="" width="24" height="24" />
+			</a>
+			<Button href="/audit" variant="secondary">{sprint.auditLabel}</Button>
+			<p class="price">{sprint.price}</p>
+		</PageIntro>
+
+		<section class="block" aria-labelledby="included-heading">
+			<h2 id="included-heading" class="block__title">{sprint.included.title}</h2>
+			<ul class="cards">
+				{
+					sprint.included.items.map((item) => (
+						<li class="card">
+							<h3 class="card__title">{item.title}</h3>
+							<p class="card__description">{item.description}</p>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<section class="block" aria-labelledby="timeline-heading">
+			<h2 id="timeline-heading" class="block__title">{sprint.timeline.title}</h2>
+			<ol class="timeline">
+				{
+					sprint.timeline.steps.map((step) => (
+						<li class="timeline__step">
+							<span class="timeline__when">{step.number}</span>
+							<h3 class="card__title">{step.title}</h3>
+							<p class="card__description">{step.description}</p>
+						</li>
+					))
+				}
+			</ol>
+		</section>
+
+		<section class="fit" aria-label="Who the Sprint is for">
+			{
+				[sprint.fit.good, sprint.fit.bad].map((group, i) => (
+					<div class:list={['fit__group', i === 1 && 'fit__group--muted']}>
+						<h2 class="fit__title">{group.title}</h2>
+						<ul class="fit__list">
+							{group.items.map((item) => (
+								<li>{item}</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</section>
+
+		<section class="proof" aria-label="Proof">
+			<figure class="proof__quote">
+				<blockquote>“{quote.quote}”</blockquote>
+				<figcaption>{quote.source}</figcaption>
+			</figure>
+			<p class="proof__example">
+				<span class="eyebrow">{sprint.example.label}</span>
+				<span>{sprint.example.text}</span>
+				<a href={sprint.example.href}>{sprint.example.linkLabel} →</a>
+			</p>
+		</section>
+
+		<section class="block" aria-labelledby="faq-heading">
+			<h2 id="faq-heading" class="block__title">Questions</h2>
+			<dl class="faqs">
+				{
+					sprint.faqs.map((faq) => (
+						<div class="faq">
+							<dt class="card__title">{faq.q}</dt>
+							<dd class="card__description">{faq.a}</dd>
+						</div>
+					))
+				}
+			</dl>
+		</section>
+
+		<aside class="closing">
+			<h2 class="closing__title">{sprint.closing.title}</h2>
+			<p class="closing__description">{sprint.closing.description}</p>
+			<div class="closing__actions">
+				<a class="call ds-button ds-button--primary" href={callHref} {...callAttrs}>
+					<span>{sprint.callLabel}</span>
+					<img src="/icons/arrow-up-right-white.svg" alt="" width="24" height="24" />
+				</a>
+				<a class="closing__link" href="/audit">{sprint.auditLabel} →</a>
+			</div>
+		</aside>
+	</div>
+</Layout>
+
+<style>
+	.page {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-9);
+		padding-block: 88px var(--space-10);
+	}
+
+	/* Mirrors Button.astro's primary style; a plain <a> so it can open Zeeg in a new tab. */
+	.call {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-2);
+		height: 56px;
+		min-width: 195px;
+		padding: 16px 18px 16px 24px;
+		border: 1px solid var(--color-accent-border);
+		border-radius: var(--radius-md);
+		background: var(--color-accent);
+		color: #ffffff;
+		font-size: var(--text-button);
+		line-height: normal;
+		white-space: nowrap;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-instant) var(--ease-out);
+	}
+
+	.call img {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	@media (min-width: 48rem) {
+		.call:hover {
+			background: var(--color-accent-hover);
+		}
+
+		.call:hover img {
+			transform: translate(2px, -2px);
+		}
+	}
+
+	.call:active {
+		transform: scale(0.97);
+	}
+
+	.price {
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	.block {
+		display: grid;
+		grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+		gap: var(--space-6);
+		padding-top: var(--space-6);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.block__title {
+		font-size: var(--text-service);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-title);
+	}
+
+	.cards,
+	.timeline {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-5);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.card,
+	.timeline__step {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		padding: var(--space-5);
+		border-radius: var(--radius-lg);
+		background: var(--color-bg-subtle);
+	}
+
+	.timeline__when {
+		font-size: var(--text-caption);
+		letter-spacing: var(--tracking-eyebrow);
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	.card__title {
+		margin: 0;
+		font-size: var(--text-body-lg);
+		font-weight: 400;
+		line-height: var(--leading-snug);
+	}
+
+	.card__description {
+		margin: 0;
+		font-size: var(--text-small);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.fit {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-5);
+	}
+
+	.fit__group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		padding: var(--space-6);
+		border-radius: var(--radius-xl);
+		background: var(--color-surface-inverse);
+		color: #ffffff;
+	}
+
+	.fit__group--muted {
+		background: var(--color-bg-subtle);
+		color: var(--color-text);
+	}
+
+	.fit__title {
+		font-size: var(--text-service);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-title);
+	}
+
+	.fit__list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		margin: 0;
+		padding-left: 1.1em;
+		font-size: var(--text-body);
+		line-height: var(--leading-body);
+		color: var(--color-text-on-inverse);
+	}
+
+	.fit__group--muted .fit__list {
+		color: var(--color-text-secondary);
+	}
+
+	.proof {
+		display: grid;
+		grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+		gap: var(--space-5);
+	}
+
+	.proof__quote {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: var(--space-5);
+		margin: 0;
+		padding: var(--space-6);
+		border: 1px solid var(--color-border-warm);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-warm);
+	}
+
+	.proof__quote blockquote {
+		margin: 0;
+		font-size: var(--text-quote);
+		line-height: var(--leading-snug);
+		letter-spacing: -0.01em;
+	}
+
+	.proof__quote figcaption {
+		font-size: var(--text-small);
+		color: var(--color-text-warm);
+	}
+
+	.proof__example {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		padding: var(--space-6);
+		border-radius: var(--radius-lg);
+		background: var(--color-bg-subtle);
+		font-size: var(--text-body);
+		line-height: var(--leading-body);
+	}
+
+	.proof__example a,
+	.closing__link {
+		color: var(--color-accent);
+		font-size: var(--text-small);
+	}
+
+	@media (min-width: 48rem) {
+		.proof__example a:hover,
+		.closing__link:hover {
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
+	}
+
+	.faqs {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+	}
+
+	.faq {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		padding-block: var(--space-4);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.faq:first-child {
+		padding-top: 0;
+	}
+
+	.faq:last-child {
+		border-bottom: 0;
+	}
+
+	.closing {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-5);
+		padding: var(--space-8);
+		border-radius: var(--radius-xl);
+		background: var(--color-bg-subtle);
+	}
+
+	.closing__title {
+		font-size: var(--text-display);
+		line-height: var(--leading-display);
+		letter-spacing: var(--tracking-display);
+	}
+
+	.closing__description {
+		max-width: 36rem;
+		font-size: var(--text-lead);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.closing__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-5);
+	}
+
+	@media (max-width: 64rem) {
+		.block,
+		.proof {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.page {
+			gap: var(--space-8);
+			padding-top: var(--space-7);
+		}
+
+		.cards,
+		.timeline,
+		.fit {
+			grid-template-columns: 1fr;
+		}
+
+		.closing {
+			padding: var(--space-6);
+		}
+
+		.call,
+		.closing__actions {
+			width: 100%;
+		}
+	}
+</style>

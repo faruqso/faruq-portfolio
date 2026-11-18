@@ -8,16 +8,20 @@ import SiteFooter from '../components/SiteFooter.astro';
 type Props = {
 	title?: string;
 	description?: string;
-	navItems: NavItem[];
+	navItems?: NavItem[];
+	/** Landing-page mode: no nav, no links anywhere in the header or footer. */
+	minimal?: boolean;
 };
 
 const {
 	title = site.title,
 	description = site.description,
-	navItems,
+	navItems = [],
+	minimal = false,
 } = Astro.props;
 
 const pageTitle = `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, site.url).href;
 ---
 
 <!DOCTYPE html>
@@ -29,14 +33,21 @@ const pageTitle = `${title} · ${site.name}`;
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{pageTitle}</title>
+		<link rel="canonical" href={canonical} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={site.name} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary" />
 	</head>
 	<body>
 		<a class="skip-link" href="#main">Skip to content</a>
-		<SiteHeader items={navItems} />
+		<SiteHeader items={navItems} minimal={minimal}><slot name="brand" slot="brand" /></SiteHeader>
 		<main id="main">
 			<slot />
 		</main>
-		<SiteFooter />
+		<SiteFooter minimal={minimal} />
 	</body>
 </html>
 

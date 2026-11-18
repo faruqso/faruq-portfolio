@@ -1,0 +1,54 @@
+---
+/** Top of a standalone page: eyebrow, page title, lead, and an optional actions slot. */
+type Props = { eyebrow: string; title: string; lead: string };
+
+const { eyebrow, title, lead } = Astro.props;
+---
+
+<header class="page-intro">
+	<p class="eyebrow">{eyebrow}</p>
+	<h1 class="page-intro__title">{title}</h1>
+	<p class="text-lead page-intro__lead">{lead}</p>
+	{
+		Astro.slots.has('default') && (
+			<div class="page-intro__actions">
+				<slot />
+			</div>
+		)
+	}
+</header>
+
+<style>
+	.page-intro {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		max-width: 52rem;
+	}
+
+	.page-intro__title {
+		font-size: var(--text-display);
+		line-height: var(--leading-display);
+		letter-spacing: var(--tracking-display);
+		text-wrap: balance;
+	}
+
+	.page-intro__lead {
+		max-width: 40rem;
+		text-wrap: pretty;
+	}
+
+	.page-intro__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-4);
+		margin-top: var(--space-2);
+	}
+
+	@media (max-width: 47.99rem) {
+		.page-intro__actions :global(.ds-button) {
+			width: 100%;
+		}
+	}
+</style>

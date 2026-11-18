@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Checklist from '../components/Checklist.astro';
+import Button from '../components/Button.astro';
+import { subpageNavItems } from '../data/site';
+import { checklist } from '../data/leads';
+
+const total = checklist.sections.reduce((sum, section) => sum + section.items.length, 0);
+---
+
+<Layout
+	title={`${checklist.title} — a free ${total}-point checklist`}
+	description={`${total} checks to run before your AI startup homepage goes live: the first 5 seconds, explaining the AI, proof, next steps and the basics.`}
+	navItems={subpageNavItems}
+>
+	<div class="container page">
+		<PageIntro eyebrow={checklist.eyebrow} title={checklist.title} lead={checklist.lead} />
+
+		<Checklist />
+
+		<aside class="cta">
+			<h2 class="cta__title">{checklist.cta.title}</h2>
+			<p class="cta__description">{checklist.cta.description}</p>
+			<Button href={checklist.cta.href}>{checklist.cta.label}</Button>
+		</aside>
+	</div>
+</Layout>
+
+<style>
+	.page {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-8);
+		padding-block: 88px var(--space-10);
+	}
+
+	.cta {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-5);
+		margin-top: var(--space-6);
+		padding: var(--space-8);
+		border-radius: var(--radius-xl);
+		background: var(--color-surface-inverse);
+		color: #ffffff;
+	}
+
+	.cta__title {
+		font-size: var(--text-display);
+		line-height: var(--leading-display);
+		letter-spacing: var(--tracking-display);
+	}
+
+	.cta__description {
+		max-width: 38rem;
+		font-size: var(--text-lead);
+		line-height: var(--leading-body);
+		color: var(--color-text-on-inverse);
+	}
+
+	@media (max-width: 47.99rem) {
+		.page {
+			gap: var(--space-7);
+			padding-top: var(--space-7);
+		}
+
+		.cta {
+			margin-top: 0;
+			padding: var(--space-6);
+		}
+
+		.cta :global(.ds-button) {
+			width: 100%;
+		}
+	}
+
+	@media print {
+		:global(.site-header),
+		:global(.site-footer),
+		:global(.skip-link),
+		.cta :global(.ds-button) {
+			display: none !important;
+		}
+
+		.page {
+			padding-block: 0;
+			gap: var(--space-6);
+		}
+
+		.cta {
+			padding: var(--space-5);
+			background: none;
+			color: var(--color-text);
+			border: 1px solid var(--color-border);
+			break-inside: avoid;
+		}
+
+		.cta__title {
+			font-size: var(--text-service);
+		}
+
+		.cta__description {
+			color: var(--color-text-secondary);
+		}
+
+		.cta__description::after {
+			content: ' faruq-portfolio.faruqso.workers.dev/audit';
+			color: var(--color-accent);
+		}
+	}
+</style>

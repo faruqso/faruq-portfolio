@@ -1,0 +1,351 @@
+---
+/**
+ * The launch checklist: ticks saved in this browser, progress, save as PDF, clear.
+ * `page` = the full /checklist layout; `sheet` = the single-column version inside the audit page's modal.
+ * Both share one storage key, so ticks carry over between them.
+ */
+import { checklist } from '../data/leads';
+
+type Props = { variant?: 'page' | 'sheet' };
+const { variant = 'page' } = Astro.props;
+
+const checklistTotal = checklist.sections.reduce((sum, section) => sum + section.items.length, 0);
+const prefix = variant === 'sheet' ? 'sheet-' : '';
+let index = 0;
+---
+
+<div class:list={['checklist', `checklist--${variant}`]} data-checklist>
+	<div class="checklist__toolbar">
+		<p class="progress" aria-live="polite">
+			<span class="progress__bar" aria-hidden="true"><span data-progress-fill></span></span>
+			<span><span data-progress-count>0</span> of {checklistTotal} done</span>
+		</p>
+		<span class="checklist__actions">
+			<button type="button" class="text-button" data-print>Save as PDF</button>
+			<button type="button" class="text-button" data-reset>Clear ticks</button>
+		</span>
+	</div>
+
+	<div class="sections">
+		{
+			checklist.sections.map((section, sectionIndex) => (
+				<section class="block" aria-labelledby={`${prefix}section-${sectionIndex}`}>
+					<h2 id={`${prefix}section-${sectionIndex}`} class="block__title">
+						<span class="block__number">{String(sectionIndex + 1).padStart(2, '0')}</span>
+						{section.title}
+					</h2>
+					<ul class="items">
+						{section.items.map((item) => {
+							const n = ++index;
+							const id = `${prefix}check-${n}`;
+							return (
+								<li>
+									<label class="item" for={id}>
+										<input type="checkbox" id={id} class="item__box" data-check={`check-${n}`} />
+										<span class="item__text">
+											<span class="item__check">{item.check}</span>
+											<span class="item__why">{item.why}</span>
+										</span>
+									</label>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			))
+		}
+	</div>
+
+	<slot />
+</div>
+
+<script>
+	const KEY = 'launch-checklist-v1';
+
+	const read = (): Set<string> => {
+		try {
+			return new Set(JSON.parse(localStorage.getItem(KEY) ?? '[]'));
+		} catch {
+			return new Set();
+		}
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-checklist]').forEach((root) => {
+		const boxes = Array.from(root.querySelectorAll<HTMLInputElement>('input[data-check]'));
+		const count = root.querySelector('[data-progress-count]');
+		const fill = root.querySelector<HTMLElement>('[data-progress-fill]');
+
+		const render = () => {
+			const done = boxes.filter((box) => box.checked).length;
+			if (count) count.textContent = String(done);
+			if (fill) fill.style.transform = `scaleX(${boxes.length ? done / boxes.length : 0})`;
+		};
+
+		const save = () => {
+			try {
+				localStorage.setItem(KEY, JSON.stringify(boxes.filter((b) => b.checked).map((b) => b.dataset.check)));
+			} catch {
+				/* private mode: ticks just won't persist */
+			}
+		};
+
+		const load = () => {
+			const saved = read();
+			boxes.forEach((box) => (box.checked = saved.has(box.dataset.check ?? '')));
+			render();
+		};
+
+		boxes.forEach((box) =>
+			box.addEventListener('change', () => {
+				save();
+				render();
+			}),
+		);
+		root.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+		root.querySelector('[data-reset]')?.addEventListener('click', () => {
+			boxes.forEach((box) => (box.checked = false));
+			save();
+			render();
+		});
+		// Re-sync when the sheet opens, in case ticks changed in another tab.
+		root.addEventListener('checklist:refresh', load);
+		load();
+	});
+</script>
+
+<style>
+	.checklist {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-7);
+	}
+
+	.checklist__toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-3) var(--space-5);
+	}
+
+	.checklist__actions {
+		display: inline-flex;
+		gap: var(--space-4);
+	}
+
+	.progress {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-3);
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	.progress__bar {
+		width: 120px;
+		height: 6px;
+		border-radius: var(--radius-pill);
+		background: var(--color-border);
+		overflow: hidden;
+	}
+
+	.progress__bar span {
+		display: block;
+		height: 100%;
+		background: var(--color-accent);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform var(--duration-standard) var(--ease-out);
+	}
+
+	.text-button {
+		padding: 0;
+		border: 0;
+		background: none;
+		font: inherit;
+		font-size: var(--text-small);
+		color: var(--color-accent);
+		cursor: pointer;
+	}
+
+	@media (min-width: 48rem) {
+		.text-button:hover {
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
+	}
+
+	.sections {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-8);
+	}
+
+	.block {
+		display: grid;
+		grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+		gap: var(--space-6);
+		padding-top: var(--space-6);
+		border-top: 1px solid var(--color-border);
+	}
+
+	.block__title {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+		font-size: var(--text-service);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-title);
+	}
+
+	.block__number {
+		font-size: var(--text-caption);
+		letter-spacing: var(--tracking-eyebrow);
+		color: var(--color-accent);
+	}
+
+	.items {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.item {
+		display: flex;
+		gap: var(--space-4);
+		padding-block: var(--space-4);
+		border-bottom: 1px solid var(--color-border);
+		cursor: pointer;
+	}
+
+	.items li:last-child .item {
+		border-bottom: 0;
+	}
+
+	.item__box {
+		flex-shrink: 0;
+		width: 22px;
+		height: 22px;
+		margin: 2px 0 0;
+		border: 1.5px solid var(--color-border-warm);
+		border-radius: 6px;
+		background: var(--color-surface-solid);
+		appearance: none;
+		display: grid;
+		place-content: center;
+		cursor: pointer;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			border-color var(--duration-fast) var(--ease-out);
+	}
+
+	.item__box::after {
+		content: '';
+		width: 10px;
+		height: 6px;
+		border-left: 2px solid #ffffff;
+		border-bottom: 2px solid #ffffff;
+		transform: translateY(-1px) rotate(-45deg) scale(0);
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	.item__box:checked {
+		background: var(--color-accent);
+		border-color: var(--color-accent);
+	}
+
+	.item__box:checked::after {
+		transform: translateY(-1px) rotate(-45deg) scale(1);
+	}
+
+	.item__box:focus-visible {
+		outline: none;
+		box-shadow: 0 0 0 3px var(--color-focus-ring);
+	}
+
+	.item__text {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	.item__check {
+		font-size: var(--text-body-lg);
+		line-height: var(--leading-snug);
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	.item__why {
+		font-size: var(--text-small);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.item:has(:checked) .item__check {
+		color: var(--color-text-secondary);
+	}
+
+	/* Sheet: one narrow column */
+	.checklist--sheet {
+		gap: var(--space-6);
+	}
+
+	.checklist--sheet .sections {
+		gap: var(--space-6);
+	}
+
+	.checklist--sheet .block {
+		grid-template-columns: 1fr;
+		gap: var(--space-2);
+		padding-top: var(--space-5);
+	}
+
+	.checklist--sheet .block__title {
+		flex-direction: row;
+		align-items: baseline;
+		gap: var(--space-3);
+		font-size: var(--text-body-lg);
+		letter-spacing: -0.01em;
+	}
+
+	.checklist--sheet .item__check {
+		font-size: var(--text-body);
+	}
+
+	@media (max-width: 64rem) {
+		.block {
+			grid-template-columns: 1fr;
+			gap: var(--space-3);
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.checklist--page {
+			gap: var(--space-8);
+		}
+	}
+
+	@media print {
+		.checklist__toolbar {
+			display: none !important;
+		}
+
+		.checklist,
+		.sections {
+			gap: var(--space-6);
+		}
+
+		.block {
+			break-inside: avoid;
+		}
+
+		.item {
+			padding-block: var(--space-2);
+		}
+
+		.item__box {
+			print-color-adjust: exact;
+		}
+	}
+</style>

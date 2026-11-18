@@ -14,7 +14,7 @@ export const site = {
 	title: 'Websites that help startups look credible and convert',
 	description:
 		'UI/UX product designer with 5+ years of experience. I design and build your website, from the first idea to launch.',
-	url: 'https://example.com',
+	url: 'https://faruq-portfolio.faruqso.workers.dev',
 	tagline: 'Clear ideas. Considered design.',
 	availability: 'Open for work',
 } as const;
@@ -26,7 +26,10 @@ export const navItems: NavItem[] = [
 	{ label: 'About', href: '#about' },
 ];
 
-export const primaryCta = { label: 'Start a project', href: '#contact' } as const;
+export const primaryCta = { label: 'Start a project', href: '/#contact' } as const;
+
+/** Nav for pages other than the homepage: same sections, linked back to it. */
+export const subpageNavItems: NavItem[] = navItems.map((item) => ({ ...item, href: `/${item.href}` }));
 
 export const email = 'faruq.soremekun@gmail.com';
 

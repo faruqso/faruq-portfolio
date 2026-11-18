@@ -1,0 +1,860 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Button from '../components/Button.astro';
+import Checklist from '../components/Checklist.astro';
+import AboutAvatar from '../components/AboutAvatar.astro';
+import { email, formAccessKey, site } from '../data/site';
+import { audit } from '../data/leads';
+---
+
+<Layout
+	title="Free 5-minute homepage audit"
+	description="Send your startup homepage and get a 5-minute Loom within 48 hours: what a first-time visitor understands, where they'd leave, and the one change to make first."
+	minimal
+>
+	<AboutAvatar slot="brand" />
+
+	<div class="container page">
+		<div class="page__main">
+			<PageIntro eyebrow={audit.eyebrow} title={audit.title} lead={audit.lead} />
+
+			<ol class="steps">
+				{
+					audit.steps.map((step, i) => (
+						<li class="step">
+							<span class="step__number">{String(i + 1).padStart(2, '0')}</span>
+							<span class="step__text">
+								<span class="step__title">{step.title}</span>
+								<span class="step__description">{step.description}</span>
+							</span>
+						</li>
+					))
+				}
+			</ol>
+
+			<p class="terms">{audit.terms}</p>
+		</div>
+
+		<form
+			class="request"
+			method={formAccessKey ? 'POST' : undefined}
+			action={formAccessKey ? 'https://api.web3forms.com/submit' : undefined}
+			data-enquiry-form
+			data-email={email}
+			data-sending={audit.form.sending}
+			data-success={audit.form.success}
+			data-error={audit.form.error}
+			data-mail-subject="Homepage audit request"
+			id="request"
+		>
+			{
+				formAccessKey && (
+					<>
+						<input type="hidden" name="access_key" value={formAccessKey} />
+						<input type="hidden" name="from_name" value={`${site.name} — audit request`} />
+						<input type="hidden" name="subject" value="New homepage audit request" />
+						<input type="checkbox" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off" />
+					</>
+				)
+			}
+
+			<h2 class="request__title">{audit.form.title}</h2>
+			<label class="field">
+				<span class="field__label">Name</span>
+				<input
+					class="field__input"
+					type="text"
+					name="name"
+					placeholder="Your name"
+					autocomplete="name"
+					required
+					data-first-field
+				/>
+			</label>
+			<label class="field">
+				<span class="field__label">Email</span>
+				<input
+					class="field__input"
+					type="email"
+					name="email"
+					placeholder="you@company.com"
+					autocomplete="email"
+					required
+				/>
+			</label>
+			<label class="field">
+				<span class="field__label">Homepage URL</span>
+				<input
+					class="field__input"
+					type="text"
+					inputmode="url"
+					name="homepage"
+					placeholder="yourstartup.com"
+					autocomplete="url"
+					required
+				/>
+			</label>
+			<label class="field">
+				<span class="field__label">{audit.form.buyerLabel}</span>
+				<textarea
+					class="field__input field__input--area"
+					name="buyer"
+					placeholder={audit.form.buyerPlaceholder}
+					rows="3"
+					required></textarea>
+			</label>
+			<Button type="submit">{audit.form.submit}</Button>
+			<p class="enquiry__note" role="status" data-enquiry-status></p>
+		</form>
+	</div>
+
+	<section class="container more" aria-labelledby="checklist-card-title">
+		<div class="checklist-card">
+			<span class="checklist-card__icon" aria-hidden="true" data-icon-anim>
+				<svg width="26" height="26" viewBox="0 0 22 22" fill="none">
+					<rect class="ci__sheet" x="3" y="2.5" width="16" height="17" rx="3" stroke="currentColor" stroke-width="1.5"
+					></rect>
+					<path class="ci__tick ci__tick--1" pathLength="1" d="M7 8l1.5 1.5L11 7" stroke="currentColor"
+						stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+					<path class="ci__line ci__line--1" pathLength="1" d="M13 8.5h2.5" stroke="currentColor" stroke-width="1.5"
+						stroke-linecap="round"></path>
+					<path class="ci__tick ci__tick--2" pathLength="1" d="M7 13.5l1.5 1.5L11 12.5" stroke="currentColor"
+						stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+					<path class="ci__line ci__line--2" pathLength="1" d="M13 14h2.5" stroke="currentColor" stroke-width="1.5"
+						stroke-linecap="round"></path>
+				</svg>
+			</span>
+			<div class="checklist-card__text">
+				<p class="checklist-card__eyebrow">{audit.checklistCard.eyebrow}</p>
+				<h2 id="checklist-card-title" class="checklist-card__title">{audit.checklistCard.title}</h2>
+				<p class="checklist-card__description">{audit.checklistCard.description}</p>
+			</div>
+			<button type="button" class="checklist-card__button" data-sheet-open aria-haspopup="dialog">
+				{audit.checklistCard.label}
+				<span aria-hidden="true">→</span>
+			</button>
+		</div>
+	</section>
+
+	<dialog class="sheet" aria-labelledby="sheet-title" data-sheet>
+		<div class="sheet__panel">
+			<header class="sheet__header">
+				<div>
+					<h2 id="sheet-title" class="sheet__title">{audit.sheet.title}</h2>
+					<p class="sheet__lead">{audit.sheet.lead}</p>
+				</div>
+				<button type="button" class="sheet__close" data-sheet-close aria-label={audit.sheet.close}>
+					<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"
+						><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+						></path></svg
+					>
+				</button>
+			</header>
+			<div class="sheet__body">
+				<Checklist variant="sheet">
+					<div class="sheet__cta">
+						<p class="sheet__cta-title">{audit.sheet.ctaTitle}</p>
+						<button type="button" class="sheet__cta-button" data-sheet-to-form>
+							{audit.sheet.ctaLabel}
+							<img src="/icons/arrow-up-right-white.svg" alt="" width="24" height="24" />
+						</button>
+					</div>
+				</Checklist>
+			</div>
+		</div>
+	</dialog>
+</Layout>
+
+<script>
+	import { wireForms } from '../scripts/forms';
+	wireForms();
+
+	// Section icons start animating when they scroll into view.
+	const io = new IntersectionObserver(
+		(entries) =>
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				entry.target.setAttribute('data-playing', '');
+				io.unobserve(entry.target);
+			}),
+		{ threshold: 0.6 },
+	);
+	document.querySelectorAll('[data-icon-anim]').forEach((el) => io.observe(el));
+
+	const sheet = document.querySelector<HTMLDialogElement>('[data-sheet]');
+	const checklist = sheet?.querySelector('[data-checklist]');
+	let opener: HTMLElement | null = null;
+
+	const open = (trigger: HTMLElement) => {
+		if (!sheet || sheet.open) return;
+		opener = trigger;
+		checklist?.dispatchEvent(new Event('checklist:refresh'));
+		delete sheet.dataset.closing;
+		sheet.showModal();
+		document.documentElement.classList.add('sheet-open');
+		sheet.querySelector<HTMLElement>('.sheet__body')?.scrollTo(0, 0);
+	};
+
+	// Play the exit animation, then actually close.
+	const close = (after?: () => void) => {
+		if (!sheet?.open || sheet.dataset.closing) return;
+		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		let done = false;
+		const finish = () => {
+			if (done) return;
+			done = true;
+			sheet.close();
+			delete sheet.dataset.closing;
+			document.documentElement.classList.remove('sheet-open');
+			if (after) after();
+			else opener?.focus();
+		};
+		if (reduce) return finish();
+		sheet.dataset.closing = 'true';
+		sheet.querySelector('.sheet__panel')?.addEventListener('animationend', finish, { once: true });
+		// Fallback in case animationend never fires (background tab, animation skipped).
+		window.setTimeout(finish, 320);
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-sheet-open]').forEach((trigger) =>
+		trigger.addEventListener('click', () => open(trigger)),
+	);
+	sheet?.querySelector('[data-sheet-close]')?.addEventListener('click', () => close());
+
+	// Esc: animate out instead of the instant native close.
+	sheet?.addEventListener('cancel', (event) => {
+		event.preventDefault();
+		close();
+	});
+
+	// Tap on the dimmed backdrop (outside the panel) closes it.
+	sheet?.addEventListener('click', (event) => {
+		if (event.target === sheet) close();
+	});
+
+	sheet?.querySelector('[data-sheet-to-form]')?.addEventListener('click', () =>
+		close(() => {
+			const form = document.getElementById('request');
+			form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			form?.querySelector<HTMLInputElement>('[data-first-field]')?.focus({ preventScroll: true });
+		}),
+	);
+</script>
+
+<style>
+	.page {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+		align-items: start;
+		gap: var(--space-9);
+		padding-block: 88px var(--space-9);
+	}
+
+	.page__main {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-7);
+	}
+
+	.steps {
+		align-self: stretch;
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-top: 1px solid var(--color-border);
+	}
+
+	.step {
+		display: flex;
+		gap: var(--space-5);
+		padding-block: var(--space-5);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.step__number {
+		flex-shrink: 0;
+		width: 2rem;
+		font-size: var(--text-caption);
+		letter-spacing: var(--tracking-eyebrow);
+		line-height: 2;
+		color: var(--color-accent);
+	}
+
+	.step__text {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	.step__title {
+		font-size: var(--text-body-lg);
+		line-height: var(--leading-snug);
+	}
+
+	.step__description,
+	.terms {
+		font-size: var(--text-small);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.terms {
+		max-width: 36rem;
+	}
+
+	/* ---------- Micro-interactions ---------- */
+
+	/* Entrance: intro, steps and form rise in, one after another. */
+	.page__main > *,
+	.request {
+		animation: rise 640ms var(--ease-out) both;
+	}
+
+	.page__main > :nth-child(2) {
+		animation-delay: 90ms;
+	}
+
+	.page__main > :nth-child(3) {
+		animation-delay: 160ms;
+	}
+
+	.request {
+		animation-delay: 120ms;
+	}
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(14px);
+		}
+	}
+
+	/* Steps: the number slides and the row warms up on hover. */
+	.step__number,
+	.step__title {
+		transition:
+			transform var(--duration-standard) var(--ease-out),
+			color var(--duration-fast) var(--ease-out);
+	}
+
+	@media (min-width: 48rem) {
+		.step:hover .step__number {
+			transform: translateX(4px);
+		}
+
+		.step:hover .step__title {
+			color: var(--color-accent);
+		}
+	}
+
+	/* Form: the label follows the field you're in. */
+	.request :global(.field__label) {
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	.request :global(.field:focus-within .field__label) {
+		color: var(--color-accent);
+	}
+
+	.request :global(.enquiry__note:not(:empty)) {
+		animation: rise 320ms var(--ease-out) both;
+	}
+
+	/* Checklist icon: ticks itself off, line by line, then starts over. */
+	.ci__tick,
+	.ci__line {
+		stroke-dasharray: 1;
+		stroke-dashoffset: 1;
+	}
+
+	[data-playing] .ci__tick--1 {
+		animation: ci-tick-1 5s var(--ease-out) infinite;
+	}
+
+	[data-playing] .ci__line--1 {
+		animation: ci-line-1 5s var(--ease-out) infinite;
+	}
+
+	[data-playing] .ci__tick--2 {
+		animation: ci-tick-2 5s var(--ease-out) infinite;
+	}
+
+	[data-playing] .ci__line--2 {
+		animation: ci-line-2 5s var(--ease-out) infinite;
+	}
+
+	[data-playing] .ci__sheet {
+		transform-origin: 50% 50%;
+		transform-box: fill-box;
+		animation: ci-sheet 5s var(--ease-out) infinite;
+	}
+
+	@keyframes ci-tick-1 {
+		0%, 6% { stroke-dashoffset: 1; opacity: 1; }
+		16%, 86% { stroke-dashoffset: 0; opacity: 1; }
+		96%, 100% { stroke-dashoffset: 0; opacity: 0; }
+	}
+
+	@keyframes ci-line-1 {
+		0%, 14% { stroke-dashoffset: 1; opacity: 1; }
+		22%, 86% { stroke-dashoffset: 0; opacity: 1; }
+		96%, 100% { stroke-dashoffset: 0; opacity: 0; }
+	}
+
+	@keyframes ci-tick-2 {
+		0%, 30% { stroke-dashoffset: 1; opacity: 1; }
+		40%, 86% { stroke-dashoffset: 0; opacity: 1; }
+		96%, 100% { stroke-dashoffset: 0; opacity: 0; }
+	}
+
+	@keyframes ci-line-2 {
+		0%, 38% { stroke-dashoffset: 1; opacity: 1; }
+		46%, 86% { stroke-dashoffset: 0; opacity: 1; }
+		96%, 100% { stroke-dashoffset: 0; opacity: 0; }
+	}
+
+	/* A small "done" bump after the last line */
+	@keyframes ci-sheet {
+		0%, 46% { transform: scale(1); }
+		52% { transform: scale(1.08); }
+		60%, 100% { transform: scale(1); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ci__tick,
+		.ci__line {
+			stroke-dashoffset: 0;
+			animation: none !important;
+		}
+
+		.ci__sheet {
+			animation: none !important;
+		}
+	}
+
+	/* Checklist card: lifts slightly; the icon tile tints on hover. */
+	.checklist-card {
+		transition:
+			border-color var(--duration-fast) var(--ease-out),
+			box-shadow var(--duration-standard) var(--ease-out),
+			transform var(--duration-standard) var(--ease-out);
+	}
+
+	.checklist-card__icon {
+		transition: background-color var(--duration-fast) var(--ease-out);
+	}
+
+	@media (min-width: 48rem) {
+		.checklist-card:hover {
+			border-color: var(--color-border-warm);
+			box-shadow: 0 12px 32px rgba(24, 26, 27, 0.07);
+			transform: translateY(-2px);
+		}
+
+		.checklist-card:hover .checklist-card__icon {
+			background: rgba(41, 79, 232, 0.14);
+		}
+	}
+
+	/* Checklist section, below the audit so it doesn't compete with the form */
+	.more {
+		padding-bottom: var(--space-10);
+	}
+
+	/* Checklist card: says what's inside before it opens */
+	.checklist-card {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: var(--space-4) var(--space-6);
+		padding: var(--space-6);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		background: var(--color-surface-solid);
+	}
+
+	.checklist-card__icon {
+		display: grid;
+		place-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: var(--radius-md);
+		background: rgba(41, 79, 232, 0.08);
+		color: var(--color-accent);
+	}
+
+	.checklist-card__text {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+	}
+
+	.checklist-card__eyebrow {
+		font-size: var(--text-caption);
+		letter-spacing: var(--tracking-eyebrow);
+		text-transform: uppercase;
+		color: var(--color-text-secondary);
+	}
+
+	.checklist-card__title {
+		font-size: var(--text-service);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-title);
+	}
+
+	.checklist-card__description {
+		font-size: var(--text-small);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	.checklist-card__text {
+		max-width: 40rem;
+	}
+
+	.checklist-card__button {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		height: 48px;
+		padding: 0 var(--space-5);
+		border: 1px solid var(--color-text);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-solid);
+		font: inherit;
+		font-size: var(--text-button);
+		color: var(--color-text);
+		cursor: pointer;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			color var(--duration-fast) var(--ease-out),
+			transform var(--duration-instant) var(--ease-out);
+	}
+
+	.checklist-card__button span {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	.checklist-card__button:active {
+		transform: scale(0.97);
+	}
+
+	@media (min-width: 48rem) {
+		.checklist-card__button:hover {
+			background: var(--color-text);
+			color: #ffffff;
+		}
+
+		.checklist-card__button:hover span {
+			transform: translateX(3px);
+		}
+	}
+
+	.request {
+		position: sticky;
+		top: var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		padding: var(--space-6);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		background: var(--color-bg-subtle);
+		scroll-margin-top: var(--space-5);
+	}
+
+	.request__title {
+		font-size: var(--text-service);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-title);
+	}
+
+	.request :global(.ds-button) {
+		width: 100%;
+	}
+
+	/* ---------- Checklist sheet ----------
+	   Desktop: narrow centred modal that fades and scales in.
+	   Mobile: bottom sheet that slides up. */
+
+	:global(html.sheet-open) {
+		overflow: hidden;
+	}
+
+	.sheet {
+		width: min(34rem, calc(100vw - 2 * var(--space-5)));
+		max-width: none;
+		height: min(46rem, calc(100dvh - 2 * var(--space-7)));
+		max-height: none;
+		margin: auto;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--color-text);
+		overflow: visible;
+	}
+
+	.sheet::backdrop {
+		background: rgba(24, 26, 27, 0.4);
+		animation: backdrop-in var(--duration-standard) var(--ease-out);
+	}
+
+	.sheet[data-closing]::backdrop {
+		animation: backdrop-out var(--duration-fast) var(--ease-out) forwards;
+	}
+
+	.sheet__panel {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		border-radius: var(--radius-xl);
+		background: var(--color-bg);
+		box-shadow:
+			0 24px 64px rgba(24, 26, 27, 0.18),
+			0 0 0 1px rgba(24, 26, 27, 0.06);
+		overflow: hidden;
+		animation: modal-in var(--duration-standard) var(--ease-out);
+	}
+
+	.sheet[data-closing] .sheet__panel {
+		animation: modal-out var(--duration-fast) var(--ease-out) forwards;
+	}
+
+	.sheet__header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--space-4);
+		padding: var(--space-5) var(--space-5) var(--space-4) var(--space-6);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.sheet__title {
+		font-size: var(--text-service);
+		line-height: var(--leading-snug);
+		letter-spacing: var(--tracking-title);
+	}
+
+	.sheet__lead {
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	.sheet__close {
+		flex-shrink: 0;
+		display: grid;
+		place-content: center;
+		width: 40px;
+		height: 40px;
+		border: 0;
+		border-radius: 50%;
+		background: var(--color-bg-subtle);
+		color: var(--color-text);
+		cursor: pointer;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-instant) var(--ease-out);
+	}
+
+	.sheet__close:active {
+		transform: scale(0.94);
+	}
+
+	@media (min-width: 48rem) {
+		.sheet__close:hover {
+			background: var(--color-border);
+		}
+	}
+
+	.sheet__body {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding: var(--space-5) var(--space-6) var(--space-6);
+	}
+
+	.sheet__cta {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		padding: var(--space-5);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-inverse);
+		color: #ffffff;
+	}
+
+	.sheet__cta-title {
+		font-size: var(--text-body-lg);
+		line-height: var(--leading-snug);
+	}
+
+	.sheet__cta-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-2);
+		height: 52px;
+		border: 1px solid var(--color-accent-border);
+		border-radius: var(--radius-md);
+		background: var(--color-accent);
+		color: #ffffff;
+		font: inherit;
+		font-size: var(--text-button);
+		cursor: pointer;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-instant) var(--ease-out);
+	}
+
+	.sheet__cta-button:active {
+		transform: scale(0.97);
+	}
+
+	@media (min-width: 48rem) {
+		.sheet__cta-button:hover {
+			background: var(--color-accent-hover);
+		}
+	}
+
+	@keyframes modal-in {
+		from {
+			opacity: 0;
+			transform: translateY(8px) scale(0.97);
+		}
+	}
+
+	@keyframes modal-out {
+		to {
+			opacity: 0;
+			transform: translateY(4px) scale(0.98);
+		}
+	}
+
+	@keyframes backdrop-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes backdrop-out {
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes sheet-in {
+		from {
+			transform: translateY(100%);
+		}
+	}
+
+	@keyframes sheet-out {
+		to {
+			transform: translateY(100%);
+		}
+	}
+
+	@media (max-width: 64rem) {
+		.page {
+			grid-template-columns: 1fr;
+			gap: var(--space-7);
+		}
+
+		.request {
+			position: static;
+		}
+	}
+
+	@media (max-width: 47.99rem) {
+		.page {
+			padding-top: var(--space-7);
+		}
+
+		.request {
+			padding: var(--space-5);
+		}
+
+		.checklist-card {
+			grid-template-columns: 1fr;
+			padding: var(--space-5);
+		}
+
+		.checklist-card__button {
+			justify-self: stretch;
+			justify-content: center;
+		}
+
+		/* Bottom action sheet */
+		.sheet {
+			width: 100%;
+			height: auto;
+			max-height: calc(100dvh - var(--space-7));
+			margin: auto 0 0;
+		}
+
+		.sheet__panel {
+			height: auto;
+			max-height: calc(100dvh - var(--space-7));
+			border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+			animation: sheet-in 380ms var(--ease-out);
+		}
+
+		.sheet[data-closing] .sheet__panel {
+			animation: sheet-out 240ms var(--ease-out) forwards;
+		}
+
+		.sheet__header {
+			padding: var(--space-5) var(--space-4) var(--space-4) var(--space-5);
+		}
+
+		.sheet__body {
+			padding: var(--space-4) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom));
+		}
+	}
+
+	/* Printing from the sheet prints just the checklist. */
+	@media print {
+		:global(html.sheet-open body > *:not(main)),
+		:global(html.sheet-open main > *:not(.sheet)) {
+			display: none !important;
+		}
+
+		.sheet {
+			position: static;
+			width: auto;
+			height: auto;
+		}
+
+		.sheet::backdrop {
+			display: none;
+		}
+
+		.sheet__panel {
+			height: auto;
+			box-shadow: none;
+			border-radius: 0;
+			overflow: visible;
+			animation: none;
+		}
+
+		.sheet__header {
+			padding: 0 0 var(--space-4);
+		}
+
+		.sheet__close,
+		.sheet__lead,
+		.sheet__cta {
+			display: none;
+		}
+
+		.sheet__body {
+			overflow: visible;
+			padding: var(--space-4) 0 0;
+		}
+	}
+</style>

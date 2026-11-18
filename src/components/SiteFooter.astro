@@ -1,10 +1,14 @@
 ---
 import { about, contact, site, socialLinks } from '../data/site';
+
+/** minimal: landing-page footer — socials only, no full-time note. */
+type Props = { minimal?: boolean };
+const { minimal = false } = Astro.props;
 ---
 
 <footer class="site-footer">
 	<div class="container site-footer__inner">
-		<p class="site-footer__note">{contact.footerNote}</p>
+		{!minimal && <p class="site-footer__note">{contact.footerNote}</p>}
 		<ul class="site-footer__links">
 			{
 				socialLinks.map((link) => (
@@ -20,12 +24,14 @@ import { about, contact, site, socialLinks } from '../data/site';
 			}
 		</ul>
 		<div class="site-footer__signature">
+			{!minimal && (
 			<span class="site-footer__brand">
 				<span class="site-footer__avatar">
 					<img src={about.photo} alt="" width="472" height="1080" loading="lazy" />
 				</span>
 				<span class="site-footer__wordmark">{site.wordmark}</span>
 			</span>
+			)}
 			<p class="site-footer__tagline">{site.tagline}</p>
 		</div>
 	</div>
@@ -62,9 +68,33 @@ import { about, contact, site, socialLinks } from '../data/site';
 		line-height: normal;
 	}
 
-	@media (hover: hover) {
+	.site-footer__links a {
+		position: relative;
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	/* Underline that slides in from the left */
+	.site-footer__links a::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -3px;
+		height: 1px;
+		background: currentColor;
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform var(--duration-standard) var(--ease-out);
+	}
+
+	@media (min-width: 48rem) {
 		.site-footer__links a:hover {
 			color: var(--color-accent);
+		}
+
+		.site-footer__links a:hover::after {
+			transform: scaleX(1);
+			transform-origin: left;
 		}
 	}
 
