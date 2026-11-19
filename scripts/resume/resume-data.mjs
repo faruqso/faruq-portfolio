@@ -37,7 +37,7 @@ export const versions = [
 					{
 						title: '**Independent Product Designer** · Upwork',
 						dates: 'Sept 2023 – Present',
-						text: '42 contracts, 31 client reviews, 100% Job Success Score. Selected clients:',
+						text: '42 contracts, 31 5-star reviews, 100% Job Success Score. Selected clients:',
 					},
 					{
 						title: '**MightyOcto** (AI documentation SaaS, Amsterdam)',
@@ -121,7 +121,7 @@ export const versions = [
 					{
 						title: '**Independent Product Designer and Design Engineer** · Upwork',
 						dates: 'Sept 2023 – Present',
-						text: '42 contracts, 31 client reviews, 100% Job Success Score. Selected work:',
+						text: '42 contracts, 31 5-star reviews, 100% Job Success Score. Selected work:',
 					},
 					{
 						title: '**AI product front end** (startup founder)',

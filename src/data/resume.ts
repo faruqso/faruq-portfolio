@@ -51,7 +51,7 @@ export const resumeStats: ResumeStat[] = [
 	{ display: '$60K+', label: 'earned on Upwork' },
 	{ display: '42', label: 'contracts since Sept 2023', countUp: { target: 42 } },
 	{ display: '100%', label: 'Job Success Score', countUp: { target: 100, suffix: '%' } },
-	{ display: '31', label: 'client reviews', countUp: { target: 31 } },
+	{ display: '31', label: '5-star reviews', countUp: { target: 31 } },
 	{ display: '5+ years', label: '40+ businesses served' },
 ];
 
@@ -171,7 +171,7 @@ export const resumeVersions: Record<ResumeVersion, ResumeVersionContent> = {
 			'Product designer with 5+ years of experience and 40+ businesses served across AI, SaaS, insurance and fintech. I take products from brand and user flows to finished interfaces, and I build the marketing site myself in Framer or Next.js. Clients keep hiring me again.',
 		umbrella: {
 			title: 'Independent Product Designer · Upwork',
-			meta: 'Sept 2023 – Present · 42 contracts · 31 reviews',
+			meta: 'Sept 2023 – Present · 42 contracts · 31 5-star reviews',
 		},
 		roles: designerRoles,
 		spotlight: {
@@ -210,7 +210,7 @@ export const resumeVersions: Record<ResumeVersion, ResumeVersionContent> = {
 			'Design engineer with 5+ years shipping interfaces for startups. I own the path from Figma to production: React and Next.js when you need custom product UI, Framer or Webflow when you need a site live fast. Strong Upwork track record and repeat clients.',
 		umbrella: {
 			title: 'Independent Design Engineer · Upwork',
-			meta: 'Sept 2023 – Present · 42 contracts · 31 reviews',
+			meta: 'Sept 2023 – Present · 42 contracts · 31 5-star reviews',
 		},
 		roles: engineerRoles,
 		spotlight: {

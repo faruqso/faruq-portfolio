@@ -708,22 +708,136 @@
 }
 
 @media (max-width: 47.99rem) {
+	.resume {
+		--resume-name: clamp(2.5rem, 11vw, 3.25rem);
+		--resume-role: clamp(1.375rem, 5.5vw, 1.75rem);
+		--resume-section-title: clamp(1.75rem, 6vw, 2.125rem);
+	}
+
+	.resume-intro {
+		padding-block: var(--space-6) var(--space-7);
+		gap: var(--space-4);
+	}
+
+	.resume-intro__controls {
+		flex-direction: column;
+		align-items: stretch;
+		width: 100%;
+		gap: var(--space-3);
+	}
+
+	.resume-toggle {
+		display: flex;
+		width: 100%;
+	}
+
+	.resume-toggle__option {
+		flex: 1;
+		min-width: 0;
+		padding: 11px 12px;
+		font-size: var(--text-small);
+		text-align: center;
+	}
+
+	.resume-intro__controls .ds-button,
+	.resume-intro__controls .resume-copy {
+		justify-content: center;
+		width: 100%;
+	}
+
+	.resume-contact {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-3);
+	}
+
+	.resume-stats {
+		padding-block: var(--space-6);
+	}
+
 	.resume-stats__grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: var(--space-3);
+	}
+
+	.resume-stat {
+		padding: var(--space-4);
+	}
+
+	.resume-stat__value {
+		font-size: clamp(1.75rem, 7vw, 2.25rem);
+	}
+
+	.resume-stat:last-child:nth-child(odd) {
+		grid-column: 1 / -1;
+	}
+
+	.resume-section {
+		padding-block: var(--space-7);
 	}
 
 	.resume-row {
 		flex-direction: column;
-		gap: var(--space-5);
+		gap: var(--space-4);
 	}
 
 	.resume-row__label {
 		flex: none;
 	}
 
+	.resume-umbrella {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-2);
+	}
+
+	.resume-umbrella__spacer {
+		display: none;
+	}
+
+	.resume-umbrella__title,
+	.resume-umbrella__meta {
+		white-space: normal;
+	}
+
+	.resume-role__header {
+		grid-template-columns: 1fr auto;
+		grid-template-areas:
+			'client toggle'
+			'dates dates';
+		gap: var(--space-3) var(--space-4);
+		align-items: start;
+		padding-block: var(--space-5);
+	}
+
+	.resume-role__dates {
+		grid-area: dates;
+	}
+
+	.resume-role__client-wrap {
+		grid-area: client;
+		min-width: 0;
+	}
+
+	.resume-role__toggle {
+		grid-area: toggle;
+	}
+
+	.resume-role__descriptor {
+		white-space: normal;
+		overflow: visible;
+	}
+
 	.resume-spotlight-card {
 		flex-direction: column;
 		align-items: stretch;
+		padding: var(--space-5);
+		gap: var(--space-5);
+	}
+
+	.resume-spotlight-card__media {
+		flex-basis: auto;
+		width: 100%;
 	}
 
 	.resume-skills,
@@ -733,7 +847,14 @@
 
 	.resume-cta {
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: stretch;
+		gap: var(--space-5);
+		padding-block: var(--space-7) var(--space-6);
+	}
+
+	.resume-cta .ds-button {
+		width: 100%;
+		justify-content: center;
 	}
 }
 
