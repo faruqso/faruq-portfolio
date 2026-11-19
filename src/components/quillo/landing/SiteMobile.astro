@@ -1,0 +1,1798 @@
+---
+/** Quillo landing page — mobile artboard, 1:1 with Figma frame 32:1062 (390 wide). */
+import Device from '../app/Device.astro';
+import Icon from '../app/Icon.astro';
+import Home from '../app/screens/Home.astro';
+import Editor from '../app/screens/Editor.astro';
+import Connect from '../app/screens/Connect.astro';
+import Published from '../app/screens/Published.astro';
+import { cms, statusLabel, cmsDetail, faqs, faqsMobile, plans, compare, uses, steps, clients } from '../../../data/quillo-landing';
+
+const p = '/images/case/quillo/photos';
+const sparkle = '<path d="M12 2.5c.4 3.9 2.6 6.1 6.5 6.5-3.9.4-6.1 2.6-6.5 6.5-.4-3.9-2.6-6.1-6.5-6.5 3.9-.4 6.1-2.6 6.5-6.5Z" fill="currentColor"/><path d="M19 14.5c.2 1.8 1.2 2.8 3 3-1.8.2-2.8 1.2-3 3-.2-1.8-1.2-2.8-3-3 1.8-.2 2.8-1.2 3-3Z" fill="currentColor"/>';
+const feather = '<path d="M20.2 3.8a5.5 5.5 0 0 0-7.8 0L5 11.2V19h7.8l7.4-7.4a5.5 5.5 0 0 0 0-7.8Z"/><path d="M16 8 3 21M17.5 15H9"/>';
+const pro = plans[1];
+---
+
+<div class="qs qsm" data-art="mobile" style="width:390px">
+	<!-- Hero -->
+	<section class="m-hero" data-sec="top">
+		<div class="m-hero__card">
+			<img class="m-bg" src={`${p}/sky.webp`} alt="" width="1152" height="648" />
+			<span class="m-hero__shade" aria-hidden="true"></span>
+			<header class="m-nav">
+				<span class="qs-mark"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={feather} /></i>Quillo</span>
+				<button class="qs-circle m-nav__menu" data-menu aria-expanded="false" aria-label="Menu"><Icon name="menu" size={20} stroke={2.4} /></button>
+			</header>
+			<nav class="m-menu" data-menu-panel>
+				<a data-jump="features">Product</a>
+				<a data-jump="how">How it works</a>
+				<a data-jump="agencies">For agencies</a>
+				<a data-jump="pricing">Pricing</a>
+				<a data-jump="faq">FAQ</a>
+			</nav>
+			<div class="m-hero__copy">
+				<p class="m-badge"><b>New</b>Beta open for Sanity teams</p>
+				<h1 class="m-hero__h">Your website,<br />edited right from<br />your <em>pocket.</em></h1>
+				<p class="m-hero__sub">A beautiful native app for your headless CMS, starting with Sanity. Fix a typo, swap a photo or approve a post in seconds.</p>
+				<a class="qs-btn qs-btn--white m-wide" data-jump="join" data-tour-id="hero-cta">Join the waitlist<i class="qs-btn__arrow"><Icon name="arrow" size={14} stroke={2.4} /></i></a>
+				<a class="qs-btn m-wide m-watch" data-jump="demo">Watch the 60s demo</a>
+			</div>
+			<div class="m-hero__phone"><Device width={230}><Home /></Device></div>
+			<span class="qs-sticker" style="width:66px;height:66px;left:300px;top:528px"><img src={`${p}/icon-quill.webp`} alt="" /></span>
+			<p class="m-chip" style="left:8px;top:636px">
+				<span class="qs-circle is-ok"><Icon name="check" size={14} stroke={3} /></span>
+				<span><strong>Published</strong><em>crumbandco.com · 2.1s</em></span>
+			</p>
+			<p class="m-chip" style="left:200px;top:800px">
+				<span class="qs-circle is-blue"><Icon name="check" size={14} stroke={3} /></span>
+				<span><strong>Priya approved</strong><em>Easter pre-orders</em></span>
+			</p>
+		</div>
+	</section>
+
+	<!-- CMS picker -->
+	<section class="m-sec" data-sec="cms">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />Integrations</span>
+			<h2 class="qs-h">Which CMS runs<br /><em>your website?</em></h2>
+			<p class="qs-lead">Sanity is live in beta. Contentful and Strapi are next.</p>
+		</div>
+		<div class="m-tabs" role="tablist" data-in>
+			<button role="tab" aria-selected="true" data-filter="all">All</button>
+			<button role="tab" aria-selected="false" data-filter="headless">Headless</button>
+			<button role="tab" aria-selected="false" data-filter="builder">Builders</button>
+			<button role="tab" aria-selected="false" data-filter="commerce">Commerce</button>
+		</div>
+		<div class="m-cms" data-in>
+			<ul class="m-cms__list">
+				{
+					cms.map((c, i) => (
+						<li
+							class:list={['m-cmsrow', { 'is-on': i === 0, 'is-extra': i > 3 }]}
+							data-cms={c.id}
+							data-cat={c.cat}
+							data-name={c.name}
+							data-detail={cmsDetail[c.tone]}
+							aria-pressed={i === 0 ? 'true' : 'false'}
+							role="button"
+							tabindex="0"
+						>
+							<span class="qs-logo" style={`background:${c.color};width:40px;height:40px;border-radius:12px;font-size:18px`}>{c.l}</span>
+							<p>
+								<strong>{c.name}</strong>
+								<span>Headless CMS</span>
+							</p>
+							<span class={`qs-pill qs-pill--nodot qs-pill--${c.tone}`}>{statusLabel[c.tone]}</span>
+						</li>
+					))
+				}
+			</ul>
+			<p class="m-cms__empty">No commerce platforms yet. Vote for yours.</p>
+		</div>
+		<button class="m-more" data-more data-in>+ 4 more planned · Vote for yours →</button>
+	</section>
+
+	<!-- Demo -->
+	<section class="m-sec m-demo" data-sec="demo">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />Product demo</span>
+			<h2 class="qs-h">See Quillo in<br /><em>60 seconds.</em></h2>
+		</div>
+		<div class="m-player" data-player data-in>
+			<img class="m-bg" src={`${p}/sky.webp`} alt="" loading="lazy" />
+			<div class="m-player__ph"><Device width={232}><Editor /></Device></div>
+			<span class="m-player__shade" aria-hidden="true"></span>
+			<button class="m-play" data-play aria-label="Play the demo preview">
+				<span class="m-play__ring" aria-hidden="true"></span>
+				<span class="m-play__btn"><Icon name="play" size={26} /></span>
+			</button>
+			<p class="qs-glass m-chap"><b data-chap-label><em>0:00</em>Connect</b><span>4 chapters · 1:00</span></p>
+		</div>
+	</section>
+
+	<!-- Features -->
+	<section class="m-sec" data-sec="features">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />Why Quillo</span>
+			<h2 class="qs-h">The little website jobs,<br />finally <em>phone-sized.</em></h2>
+			<p class="qs-lead">Typos, prices, photos and approvals, handled from your phone.</p>
+		</div>
+		<div class="m-tiles">
+			<article class="m-tile m-snap" data-in>
+				<img class="m-bg" src={`${p}/photographer.webp`} alt="" loading="lazy" />
+				<span class="m-snap__shade" aria-hidden="true"></span>
+				<p class="qs-glass m-snap__pill"><span class="qs-circle"><Icon name="camera" size={13} /></span>westside-shopfront.heic · 1.9 MB</p>
+				<div class="m-tile__copy m-tile__copy--light">
+					<h3>Snap. Upload. Live.</h3>
+					<p>Shoot on your phone. Quillo resizes it, writes alt text and drops it into your post.</p>
+				</div>
+			</article>
+			<article class="m-tile m-tile--grey" data-in>
+				<div class="m-note" data-approve-card>
+					<p class="m-note__top">
+						<img src={`${p}/avatar-priya.webp`} alt="" width="34" height="34" />
+						<span><strong>Priya wants a review</strong><em>Catering for offices · 8m</em></span>
+						<span class="qs-pill qs-pill--live" data-approve-pill>In review</span>
+					</p>
+					<p class="m-note__btns">
+						<button class="m-note__yes" data-approve><Icon name="check" size={13} stroke={3} /><span>Approve</span></button>
+						<button class="m-note__no" data-toast="Priya gets your comment as a push notification.">Changes</button>
+					</p>
+				</div>
+				<div class="m-tile__copy">
+					<h3>Approvals on the go</h3>
+					<p>Review, comment and approve from a push notification. Your CMS roles and permissions still apply.</p>
+				</div>
+			</article>
+			<article class="m-tile m-tile--lime" data-in>
+				<button class="m-polish" data-polish aria-pressed="false" data-tour-id="polish">
+					<s>“our new croisant is realy good”</s>
+					<strong>“Meet our new croissant: flaky, buttery and gone by noon.”</strong>
+					<span class="m-polish__hint"><Icon name="sparkle" size={12} />Tap to polish</span>
+				</button>
+				<span class="qs-sticker" style="width:84px;height:84px;right:20px;top:36px"><img src={`${p}/icon-quill.webp`} alt="" /></span>
+				<div class="m-tile__copy">
+					<h3>AI polish &amp; alt text</h3>
+					<p>Fix typos, tighten copy and write alt text for every image, always with a quick review before it goes live.</p>
+				</div>
+			</article>
+			<article class="m-tile m-tile--sky" data-in>
+				<span class="qs-sticker" style="width:84px;height:84px;left:24px;top:36px"><img src={`${p}/icon-plane.webp`} alt="" /></span>
+				<span class="qs-sticker" style="width:74px;height:74px;left:130px;top:30px;--d:-2s"><img src={`${p}/icon-bell.webp`} alt="" /></span>
+				<p class="m-offline"><Icon name="wifi-off" size={13} stroke={2.4} />Draft saved offline · syncs later</p>
+				<div class="m-tile__copy">
+					<h3>Works offline</h3>
+					<p>Edit on the train or in a dead zone. Quillo queues your changes and syncs them the moment you’re back online.</p>
+				</div>
+			</article>
+			<article class="m-tile m-tile--sun" data-in>
+				<div class="m-sched">
+					<p class="m-sched__t"><span><Icon name="calendar" size={14} /></span>Easter pre-orders</p>
+					<p class="m-sched__chips"><span><Icon name="calendar" size={12} />Fri, Apr 3</span><b>9:00 AM</b></p>
+					<span class="qs-pill qs-pill--next">Scheduled</span>
+				</div>
+				<span class="qs-sticker" style="width:76px;height:76px;right:18px;top:56px"><img src={`${p}/icon-bell.webp`} alt="" /></span>
+				<div class="m-tile__copy">
+					<h3>Schedule it, forget it</h3>
+					<p>Line up posts for launch day and Quillo publishes them on time, even if your phone is off.</p>
+				</div>
+			</article>
+		</div>
+	</section>
+
+	<!-- How it works -->
+	<section class="m-sec" data-sec="how">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />How Quillo works</span>
+			<h2 class="qs-h">Up and running<br />in <em>three steps.</em></h2>
+		</div>
+		<div class="m-how" data-in>
+			<img class="m-bg" src={`${p}/sky.webp`} alt="" loading="lazy" />
+			<div class="m-how__ph m-how__ph--a"><Device width={170}><Connect /></Device></div>
+			<div class="m-how__ph m-how__ph--b"><Device width={170}><Editor /></Device></div>
+			<span class="qs-sticker" style="width:62px;height:62px;right:12px;top:14px"><img src={`${p}/icon-check.webp`} alt="" /></span>
+			<span class="qs-sticker" style="width:64px;height:64px;left:12px;top:238px;--d:-3s"><img src={`${p}/icon-quill.webp`} alt="" /></span>
+		</div>
+		<ol class="m-steps" data-in>
+			{
+				steps.map(([t, , d], i) => (
+					<li class:list={{ 'is-on': i === 0 }} data-step={i} role="button" tabindex="0">
+						<b>{i + 1}</b>
+						<p>
+							<strong>{t}</strong>
+							<span>{d}</span>
+						</p>
+					</li>
+				))
+			}
+		</ol>
+		<div class="m-dev" data-in>
+			<span class="m-dev__chip">For developers</span>
+			<h3>5-minute setup</h3>
+			<pre><span>npm i sanity-plugin-quillo</span>
+<span class="c-lime">npx sanity schema deploy</span></pre>
+		</div>
+	</section>
+
+	<!-- Use cases -->
+	<section class="m-sec" data-sec="uses">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />Who it’s for</span>
+			<h2 class="qs-h">Made for people<br /><em>not at a desk.</em></h2>
+		</div>
+		<ul class="m-uses" data-in data-swipe>
+			{
+				uses.map((u) => (
+					<li class="m-use">
+						<img class="m-bg" src={`${p}/${u.img}`} alt="" loading="lazy" />
+						<span class="m-use__shade" aria-hidden="true" />
+						<p class="qs-glass m-use__pill">
+							<span class:list={['qs-circle', u.tone === 'ok' ? 'is-ok' : 'is-blue']}>
+								<Icon name="check" size={11} stroke={3} />
+							</span>
+							{u.pill}
+						</p>
+						<div class="qs-glass m-use__card">
+							<strong>{u.t}</strong>
+							<span>{u.d}</span>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+		<p class="m-dots" aria-hidden="true" data-swipe-dots><i class="is-on"></i><i></i><i></i></p>
+	</section>
+
+	<!-- Agencies -->
+	<section class="m-agency" data-sec="agencies">
+		<div class="m-agency__card">
+			<span class="m-agency__glow" aria-hidden="true"></span>
+			<div class="m-agency__copy" data-in>
+				<span class="qs-eyebrow m-agency__eb"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />For agencies</span>
+				<h2 class="qs-h">White-label it for<br /><em>every client.</em></h2>
+				<p class="m-agency__lead">Every client site gets its own branded editing app.</p>
+				<ul class="m-agency__list">
+					<li><i><Icon name="palette" size={16} /></i>Your brand, colors and app icon</li>
+					<li><i><Icon name="shield" size={16} /></i>Client-safe roles</li>
+					<li><i><Icon name="grid" size={16} /></i>One dashboard for every site</li>
+				</ul>
+				<a class="qs-btn qs-btn--blue m-wide" data-toast="Agency demos open with the beta. Join the waitlist to book one.">Book an agency demo<i class="qs-btn__arrow"><Icon name="arrow" size={14} stroke={2.4} /></i></a>
+			</div>
+			<div class="m-agency__vis" data-in>
+				<img class="m-bg" src={`${p}/agency.webp`} alt="" loading="lazy" />
+				<div class="qs-glass m-apps">
+					<p><strong>Your client apps</strong><span>12 sites · 38 editors</span></p>
+					<ul>
+						{
+							clients.map((c) => (
+								<li>
+									<b style={`background:${c.c}`}>{c.l}</b>
+									{c.n}
+								</li>
+							))
+						}
+					</ul>
+				</div>
+				<p class="qs-glass m-joined">
+					<img src={`${p}/avatar-amara.webp`} alt="" width="26" height="26" />
+					<span><strong>Amara joined Crumb &amp; Co.</strong><em>Editor · can publish menu items</em></span>
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Comparison -->
+	<section class="m-sec" data-sec="compare">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />Compare</span>
+			<h2 class="qs-h">Laptop, browser,<br /><em>or Quillo?</em></h2>
+		</div>
+		<div class="m-table" data-in>
+			<div class="m-table__row m-table__row--head"><span></span><b>Laptop</b><b>Browser</b><b class="is-q">Quillo</b></div>
+			{
+				compare.map((r) => (
+					<div class="m-table__row">
+						<span>{r.short}</span>
+						{r.v.map((v, j) => (
+							<i class={`m-mark m-mark--${v}${j === 2 && v === 'y' ? 'q' : ''}`}>
+								<Icon name={v === 'y' ? 'check' : v === 'p' ? 'minus' : 'x'} size={12} stroke={3} />
+							</i>
+						))}
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- Pricing -->
+	<section class="m-sec" data-sec="pricing">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />Pricing</span>
+			<h2 class="qs-h">Simple pricing.<br /><em>Free while you’re small.</em></h2>
+		</div>
+		<div class="m-ptabs" role="tablist" data-in>
+			{plans.map((pl) => <button role="tab" aria-selected={pl.id === 'pro' ? 'true' : 'false'} data-plan-tab={pl.id}>{pl.name}</button>)}
+		</div>
+		<div class="m-plan" data-plan="pro" data-in data-tour-id="pro">
+			<p class="m-plan__name"><span data-p="name">{pro.name}</span><em>Most popular</em></p>
+			<p class="m-plan__price"><strong data-p="price">{pro.price}</strong><span data-p="unit">{pro.unit}</span></p>
+			<p class="m-plan__desc" data-p="desc">{pro.desc}</p>
+			<a class="qs-btn qs-btn--white m-wide" data-p-cta data-jump="join"><span data-p="cta">{pro.cta}</span><i class="qs-btn__arrow"><Icon name="arrow" size={14} stroke={2.4} /></i></a>
+			<hr />
+			<ul data-p="items">
+				{
+					pro.items.map((it) => (
+						<li>
+							<i class="qs-circle">
+								<Icon name="check" size={11} stroke={3} />
+							</i>
+							{it}
+						</li>
+					))
+				}
+			</ul>
+		</div>
+		<script type="application/json" data-plans set:html={JSON.stringify(plans)} />
+	</section>
+
+	<!-- FAQ -->
+	<section class="m-sec qs-faq" data-sec="faq">
+		<div class="qs-head m-head" data-in>
+			<span class="qs-eyebrow"><svg width="14" height="14" viewBox="0 0 24 24" set:html={sparkle} />FAQ</span>
+			<h2 class="qs-h">Questions,<br /><em>answered.</em></h2>
+		</div>
+		<div class="m-faq" data-in>
+			{
+				faqsMobile.map((q, i) => (
+					<details open={i === 0} data-faq data-tour-id={i === 1 ? 'faq' : undefined}>
+						<summary>
+							{q}
+							<i class="qs-circle">
+								<Icon name="plus" size={14} stroke={2.4} />
+							</i>
+						</summary>
+						<p>{faqs[i][1]}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<!-- Final CTA -->
+	<section class="m-cta" data-sec="join">
+		<div class="m-cta__card">
+			<img class="m-bg" src={`${p}/sky.webp`} alt="" loading="lazy" />
+			<span class="m-cta__shade" aria-hidden="true"></span>
+			<h2 class="m-cta__h" data-in>Your website is<br /><em>one tap away.</em></h2>
+			<form class="m-join" data-join novalidate data-in>
+				<label class="m-join__field">
+					<Icon name="mail" size={18} />
+					<span class="sr-only">Email</span>
+					<input type="email" placeholder="you@yourwebsite.com" data-email autocomplete="off" />
+				</label>
+				<button class="qs-btn qs-btn--dark m-wide" data-tour-id="join">Join the waitlist<i class="qs-btn__arrow"><Icon name="arrow" size={14} stroke={2.4} /></i></button>
+				<p class="m-join__msg" data-join-msg>iOS &amp; Android · Free for 1 site · No credit card</p>
+			</form>
+			<div class="m-cta__phone"><Device width={232}><Published /></Device></div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="m-foot">
+		<span class="qs-mark"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={feather} /></i>Quillo</span>
+		<p class="m-foot__tag">The mobile app for every headless CMS.</p>
+		<div class="m-foot__cols">
+			<p><strong>Product</strong><a data-jump="features">Features</a><a data-jump="pricing">Pricing</a><a>Roadmap</a></p>
+			<p><strong>Company</strong><a>About</a><a data-jump="agencies">Agencies</a><a>Privacy</a></p>
+		</div>
+		<p class="m-foot__copy">© 2026 Quillo. A product concept by Faruq So.</p>
+	</footer>
+</div>
+
+<style>
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+	}
+	.m-bg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: -2;
+	}
+	.is-ok {
+		background: var(--ok);
+		color: #fff;
+	}
+	.is-blue {
+		background: var(--b);
+		color: #fff;
+	}
+	.m-wide {
+		justify-content: space-between;
+		width: 100%;
+		height: 54px;
+		padding: 0 12px 0 22px;
+		font-size: 15px;
+	}
+
+	/* Section frame */
+	.m-sec {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 32px;
+		padding: 72px 16px 0;
+	}
+	.m-head {
+		gap: 16px;
+	}
+	.m-head :global(.qs-h) {
+		font-size: 36px;
+		letter-spacing: -1.4px;
+	}
+	.m-head :global(.qs-lead) {
+		font-size: 16px;
+	}
+
+	/* Hero */
+	.m-hero {
+		height: 868px;
+		padding: 8px;
+	}
+	.m-hero__card {
+		position: relative;
+		height: 852px;
+		border-radius: 28px;
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.m-hero__shade {
+		position: absolute;
+		inset: 0 0 auto;
+		height: 520px;
+		background: linear-gradient(180deg, rgba(11, 16, 32, 0.3), rgba(11, 16, 32, 0));
+		z-index: -1;
+	}
+	.m-nav {
+		position: absolute;
+		top: 16px;
+		left: 16px;
+		right: 16px;
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 8px 8px 14px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.78);
+		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(12px);
+		border: 1px solid #fff;
+		z-index: 6;
+	}
+	.m-nav__menu {
+		width: 44px;
+		height: 44px;
+		background: var(--ink) !important;
+		color: #fff !important;
+	}
+	.m-menu {
+		position: absolute;
+		top: 84px;
+		left: 16px;
+		right: 16px;
+		display: flex;
+		flex-direction: column;
+		padding: 8px;
+		border-radius: 24px;
+		background: rgba(255, 255, 255, 0.95);
+		box-shadow: 0 24px 48px -16px rgba(11, 16, 32, 0.3);
+		z-index: 6;
+		opacity: 0;
+		transform: translateY(-8px) scale(0.98);
+		transform-origin: top right;
+		pointer-events: none;
+		transition:
+			opacity 220ms var(--ease),
+			transform 220ms var(--ease);
+	}
+	.m-menu a {
+		padding: 14px 16px;
+		border-radius: 16px;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	.m-menu a:hover {
+		background: var(--s100);
+	}
+	.m-hero.is-menu .m-menu {
+		opacity: 1;
+		transform: none;
+		pointer-events: auto;
+	}
+	.m-hero__copy {
+		position: absolute;
+		top: 110px;
+		left: 16px;
+		right: 16px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 18px;
+		text-align: center;
+		color: #fff;
+	}
+	.m-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 5px 12px 5px 5px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.22);
+		border: 1px solid rgba(255, 255, 255, 0.5);
+		font-size: 13px;
+		font-weight: 600;
+	}
+	.m-badge b {
+		padding: 3px 9px;
+		border-radius: 999px;
+		background: var(--lime);
+		font-size: 12px;
+		color: var(--ink);
+	}
+	.m-hero__h {
+		font-size: 44px;
+		font-weight: 700;
+		letter-spacing: -1.8px;
+		line-height: 1.06;
+		text-shadow: 0 6px 30px rgba(13, 51, 140, 0.25);
+	}
+	.m-hero__h em {
+		font-family: 'Instrument Serif', Georgia, serif;
+		font-style: italic;
+		font-weight: 400;
+		font-size: 52px;
+		letter-spacing: -0.5px;
+	}
+	.m-hero__sub {
+		font-size: 16px;
+		line-height: 1.5;
+		color: rgba(255, 255, 255, 0.92);
+	}
+	.m-hero__copy .m-wide:first-of-type {
+		margin-top: 6px;
+	}
+	.m-watch {
+		justify-content: center;
+		margin-top: -6px;
+		background: rgba(255, 255, 255, 0.4);
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
+		color: var(--ink);
+	}
+	.m-hero__phone {
+		position: absolute;
+		left: 71px;
+		top: 560px;
+		animation: m-rise 1000ms var(--ease) both 200ms;
+	}
+	@keyframes m-rise {
+		from {
+			transform: translateY(60px);
+			opacity: 0;
+		}
+	}
+	.m-chip {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 7px 14px 7px 7px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.92);
+		box-shadow: 0 12px 28px -10px rgba(31, 51, 115, 0.35);
+		z-index: 3;
+		animation: m-rise 1000ms var(--ease) both 500ms;
+	}
+	.m-chip .qs-circle {
+		width: 28px;
+		height: 28px;
+	}
+	.m-chip > span:last-child {
+		display: flex;
+		flex-direction: column;
+	}
+	.m-chip strong {
+		font-size: 13px;
+		font-weight: 600;
+	}
+	.m-chip em {
+		font-style: normal;
+		font-size: 11px;
+		color: var(--ink5);
+	}
+
+	/* CMS */
+	.m-tabs {
+		display: flex;
+		gap: 8px;
+		margin-top: -2px;
+	}
+	.m-tabs button {
+		padding: 9px 16px;
+		border-radius: 999px;
+		box-shadow: inset 0 0 0 1px var(--line);
+		font-size: 14px;
+		font-weight: 600;
+		transition:
+			background-color 220ms var(--ease),
+			color 220ms var(--ease);
+	}
+	.m-tabs button[aria-selected='true'] {
+		background: var(--ink);
+		color: #fff;
+		box-shadow: none;
+	}
+	.m-cms {
+		width: 100%;
+		margin-top: -12px;
+	}
+	.m-cms__list {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.m-cmsrow {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		height: 66px;
+		padding: 0 14px;
+		border-radius: 20px;
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--line);
+		transition: box-shadow 240ms var(--ease);
+	}
+	.m-cmsrow.is-on {
+		box-shadow:
+			inset 0 0 0 2px var(--b),
+			0 14px 28px -14px rgba(46, 92, 255, 0.3);
+	}
+	.m-cmsrow p {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.m-cmsrow strong {
+		font-size: 16px;
+		font-weight: 600;
+		letter-spacing: -0.3px;
+	}
+	.m-cmsrow p span {
+		font-size: 13px;
+		color: var(--ink5);
+	}
+	.m-cmsrow[hidden],
+	.m-cms:not(.is-all) .m-cmsrow.is-extra:not(.is-shown) {
+		display: none;
+	}
+	.m-cms__empty {
+		display: none;
+		padding: 40px 0;
+		border-radius: 20px;
+		background: var(--s50);
+		text-align: center;
+		font-size: 14px;
+		color: var(--ink5);
+	}
+	.m-cms.is-empty .m-cms__empty {
+		display: block;
+	}
+	.m-more {
+		margin-top: -10px;
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--b);
+	}
+
+	/* Demo */
+	.m-demo {
+		gap: 36px;
+	}
+	.m-player {
+		position: relative;
+		width: 358px;
+		height: 461px;
+		border-radius: 28px 28px 0 0;
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.m-player__ph {
+		position: absolute;
+		left: 57px;
+		top: 32px;
+		transition: transform 700ms var(--ease);
+	}
+	.m-player.is-playing .m-player__ph {
+		transform: translateY(-40px);
+	}
+	.m-player__shade {
+		position: absolute;
+		inset: 0;
+		background: rgba(10, 20, 51, 0.14);
+		transition: opacity 400ms;
+	}
+	.m-player.is-playing .m-player__shade {
+		opacity: 0;
+	}
+	.m-play {
+		position: absolute;
+		left: 50%;
+		top: 166px;
+		width: 108px;
+		height: 108px;
+		margin-left: -54px;
+		display: grid;
+		place-items: center;
+		transition:
+			opacity 300ms,
+			transform 300ms var(--ease);
+	}
+	.m-play__ring {
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.3);
+		animation: m-pulse 2.4s ease-out infinite;
+	}
+	@keyframes m-pulse {
+		from {
+			transform: scale(0.74);
+			opacity: 1;
+		}
+		to {
+			transform: scale(1.1);
+			opacity: 0;
+		}
+	}
+	.m-play__btn {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 80px;
+		height: 80px;
+		padding-left: 4px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.88);
+		border: 1.5px solid #fff;
+		color: var(--b);
+	}
+	.m-player.is-playing .m-play {
+		opacity: 0;
+		transform: scale(0.8);
+		pointer-events: none;
+	}
+	.m-chap {
+		position: absolute;
+		left: 50%;
+		bottom: 20px;
+		transform: translateX(-50%);
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 5px 14px 5px 5px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.85);
+		font-size: 14px;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+	.m-chap b {
+		display: inline-flex;
+		gap: 8px;
+		padding: 8px 14px;
+		border-radius: 999px;
+		background: var(--ink);
+		color: #fff;
+		font-weight: 600;
+	}
+	.m-chap b em {
+		font-style: normal;
+		color: var(--lime);
+	}
+	.m-chap > span {
+		color: var(--ink5);
+	}
+
+	/* Feature tiles */
+	.m-tiles {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		width: 100%;
+	}
+	.m-tile {
+		position: relative;
+		height: 330px;
+		border-radius: 28px;
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.m-tile__copy {
+		position: absolute;
+		left: 24px;
+		right: 24px;
+		bottom: 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.m-tile__copy h3 {
+		font-size: 20px;
+		font-weight: 600;
+		letter-spacing: -0.5px;
+	}
+	.m-tile__copy p {
+		font-size: 14px;
+		line-height: 1.5;
+		color: var(--ink5);
+	}
+	.m-tile__copy--light {
+		color: #fff;
+	}
+	.m-tile__copy--light p {
+		color: rgba(255, 255, 255, 0.78);
+	}
+	.m-snap {
+		height: 400px;
+	}
+	.m-snap__shade {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(10, 15, 33, 0) 40%, rgba(10, 15, 33, 0.72));
+		z-index: -1;
+	}
+	.m-snap__pill {
+		position: absolute;
+		left: 16px;
+		top: 16px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 4px 12px 4px 4px;
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.m-snap__pill .qs-circle {
+		width: 26px;
+		height: 26px;
+		background: #ff7a59;
+		color: #fff;
+	}
+	.m-tile--grey {
+		background: var(--s50);
+		box-shadow: inset 0 0 0 1px var(--line);
+	}
+	.m-tile--lime {
+		background: linear-gradient(180deg, #edfacc, #f7fced);
+	}
+	.m-tile--sky {
+		background: linear-gradient(180deg, #d1e8ff, #f2f7ff);
+	}
+	.m-tile--sun {
+		background: linear-gradient(180deg, #fff5db, #fffcf5);
+	}
+	.m-note {
+		position: absolute;
+		left: 16px;
+		right: 16px;
+		top: 24px;
+		padding: 14px;
+		border-radius: 20px;
+		background: #fff;
+		box-shadow: 0 16px 32px -12px rgba(31, 51, 115, 0.18);
+	}
+	.m-note__top {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.m-note__top img {
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+	}
+	.m-note__top > span:nth-child(2) {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.m-note__top strong {
+		font-size: 13px;
+		font-weight: 600;
+	}
+	.m-note__top em {
+		font-style: normal;
+		font-size: 11px;
+		color: var(--ink5);
+	}
+	.m-note__btns {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+		margin-top: 12px !important;
+	}
+	.m-note__btns button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		height: 36px;
+		border-radius: 999px;
+		font-size: 13px;
+		font-weight: 600;
+		transition: background-color 240ms var(--ease);
+	}
+	.m-note__yes {
+		background: var(--ink) !important;
+		color: #fff !important;
+	}
+	.m-note.is-done .m-note__yes {
+		background: var(--ok) !important;
+	}
+	.m-note__no {
+		background: var(--s100) !important;
+	}
+	.m-polish {
+		position: absolute;
+		left: 16px;
+		top: 40px;
+		width: 220px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 14px;
+		border-radius: 18px;
+		background: #fff;
+		box-shadow: 0 16px 32px -12px rgba(60, 90, 20, 0.2);
+		text-align: left;
+		z-index: 2;
+	}
+	.m-polish s {
+		font-size: 11.5px;
+		color: var(--ink3);
+	}
+	.m-polish strong {
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.45;
+		clip-path: inset(0 100% 0 0);
+		transition: clip-path 900ms var(--ease);
+	}
+	.m-polish[aria-pressed='true'] strong {
+		clip-path: inset(0 0 0 0);
+	}
+	.m-polish__hint {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		margin-top: -40px;
+		font-size: 11.5px;
+		font-weight: 600;
+		color: #4b7a12;
+		transition: opacity 200ms;
+	}
+	.m-polish[aria-pressed='true'] .m-polish__hint {
+		opacity: 0;
+	}
+	.m-offline {
+		position: absolute;
+		left: 24px;
+		top: 140px;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 12px;
+		border-radius: 999px;
+		background: #fff;
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--ink7);
+	}
+	.m-sched {
+		position: absolute;
+		left: 16px;
+		top: 32px;
+		width: 230px;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 10px;
+		padding: 14px;
+		border-radius: 18px;
+		background: #fff;
+		box-shadow: 0 16px 32px -12px rgba(120, 80, 0, 0.18);
+	}
+	.m-sched__t {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13.5px;
+		font-weight: 600;
+	}
+	.m-sched__t span {
+		display: grid;
+		place-items: center;
+		width: 28px;
+		height: 28px;
+		border-radius: 8px;
+		background: #fff1cc;
+		color: #b37400;
+	}
+	.m-sched__chips {
+		display: flex;
+		gap: 6px;
+	}
+	.m-sched__chips span,
+	.m-sched__chips b {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: var(--s100);
+		font-size: 11.5px;
+		font-weight: 600;
+	}
+	.m-sched__chips b {
+		background: var(--ink);
+		color: #fff;
+	}
+
+	/* How */
+	.m-how {
+		position: relative;
+		width: 358px;
+		height: 356px;
+		margin-top: -8px;
+		border-radius: 28px;
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.m-how__ph {
+		position: absolute;
+		transition: transform 600ms var(--ease);
+	}
+	.m-how__ph--a {
+		left: 24px;
+		top: 52px;
+	}
+	.m-how__ph--b {
+		left: 166px;
+		top: 24px;
+	}
+	.m-how[data-active='0'] .m-how__ph--a,
+	.m-how[data-active='1'] .m-how__ph--b,
+	.m-how[data-active='2'] .m-how__ph--b {
+		transform: translateY(-10px);
+	}
+	.m-how[data-active='0'] .m-how__ph--a {
+		z-index: 2;
+	}
+	.m-steps {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		width: 100%;
+		margin-top: -8px;
+	}
+	.m-steps li {
+		display: flex;
+		gap: 14px;
+		padding: 16px;
+		border-radius: 20px;
+		background: var(--s50);
+		transition:
+			background-color 300ms,
+			box-shadow 300ms;
+	}
+	.m-steps li b {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		width: 34px;
+		height: 34px;
+		border-radius: 11px;
+		background: #fff;
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--ink5);
+		transition:
+			background-color 300ms,
+			color 300ms;
+	}
+	.m-steps li p {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+	.m-steps li strong {
+		font-size: 17px;
+		font-weight: 600;
+		letter-spacing: -0.3px;
+	}
+	.m-steps li span {
+		font-size: 14px;
+		line-height: 1.45;
+		color: var(--ink5);
+	}
+	.m-steps li.is-on {
+		background: #fff;
+		box-shadow:
+			inset 0 0 0 1px var(--line),
+			0 16px 32px -16px rgba(31, 51, 115, 0.2);
+	}
+	.m-steps li.is-on b {
+		background: var(--b);
+		color: #fff;
+	}
+	.m-dev {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+		padding: 24px;
+		border-radius: 28px;
+		background: var(--ink);
+		color: #fff;
+	}
+	.m-dev__chip {
+		padding: 5px 12px;
+		border-radius: 999px;
+		background: var(--lime);
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--ink);
+	}
+	.m-dev h3 {
+		font-size: 22px;
+		font-weight: 600;
+		letter-spacing: -0.5px;
+	}
+	.m-dev pre {
+		align-self: stretch;
+		margin: 0;
+		padding: 16px;
+		border-radius: 14px;
+		background: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+		font-size: 13px;
+		line-height: 1.7;
+	}
+	.c-lime {
+		color: var(--lime);
+	}
+
+	/* Use cases */
+	.m-uses {
+		display: flex;
+		gap: 12px;
+		width: calc(100% + 32px);
+		padding: 0 16px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+		overscroll-behavior-x: contain;
+	}
+	.m-uses::-webkit-scrollbar {
+		display: none;
+	}
+	.m-use {
+		position: relative;
+		flex: 0 0 300px;
+		height: 420px;
+		border-radius: 28px;
+		overflow: hidden;
+		isolation: isolate;
+		scroll-snap-align: center;
+	}
+	.m-use__shade {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(10, 15, 33, 0) 45%, rgba(10, 15, 33, 0.55));
+		z-index: -1;
+	}
+	.m-use__pill {
+		position: absolute;
+		left: 14px;
+		top: 14px;
+		display: flex;
+		align-items: center;
+		gap: 7px;
+		padding: 5px 12px 5px 5px;
+		border-radius: 999px;
+		font-size: 12.5px;
+		font-weight: 600;
+	}
+	.m-use__pill .qs-circle {
+		width: 22px;
+		height: 22px;
+	}
+	.m-use__card {
+		position: absolute;
+		left: 12px;
+		right: 12px;
+		bottom: 12px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 16px;
+		border-radius: 20px;
+	}
+	.m-use__card strong {
+		font-size: 17px;
+		font-weight: 600;
+	}
+	.m-use__card span {
+		font-size: 13.5px;
+		line-height: 1.45;
+		color: var(--ink5);
+	}
+	.m-dots {
+		display: flex;
+		gap: 6px;
+		margin-top: -16px;
+	}
+	.m-dots i {
+		width: 6px;
+		height: 6px;
+		border-radius: 3px;
+		background: var(--line);
+		transition:
+			width 300ms var(--ease),
+			background-color 300ms;
+	}
+	.m-dots i.is-on {
+		width: 20px;
+		background: var(--b);
+	}
+
+	/* Agencies */
+	.m-agency {
+		padding: 72px 8px 0;
+	}
+	.m-agency__card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+		padding: 32px 16px 16px;
+		border-radius: 28px;
+		background: var(--ink);
+		color: #fff;
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.m-agency__glow {
+		position: absolute;
+		left: -160px;
+		top: -180px;
+		width: 420px;
+		height: 420px;
+		border-radius: 50%;
+		background: rgba(46, 92, 255, 0.45);
+		filter: blur(90px);
+		z-index: -1;
+	}
+	.m-agency__copy {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 18px;
+		padding: 0 4px;
+	}
+	.m-agency__copy :global(.qs-h) {
+		font-size: 34px;
+		letter-spacing: -1.3px;
+	}
+	.m-agency__copy :global(.qs-h em) {
+		color: var(--lime);
+	}
+	.m-agency__eb {
+		background: rgba(255, 255, 255, 0.1);
+		color: var(--lime);
+	}
+	.m-agency__lead {
+		font-size: 16px;
+		line-height: 1.5;
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.m-agency__list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.m-agency__list li {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		font-size: 15px;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.9);
+	}
+	.m-agency__list i {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 10px;
+		background: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		color: var(--lime);
+	}
+	.m-agency__copy .m-wide {
+		margin-top: 8px;
+	}
+	.m-agency__vis {
+		position: relative;
+		height: 360px;
+		border-radius: 24px;
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.m-apps {
+		position: absolute;
+		left: 12px;
+		top: 12px;
+		padding: 10px;
+		border-radius: 18px;
+		color: var(--ink);
+	}
+	.m-apps > p {
+		display: flex;
+		gap: 12px;
+		align-items: baseline;
+		margin-bottom: 8px !important;
+	}
+	.m-apps strong {
+		font-size: 12px;
+		font-weight: 600;
+	}
+	.m-apps > p span {
+		font-size: 9.5px;
+		color: var(--ink5);
+	}
+	.m-apps ul {
+		display: flex;
+		gap: 8px;
+	}
+	.m-apps li {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+		font-size: 8.5px;
+		color: var(--ink7);
+	}
+	.m-apps b {
+		display: grid;
+		place-items: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 12px;
+		color: #fff;
+		font-size: 17px;
+		font-weight: 800;
+	}
+	.m-joined {
+		position: absolute;
+		right: 12px;
+		bottom: 12px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 5px 12px 5px 5px;
+		border-radius: 999px;
+		color: var(--ink);
+	}
+	.m-joined img {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+	}
+	.m-joined span {
+		display: flex;
+		flex-direction: column;
+	}
+	.m-joined strong {
+		font-size: 11px;
+		font-weight: 600;
+	}
+	.m-joined em {
+		font-style: normal;
+		font-size: 9.5px;
+		color: var(--ink5);
+	}
+
+	/* Comparison */
+	.m-table {
+		width: 100%;
+		padding: 8px 12px;
+		border-radius: 24px;
+		background: var(--s50);
+	}
+	.m-table__row {
+		display: grid;
+		grid-template-columns: 1fr 60px 60px 66px;
+		align-items: center;
+		justify-items: center;
+		height: 48px;
+		border-bottom: 1px solid var(--line);
+	}
+	.m-table__row:last-child {
+		border-bottom: 0;
+	}
+	.m-table__row > span {
+		justify-self: start;
+		padding-left: 4px;
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--ink7);
+	}
+	.m-table__row--head b {
+		font-size: 12px;
+		font-weight: 500;
+		color: var(--ink5);
+	}
+	.m-table__row--head b.is-q {
+		padding: 7px 14px;
+		border-radius: 999px;
+		background: var(--b);
+		font-size: 13px;
+		font-weight: 600;
+		color: #fff;
+	}
+	.m-mark {
+		display: grid;
+		place-items: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+	}
+	.m-mark--x {
+		background: rgba(163, 170, 189, 0.22);
+		color: var(--ink3);
+	}
+	.m-mark--p {
+		background: rgba(245, 165, 36, 0.18);
+		color: var(--warn);
+	}
+	.m-mark--y {
+		background: rgba(31, 184, 106, 0.16);
+		color: var(--ok);
+	}
+	.m-mark--yq {
+		background: var(--b);
+		color: #fff;
+	}
+
+	/* Pricing */
+	.m-ptabs {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		width: 250px;
+		padding: 4px;
+		margin-top: -4px;
+		border-radius: 999px;
+		background: var(--s100);
+	}
+	.m-ptabs button {
+		padding: 8px 0;
+		border-radius: 999px;
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--ink5);
+		transition:
+			background-color 220ms,
+			color 220ms;
+	}
+	.m-ptabs button[aria-selected='true'] {
+		background: #fff;
+		color: var(--ink);
+		font-weight: 600;
+		box-shadow: 0 4px 10px -6px rgba(11, 16, 32, 0.25);
+	}
+	.m-plan {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		margin-top: -8px;
+		padding: 24px;
+		border-radius: 28px;
+		background: linear-gradient(180deg, #61a8ff, #294df2);
+		color: #fff;
+		box-shadow: 0 30px 60px -24px rgba(41, 77, 242, 0.55);
+		transition:
+			background 400ms,
+			color 400ms;
+	}
+	.m-plan.is-swap {
+		animation: m-swap 420ms var(--ease);
+	}
+	@keyframes m-swap {
+		from {
+			opacity: 0.4;
+			transform: translateY(8px) scale(0.98);
+		}
+	}
+	.m-plan:not([data-plan='pro']) {
+		background: var(--s50);
+		color: var(--ink);
+		box-shadow: inset 0 0 0 1px var(--line);
+	}
+	.m-plan__name {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 19px;
+		font-weight: 600;
+	}
+	.m-plan__name em {
+		padding: 4px 10px;
+		border-radius: 999px;
+		background: var(--lime);
+		font-style: normal;
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--ink);
+	}
+	.m-plan:not([data-plan='pro']) .m-plan__name em {
+		display: none;
+	}
+	.m-plan__price {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+	}
+	.m-plan__price strong {
+		font-size: 52px;
+		font-weight: 700;
+		letter-spacing: -2px;
+		line-height: 1;
+	}
+	.m-plan__price span,
+	.m-plan__desc {
+		font-size: 14px;
+		color: rgba(255, 255, 255, 0.8);
+	}
+	.m-plan:not([data-plan='pro']) .m-plan__price span,
+	.m-plan:not([data-plan='pro']) .m-plan__desc {
+		color: var(--ink5);
+	}
+	.m-plan[data-plan='agency'] .m-wide {
+		background: var(--ink);
+		color: #fff;
+	}
+	.m-plan[data-plan='agency'] .m-wide :global(.qs-btn__arrow) {
+		background: rgba(255, 255, 255, 0.18);
+	}
+	.m-plan hr {
+		height: 1px;
+		margin: 0;
+		border: 0;
+		background: rgba(255, 255, 255, 0.24);
+	}
+	.m-plan:not([data-plan='pro']) hr {
+		background: var(--line);
+	}
+	.m-plan ul {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.m-plan ul :global(li) {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 15px;
+		font-weight: 500;
+	}
+	.m-plan ul :global(i) {
+		width: 20px;
+		height: 20px;
+		background: rgba(255, 255, 255, 0.22);
+		color: #fff;
+	}
+	.m-plan:not([data-plan='pro']) ul :global(i) {
+		background: rgba(47, 91, 255, 0.1);
+		color: var(--b);
+	}
+
+	/* FAQ */
+	.m-faq {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		width: 100%;
+	}
+	.m-faq details {
+		border-radius: 20px;
+		background: var(--s50);
+		transition:
+			background-color 300ms,
+			box-shadow 300ms;
+	}
+	.m-faq details[open] {
+		background: #fff;
+		box-shadow:
+			inset 0 0 0 1px var(--line),
+			0 16px 32px -16px rgba(31, 51, 115, 0.18);
+	}
+	.m-faq summary {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 12px;
+		min-height: 64px;
+		padding: 0 16px 0 20px;
+		font-size: 16px;
+		font-weight: 600;
+		letter-spacing: -0.2px;
+	}
+	.m-faq summary i {
+		width: 28px;
+		height: 28px;
+		background: #fff;
+		transition:
+			transform 300ms var(--ease),
+			background-color 300ms;
+	}
+	.m-faq details[open] summary i {
+		background: var(--ink);
+		color: #fff;
+		transform: rotate(45deg);
+	}
+	.m-faq details p {
+		padding: 0 20px 20px;
+		font-size: 14.5px;
+		line-height: 1.5;
+		color: var(--ink5);
+	}
+
+	/* CTA */
+	.m-cta {
+		padding: 72px 8px 0;
+	}
+	.m-cta__card {
+		position: relative;
+		height: 628px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+		padding: 48px 16px 0;
+		border-radius: 28px;
+		overflow: hidden;
+		isolation: isolate;
+		color: #fff;
+	}
+	.m-cta__shade {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(26, 92, 229, 0.72), rgba(38, 115, 242, 0.25) 55%, transparent);
+		z-index: -1;
+	}
+	.m-cta__h {
+		font-size: 40px;
+		font-weight: 700;
+		letter-spacing: -1.6px;
+		line-height: 1.06;
+		text-align: center;
+	}
+	.m-cta__h em {
+		font-family: 'Instrument Serif', Georgia, serif;
+		font-style: italic;
+		font-weight: 400;
+		font-size: 48px;
+		letter-spacing: -0.5px;
+	}
+	.m-join {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		width: 100%;
+	}
+	.m-join__field {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		height: 54px;
+		padding: 0 18px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.9);
+		color: var(--ink3);
+	}
+	.m-join input {
+		flex: 1;
+		min-width: 0;
+		font-size: 16px;
+		color: var(--ink);
+		outline: 0 !important;
+	}
+	.m-join input::placeholder {
+		color: var(--ink3);
+	}
+	.m-join.is-error {
+		animation: m-shake 400ms;
+	}
+	@keyframes m-shake {
+		25% {
+			transform: translateX(-6px);
+		}
+		75% {
+			transform: translateX(6px);
+		}
+	}
+	.m-join.is-done .qs-btn {
+		background: var(--ok);
+	}
+	.m-join__msg {
+		font-size: 12.5px;
+		text-align: center;
+		color: rgba(255, 255, 255, 0.92);
+	}
+	.m-cta__phone {
+		position: absolute;
+		left: 71px;
+		top: 340px;
+	}
+
+	/* Footer */
+	.m-foot {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 56px 24px 40px;
+	}
+	.m-foot__tag {
+		font-size: 15px;
+		color: var(--ink5);
+	}
+	.m-foot__cols {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 24px;
+		margin-top: 12px;
+	}
+	.m-foot__cols p {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		font-size: 15px;
+		color: var(--ink5);
+	}
+	.m-foot__cols strong {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--ink);
+	}
+	.m-foot__copy {
+		margin-top: 16px;
+		padding-top: 20px;
+		border-top: 1px solid var(--line);
+		font-size: 13px;
+		color: var(--ink5);
+	}
+</style>

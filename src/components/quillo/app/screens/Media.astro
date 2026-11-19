@@ -1,0 +1,280 @@
+---
+/** 06 Media upload — library behind an "Uploading to Sanity" sheet. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+const p = '/images/case/quillo/photos';
+const lib = ['pastries.webp', 'baker-full.webp', 'sky.webp', 'photographer.webp', 'new-shot.webp', 'agency.webp'];
+const files = [
+	{ img: 'pastries.webp', n: 'croissant-window.heic', v: 100 },
+	{ img: 'baker-full.webp', n: 'amara-counter.heic', v: 72 },
+	{ img: 'photographer.webp', n: 'westside-shopfront.heic', v: 30 },
+];
+---
+
+<div class="qa-screen qa-media">
+	<StatusBar />
+	<h3 class="qa-media__title">Media</h3>
+	<p class="qa-media__sub">Sanity assets · 312 files</p>
+	<span class="qa-media__cam"><Icon name="camera" size={22} /></span>
+	<p class="qa-media__tabs"><span class="is-on">Library</span><span>Uploads</span><span>Unused</span></p>
+	<ul class="qa-media__grid">{lib.map((f) => <li><img src={`${p}/${f}`} alt="" loading="lazy" /></li>)}</ul>
+	<span class="qa-media__scrim" aria-hidden="true"></span>
+	<div class="qa-media__sheet">
+		<span class="qa-grabber"></span>
+		<div class="qa-media__head">
+			<span class="qa-media__up"><Icon name="upload" size={22} /></span>
+			<p><strong>Uploading to Sanity</strong><span>3 photos · auto-resized &amp; tagged</span></p>
+			<span class="qa-media__x"><Icon name="x" size={16} stroke={2.6} /></span>
+		</div>
+		<ul class="qa-media__files">
+			{
+				files.map((f) => (
+					<li>
+						<img src={`${p}/${f.img}`} alt="" loading="lazy" />
+						<p>
+							<strong>{f.n}</strong>
+							<i style={`--v:${f.v}%`} class:list={{ 'is-done': f.v === 100 }} />
+						</p>
+						{f.v === 100 ? (
+							<span class="qa-media__done">
+								Done<b><Icon name="check" size={14} stroke={3} /></b>
+							</span>
+						) : (
+							<span class="qa-media__pct">{f.v}%</span>
+						)}
+					</li>
+				))
+			}
+		</ul>
+		<p class="qa-media__saved"><Icon name="bolt" size={16} />12.4 MB → 1.9 MB · alt text written for you</p>
+		<div class="qa-media__actions">
+			<span class="qa-btn qa-btn--outline qa-btn--lg">Add more</span>
+			<span class="qa-btn qa-btn--dark qa-btn--lg qa-btn--grow">Insert into post<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i></span>
+		</div>
+	</div>
+	<span class="qa-homebar" aria-hidden="true"></span>
+</div>
+
+<style>
+	.qa-media__title {
+		position: absolute;
+		top: 68px;
+		left: 20px;
+		font-size: 30px;
+		font-weight: 700;
+		letter-spacing: -0.04em;
+	}
+	.qa-media__sub {
+		position: absolute;
+		top: 106px;
+		left: 20px;
+		font-size: 14px;
+		color: var(--q-ink-500);
+	}
+	.qa-media__cam {
+		position: absolute;
+		top: 74px;
+		right: 20px;
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: var(--q-coral);
+		color: #fff;
+	}
+	.qa-media__tabs {
+		position: absolute;
+		top: 142px;
+		left: 20px;
+		right: 20px;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		padding: 4px;
+		border-radius: 99px;
+		background: var(--q-s100);
+		font-size: 14px;
+		font-weight: 500;
+		text-align: center;
+		color: var(--q-ink-500);
+	}
+	.qa-media__tabs span {
+		padding: 8px 0;
+		border-radius: 99px;
+	}
+	.qa-media__tabs .is-on {
+		background: #fff;
+		color: var(--q-ink-900);
+		box-shadow: 0 4px 10px -6px rgba(11, 16, 32, 0.25);
+	}
+	.qa-media__grid {
+		position: absolute;
+		top: 198px;
+		left: 20px;
+		right: 20px;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 9px;
+		list-style: none;
+	}
+	.qa-media__grid li {
+		height: 112px;
+		border-radius: 16px;
+		overflow: hidden;
+	}
+	.qa-media__grid img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.qa-media__scrim {
+		position: absolute;
+		inset: 0;
+		background: rgba(17, 22, 40, 0.34);
+	}
+	.qa-media__sheet {
+		position: absolute;
+		top: 362px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 0 20px;
+		border-radius: 30px 30px 0 0;
+		background: #fff;
+	}
+	.qa-media__head {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin-top: 16px;
+	}
+	.qa-media__up {
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 13px;
+		background: var(--q-accent-soft);
+		color: var(--q-accent);
+	}
+	.qa-media__head p {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.qa-media__head strong {
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+	.qa-media__head p span {
+		font-size: 13px;
+		color: var(--q-ink-500);
+	}
+	.qa-media__x {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: var(--q-s100);
+	}
+	.qa-media__files {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin-top: 18px;
+		list-style: none;
+	}
+	.qa-media__files li {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		height: 68px;
+		padding: 0 12px 0 10px;
+		border-radius: 16px;
+		background: var(--q-s50);
+	}
+	.qa-media__files img {
+		width: 48px;
+		height: 48px;
+		border-radius: 11px;
+		object-fit: cover;
+	}
+	.qa-media__files p {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.qa-media__files strong {
+		font-size: 13.5px;
+		font-weight: 600;
+	}
+	.qa-media__files i {
+		position: relative;
+		height: 6px;
+		border-radius: 3px;
+		background: var(--q-line);
+		overflow: hidden;
+	}
+	.qa-media__files i::after {
+		content: '';
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: var(--v);
+		border-radius: 3px;
+		background: var(--q-accent);
+	}
+	.qa-media__files i.is-done::after {
+		background: var(--q-success);
+	}
+	.qa-media__pct {
+		align-self: flex-start;
+		margin-top: 14px;
+		font-size: 12.5px;
+		font-weight: 600;
+		color: var(--q-ink-500);
+	}
+	.qa-media__done {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-size: 12.5px;
+		font-weight: 600;
+		color: var(--q-success);
+	}
+	.qa-media__done b {
+		display: grid;
+		place-items: center;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background: var(--q-success);
+		color: #fff;
+	}
+	.qa-media__saved {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 16px;
+		padding: 9px 14px;
+		border-radius: 12px;
+		background: #eefacc;
+		font-size: 12.5px;
+		font-weight: 500;
+		color: #2f4a10;
+	}
+	.qa-media__actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 16px;
+	}
+	.qa-media__actions .qa-btn--outline {
+		flex: 1;
+		height: 52px;
+	}
+	.qa-media__actions .qa-btn--dark {
+		height: 52px;
+	}
+</style>

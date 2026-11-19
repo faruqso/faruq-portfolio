@@ -38,12 +38,15 @@ const { width = 286, interactive = false, label, class: className = '' } = Astro
 
 <style>
 	.qd {
-		--bezel: calc(var(--qd-w) * 0.026);
+		/* --qd-w is the intended screen width; --qd-rw is the rendered one (set by the script below),
+		   so corners and bezel stay in proportion when the phone shrinks to fit. */
+		--qd-rw: var(--qd-w);
+		--bezel: calc(var(--qd-rw) * 0.026);
 		position: relative;
 		width: calc(var(--qd-w) + var(--bezel) * 2);
 		max-width: 100%;
 		padding: var(--bezel);
-		border-radius: calc(var(--qd-w) * 0.155);
+		border-radius: calc(var(--qd-rw) * 0.155);
 		background: linear-gradient(145deg, #2a2d33, #0f1114 40%, #1b1e23);
 		box-shadow:
 			0 40px 70px -28px rgba(13, 18, 38, 0.45),
@@ -56,7 +59,7 @@ const { width = 286, interactive = false, label, class: className = '' } = Astro
 		position: relative;
 		aspect-ratio: 393 / 852;
 		overflow: hidden;
-		border-radius: calc(var(--qd-w) * 0.13);
+		border-radius: calc(var(--qd-rw) * 0.13);
 		background: #f6f8fc;
 		/* Promote once so scaled text stays sharp. */
 		isolation: isolate;
@@ -78,7 +81,10 @@ const { width = 286, interactive = false, label, class: className = '' } = Astro
 	const ro = new ResizeObserver((entries) => {
 		for (const entry of entries) {
 			const el = entry.target as HTMLElement;
-			el.closest<HTMLElement>('.qd')!.style.setProperty('--k', String(entry.contentRect.width / 393));
+			const qd = el.closest<HTMLElement>('.qd')!;
+			const w = entry.contentRect.width;
+			qd.style.setProperty('--k', String(w / 393));
+			qd.style.setProperty('--qd-rw', `${w}px`);
 		}
 	});
 	document.querySelectorAll('[data-qd-screen]').forEach((el) => ro.observe(el));

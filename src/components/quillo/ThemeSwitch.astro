@@ -8,16 +8,16 @@ const { width = 290 } = Astro.props;
 ---
 
 <div class="theme" data-theme-switch data-theme="quillo">
-	<Device width={width} label="The Quillo home screen, and the same app white-labelled for Northwind Realty">
-		<div class="theme__layer"><Home /></div>
-		<div class="theme__layer theme__brand"><Home brand="northwind" /></div>
-		<span class="theme__seam" aria-hidden="true"></span>
-	</Device>
 	<div class="theme__control" role="radiogroup" aria-label="App theme">
 		<button type="button" role="radio" aria-checked="true" data-value="quillo">Quillo</button>
 		<button type="button" role="radio" aria-checked="false" data-value="northwind">Northwind Realty</button>
 		<span class="theme__thumb" aria-hidden="true"></span>
 	</div>
+	<Device width={width} label="The Quillo home screen, and the same app white-labelled for Northwind Realty">
+		<div class="theme__layer"><Home /></div>
+		<div class="theme__layer theme__brand"><Home brand="northwind" /></div>
+		<span class="theme__seam" aria-hidden="true"></span>
+	</Device>
 </div>
 
 <style>

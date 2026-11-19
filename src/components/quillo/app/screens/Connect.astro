@@ -1,0 +1,205 @@
+---
+/** 02 Connect CMS — step 1 of onboarding: pick where the website lives. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+
+const cms = [
+	{ l: 'S', n: 'Sanity', s: 'Selected', c: '#f03e2f', on: true },
+	{ l: 'C', n: 'Contentful', s: 'Coming next', c: '#2478cc', tag: 'Next' },
+	{ l: 'S', n: 'Strapi', s: 'Coming next', c: '#4945ff', tag: 'Next' },
+	{ l: 'S', n: 'Storyblok', s: 'Notify me', c: '#09b3af', tag: 'Soon' },
+	{ l: 'P', n: 'Payload', s: 'Notify me', c: '#111111', tag: 'Soon' },
+	{ l: 'W', n: 'WordPress', s: 'Notify me', c: '#21759b', tag: 'Soon' },
+];
+---
+
+<div class="qa-screen qa-connect">
+	<StatusBar />
+	<header class="qa-connect__top">
+		<span class="qa-circle"><Icon name="chevron-left" size={22} stroke={2.4} /></span>
+		<span class="qa-connect__dots" aria-hidden="true"><i class="is-on"></i><i></i><i></i></span>
+		<span class="qa-connect__step">Step 1 of 3</span>
+	</header>
+	<h3 class="qa-connect__title">Where does your website live?</h3>
+	<p class="qa-connect__lead">Pick your CMS. Quillo reads your content model and builds the editor for you.</p>
+	<ul class="qa-connect__grid">
+		{
+			cms.map((c) => (
+				<li class:list={{ 'is-on': c.on }}>
+					<span class="qa-connect__logo" style={`background:${c.c}`}>{c.l}</span>
+					{c.on ? (
+						<span class="qa-connect__check"><Icon name="check" size={14} stroke={3} /></span>
+					) : (
+						<span class:list={['qa-connect__tag', { 'is-next': c.tag === 'Next' }]}>{c.tag}</span>
+					)}
+					<strong>{c.n}</strong>
+					<span>{c.s}</span>
+				</li>
+			))
+		}
+	</ul>
+	<p class="qa-connect__note">
+		<span><Icon name="lock" size={18} /></span>
+		Connect by scanning a QR code in your Sanity Studio. Quillo gets editor-only access you can revoke anytime.
+	</p>
+	<span class="qa-btn qa-btn--dark qa-btn--cta qa-connect__cta">Continue with Sanity<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i></span>
+	<span class="qa-homebar" aria-hidden="true"></span>
+</div>
+
+<style>
+	.qa-connect {
+		background: linear-gradient(180deg, #e3efff 0%, #f6f8fc 34%);
+	}
+	.qa-connect__top {
+		position: absolute;
+		top: 64px;
+		left: 20px;
+		right: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.qa-connect__dots {
+		display: flex;
+		gap: 6px;
+		margin-left: 54px;
+	}
+	.qa-connect__dots i {
+		width: 8px;
+		height: 8px;
+		border-radius: 4px;
+		background: #c9d0e0;
+	}
+	.qa-connect__dots i.is-on {
+		width: 28px;
+		background: var(--q-accent);
+	}
+	.qa-connect__step {
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--q-ink-500);
+	}
+	.qa-connect__title {
+		position: absolute;
+		top: 126px;
+		left: 20px;
+		width: 260px;
+		font-size: 28px;
+		font-weight: 700;
+		line-height: 1.18;
+		letter-spacing: -0.04em;
+	}
+	.qa-connect__lead {
+		position: absolute;
+		top: 204px;
+		left: 20px;
+		right: 20px;
+		font-size: 15px;
+		line-height: 1.5;
+		color: var(--q-ink-500);
+	}
+	.qa-connect__grid {
+		position: absolute;
+		top: 274px;
+		left: 20px;
+		right: 20px;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 13px;
+		list-style: none;
+	}
+	.qa-connect__grid li {
+		position: relative;
+		height: 119px;
+		padding: 14px 15px;
+		border-radius: 18px;
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--q-line);
+		display: flex;
+		flex-direction: column;
+	}
+	.qa-connect__grid li.is-on {
+		box-shadow:
+			inset 0 0 0 2px var(--q-accent),
+			0 14px 28px -14px rgba(47, 91, 255, 0.45);
+	}
+	.qa-connect__logo {
+		display: grid;
+		place-items: center;
+		width: 38px;
+		height: 38px;
+		border-radius: 11px;
+		color: #fff;
+		font-size: 17px;
+		font-weight: 800;
+	}
+	.qa-connect__grid strong {
+		margin-top: auto;
+		font-size: 16px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+	.qa-connect__grid span:last-child {
+		margin-top: 2px;
+		font-size: 12.5px;
+		color: var(--q-ink-500);
+	}
+	.qa-connect__grid li.is-on span:last-child {
+		color: var(--q-accent);
+	}
+	.qa-connect__check {
+		position: absolute;
+		top: 24px;
+		right: 15px;
+		display: grid;
+		place-items: center;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		background: var(--q-accent);
+		color: #fff;
+	}
+	.qa-connect__tag {
+		position: absolute;
+		top: 24px;
+		right: 15px;
+		padding: 3px 8px;
+		border-radius: 99px;
+		background: rgba(163, 170, 189, 0.22);
+		font-size: 11px;
+		font-weight: 600;
+		color: var(--q-ink-500);
+	}
+	.qa-connect__tag.is-next {
+		background: rgba(245, 165, 36, 0.16);
+		color: var(--q-warning);
+	}
+	.qa-connect__note {
+		position: absolute;
+		top: 680px;
+		left: 20px;
+		right: 20px;
+		display: flex;
+		gap: 14px;
+		align-items: center;
+		padding: 14px 16px;
+		border-radius: 16px;
+		background: #e8edfb;
+		font-size: 13px;
+		line-height: 1.45;
+		color: var(--q-ink-700);
+	}
+	.qa-connect__note > span {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		width: 32px;
+		height: 32px;
+		border-radius: 9px;
+		background: #fff;
+		color: var(--q-accent);
+	}
+	.qa-connect__cta {
+		top: 764px;
+	}
+</style>

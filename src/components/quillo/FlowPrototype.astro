@@ -14,9 +14,9 @@ import Published from './app/screens/Published.astro';
 const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it', 'It’s live'];
 ---
 
-<div class="flow" data-flow data-state="home" data-photo="false">
+<div class="flow" data-flow data-state="home" data-photo="false" data-mode="auto">
 	<div class="flow__device">
-		<Device width={300} interactive>
+		<Device width={256} interactive>
 			<div class="fl fl--home"><Home /></div>
 			<div class="fl fl--editor"><Editor title="" /></div>
 			<div class="fl fl--sheet"><PublishSheet /></div>
@@ -24,11 +24,23 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 			<div class="fl fl--published"><Published /></div>
 			<span class="fl-toast" data-toast role="status"></span>
 			<span class="fl-flash" aria-hidden="true"></span>
+			<span class="fl-touch" data-touch aria-hidden="true"></span>
 		</Device>
 	</div>
 
 	<div class="flow__side">
-		<p class="flow__hint" data-hint aria-live="polite">Tap the review card on the phone.</p>
+		<div class="flow__modes" role="radiogroup" aria-label="Prototype mode">
+			<button type="button" role="radio" aria-checked="true" data-mode-btn="auto">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"></path></svg>
+				Autoplay
+			</button>
+			<button type="button" role="radio" aria-checked="false" data-mode-btn="interactive">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5.2-3l-2.3-4a1.5 1.5 0 0 1 2.6-1.5L9 15"></path></svg>
+				Interactive
+			</button>
+			<span class="flow__modes-thumb" aria-hidden="true"></span>
+		</div>
+		<p class="flow__hint" data-hint aria-live="polite">Watch the flow, or switch to Interactive and tap through it yourself.</p>
 		<ol class="flow__steps">
 			{
 				steps.map((step, i) => (
@@ -158,7 +170,6 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 
 	/* The next thing to tap */
 	.flow :global(.qa-next) {
-		position: relative;
 		outline: 2.5px solid #2f5bff;
 		outline-offset: 4px;
 		animation: next-pulse 1.6s cubic-bezier(0.23, 1, 0.32, 1) infinite;
@@ -233,6 +244,97 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 		}
 		100% {
 			opacity: 0;
+		}
+	}
+
+	/* Mode switch */
+	.flow__modes {
+		position: relative;
+		align-self: flex-start;
+		display: inline-grid;
+		grid-template-columns: 1fr 1fr;
+		padding: 4px;
+		border-radius: var(--radius-pill);
+		background: var(--color-bg-subtle);
+	}
+
+	.flow__modes button {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 7px;
+		padding: 8px 16px;
+		border: 0;
+		background: none;
+		font: inherit;
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		white-space: nowrap;
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	.flow__modes button[aria-checked='true'] {
+		color: #ffffff;
+	}
+
+	.flow__modes button:focus-visible {
+		outline: 2px solid var(--color-focus-ring);
+		border-radius: var(--radius-pill);
+	}
+
+	.flow__modes-thumb {
+		position: absolute;
+		top: 4px;
+		bottom: 4px;
+		left: 4px;
+		width: calc(50% - 4px);
+		border-radius: var(--radius-pill);
+		background: var(--color-text);
+		transition: transform 380ms var(--ease-out);
+	}
+
+	[data-mode='interactive'] .flow__modes-thumb {
+		transform: translateX(100%);
+	}
+
+	/* Autoplay touch indicator (screen coordinates) */
+	.fl-touch {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 80;
+		width: 46px;
+		height: 46px;
+		margin: -23px 0 0 -23px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.35);
+		box-shadow:
+			0 0 0 2px rgba(255, 255, 255, 0.9),
+			0 6px 18px rgba(11, 16, 32, 0.35);
+		backdrop-filter: blur(2px);
+		opacity: 0;
+		transform: translate(var(--tx, 196px), var(--ty, 600px)) scale(0.9);
+		transition:
+			transform 750ms cubic-bezier(0.65, 0, 0.35, 1),
+			opacity 260ms ease;
+		pointer-events: none;
+	}
+
+	[data-mode='auto'][data-playing] .fl-touch {
+		opacity: 1;
+	}
+
+	.fl-touch.is-press {
+		animation: touch-press 380ms ease;
+	}
+
+	@keyframes touch-press {
+		40% {
+			transform: translate(var(--tx), var(--ty)) scale(0.7);
+			background: rgba(47, 91, 255, 0.35);
 		}
 	}
 
@@ -356,6 +458,10 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.fl-touch {
+			display: none;
+		}
+
 		.fl,
 		.fl--sheet :global(.qa-sheet) {
 			transform: none !important;
@@ -380,9 +486,22 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 		const scheduleLabel = $('[data-schedule-label]');
 		const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const draft = 'Spring menu launch';
+		// Replace really replaces: the camera's close-up becomes the cover and the live page photo.
+		const photos = {
+			before: { src: '/images/case/quillo/photos/pastries.webp', alt: 'Alt text added: “Spring pastries”' },
+			after: { src: '/images/case/quillo/photos/new-shot.webp', alt: 'Alt text added: “Rhubarb custard danish”' },
+		};
+		const setPhoto = (which: 'before' | 'after') => {
+			const ph = photos[which];
+			root.querySelectorAll<HTMLImageElement>('.fl--editor [data-cover], .fl--published [data-published-image]').forEach((img) => (img.src = ph.src));
+			root.querySelectorAll('.fl--editor [data-alt]').forEach((el) => (el.textContent = ph.alt));
+		};
 		let typed = false;
 		let typer = 0;
 		let toastTimer = 0;
+		let mode: 'auto' | 'interactive' = reduce ? 'interactive' : 'auto';
+		let token = 0;
+		let visible = false;
 
 		// Targets that drive the flow, per state.
 		const target = {
@@ -440,7 +559,12 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 				el.classList.toggle('is-current', i === current);
 				el.classList.toggle('is-done', i < current);
 			});
-			hint.textContent = state === 'editor' && photo ? hints.editorPhoto : hints[state];
+			hint.textContent =
+				mode === 'auto'
+					? 'Playing the flow. Tap the phone, or choose Interactive, to take over.'
+					: state === 'editor' && photo
+						? hints.editorPhoto
+						: hints[state];
 
 			const next =
 				state === 'editor' ? (photo ? target.editorPublish : target.editorPhoto) : target[state as keyof typeof target];
@@ -470,6 +594,11 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 			clearInterval(typer);
 			title.value = '';
 			root.dataset.photo = 'false';
+			setPhoto('before');
+			root.querySelectorAll('.qa-day, .qa-time').forEach((b) => b.classList.remove('is-on'));
+			root.querySelector('.qa-day[data-short="Fri"]')!.classList.add('is-on');
+			root.querySelector('.qa-time[data-value="9:00 AM"]')!.classList.add('is-on');
+			scheduleLabel.textContent = 'Schedule for Fri, 9:00 AM';
 			go('home');
 		};
 
@@ -484,6 +613,7 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 				void flash.offsetWidth;
 				flash.classList.add('is-on');
 				root.dataset.photo = 'true';
+				setPhoto('after');
 				window.setTimeout(() => {
 					go('editor');
 					showToast('Photo added · alt text on');
@@ -519,7 +649,94 @@ const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it'
 			}
 		});
 
-		root.querySelector('[data-restart]')!.addEventListener('click', reset);
-		render();
+		/* ---- Modes: autoplay drives the real buttons; interactive leaves it to the visitor ---- */
+		const touch = $('[data-touch]');
+		const qa = $('.qa');
+		const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+		const modeBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-mode-btn]')];
+
+		const point = (el: Element) => {
+			const q = qa.getBoundingClientRect();
+			const k = q.width / 393;
+			const r = el.getBoundingClientRect();
+			touch.style.setProperty('--tx', `${(r.left - q.left + r.width / 2) / k}px`);
+			touch.style.setProperty('--ty', `${(r.top - q.top + r.height / 2) / k}px`);
+		};
+
+		const tap = async (el: HTMLElement | null, my: number) => {
+			if (!el) return false;
+			point(el);
+			await sleep(820);
+			if (my !== token) return false;
+			touch.classList.remove('is-press');
+			void touch.offsetWidth;
+			touch.classList.add('is-press');
+			el.click();
+			await sleep(420);
+			return my === token;
+		};
+
+		const autoplay = async () => {
+			const my = ++token;
+			root.dataset.playing = '';
+			while (my === token) {
+				reset();
+				await sleep(1300);
+				if (!(await tap(target.home, my))) return;
+				await sleep(2300); // the title types itself
+				if (!(await tap(target.editorPhoto, my))) return;
+				await sleep(900);
+				if (!(await tap(target.camera, my))) return;
+				await sleep(1500);
+				if (!(await tap(target.editorPublish, my))) return;
+				await sleep(1100);
+				if (!(await tap(root.querySelector('.qa-day[data-short="Sat"]'), my))) return;
+				if (!(await tap(root.querySelector('.qa-time[data-value="12:00 PM"]'), my))) return;
+				await sleep(400);
+				if (!(await tap(target.publish, my))) return;
+				await sleep(3200);
+			}
+		};
+
+		const stop = () => {
+			token++;
+			delete root.dataset.playing;
+		};
+
+		const setMode = (m: 'auto' | 'interactive', fresh = true) => {
+			mode = m;
+			root.dataset.mode = m;
+			modeBtns.forEach((b) => b.setAttribute('aria-checked', String(b.dataset.modeBtn === m)));
+			stop();
+			if (m === 'auto') {
+				if (visible) autoplay();
+			} else if (fresh) reset();
+			render();
+		};
+
+		modeBtns.forEach((b) => b.addEventListener('click', () => setMode(b.dataset.modeBtn as 'auto' | 'interactive')));
+
+		// Touching the phone during autoplay hands it over, right where it is.
+		$('.flow__device').addEventListener(
+			'pointerdown',
+			(event) => {
+				if (mode === 'auto' && event.isTrusted) setMode('interactive', false);
+			},
+			{ capture: true },
+		);
+
+		// Play only while on screen.
+		new IntersectionObserver(
+			([entry]) => {
+				visible = entry.isIntersecting;
+				if (mode !== 'auto') return;
+				if (visible && !('playing' in root.dataset)) autoplay();
+				if (!visible) stop();
+			},
+			{ threshold: 0.4 },
+		).observe(root);
+
+		root.querySelector('[data-restart]')!.addEventListener('click', () => (mode === 'auto' ? (stop(), visible && autoplay()) : reset()));
+		setMode(mode);
 	}
 </script>

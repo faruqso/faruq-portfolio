@@ -1,38 +1,12 @@
 ---
 /**
- * Live landing page — a working, scrollable build of the Quillo landing page inside a
- * desktop browser or a phone. Autoplays a guided tour with a cursor; any scroll, tap or
- * keypress hands control to the visitor. Copy from Figma "🌐 Landing page".
+ * Live landing page — the Quillo landing built 1:1 from Figma (desktop 11:187, mobile 32:1062),
+ * rendered at true artboard size and scaled to fit a browser or phone frame so the whole first
+ * fold is visible. Autoplays a guided tour; any scroll, tap or key hands control to the visitor.
  */
-import Device from './app/Device.astro';
-import Home from './app/screens/Home.astro';
-
-const cms = [
-	{ id: 'sanity', l: 'S', name: 'Sanity', kind: 'Headless · Portable Text', has: 'Posts · Pages · Media', status: 'Live in beta', tone: 'live', cat: 'headless' },
-	{ id: 'contentful', l: 'C', name: 'Contentful', kind: 'Headless · Rich text', has: 'Entries · Assets · Locales', status: 'Next up', tone: 'next', cat: 'headless' },
-	{ id: 'strapi', l: 'S', name: 'Strapi', kind: 'Headless · Open source', has: 'Collections · Media · Drafts', status: 'Next up', tone: 'next', cat: 'headless' },
-	{ id: 'storyblok', l: 'S', name: 'Storyblok', kind: 'Headless · Visual editor', has: 'Stories · Blocks · Assets', status: 'Planned', tone: 'planned', cat: 'headless' },
-	{ id: 'payload', l: 'P', name: 'Payload', kind: 'Headless · Open source', has: 'Collections · Globals', status: 'Planned', tone: 'planned', cat: 'headless' },
-	{ id: 'prismic', l: 'P', name: 'Prismic', kind: 'Headless · Slices', has: 'Documents · Slices', status: 'Planned', tone: 'planned', cat: 'headless' },
-	{ id: 'hygraph', l: 'H', name: 'Hygraph', kind: 'Headless · GraphQL', has: 'Models · Assets', status: 'Planned', tone: 'planned', cat: 'headless' },
-	{ id: 'wordpress', l: 'W', name: 'WordPress', kind: 'Traditional · Headless', has: 'Posts · Pages · Media', status: 'Planned', tone: 'planned', cat: 'builder' },
-];
-const detail: Record<string, string> = {
-	live: 'is live in beta. Your developer adds the Quillo plugin to the Studio once, then you scan a QR code and you’re in.',
-	next: 'is next up. Join the waitlist and you’ll get it first.',
-	planned: 'is planned. Vote for it and we’ll prioritise it.',
-};
-const faqs = [
-	['Does Quillo change anything in my CMS?', 'No. Quillo uses Sanity’s official APIs with an editor token you control and can revoke anytime. Your schema, content and hosting stay where they are.'],
-	['Which CMSs are supported?', 'Sanity is live in beta. Contentful and Strapi are next, then Storyblok, Payload, Prismic, Hygraph and WordPress.'],
-	['What about custom fields and plugins?', 'Standard fields get native mobile editors. Custom Studio input components show as read-only previews on your phone.'],
-	['Can I limit what clients can edit?', 'Yes. Your CMS roles and permissions still apply, and the Agency plan adds client-safe roles so clients edit only what they should.'],
-];
-const plans = [
-	{ name: 'Solo', price: '$0', per: 'forever', blurb: 'For one site and one editor getting started.', cta: 'Join the waitlist', items: ['1 site · 1 editor', 'Edit text, images & rich text', 'Camera uploads', 'Sanity today, more CMSs as they launch'] },
-	{ name: 'Pro', price: '$12', per: 'per site / month', blurb: 'For small teams who publish every week.', cta: 'Join the waitlist', items: ['Unlimited editors', 'Approvals & push notifications', 'AI polish & alt text', 'Offline drafts', 'Scheduled publishing'], hot: true },
-	{ name: 'Agency', price: '$8', per: 'per client site / month', blurb: 'For studios managing 5 or more client sites.', cta: 'Book an agency demo', items: ['Everything in Pro', 'White-label app & icon', 'Client dashboard for all sites', 'Client-safe roles', 'Priority support'] },
-];
+import '../../styles/quillo-site.css';
+import SiteDesktop from './landing/SiteDesktop.astro';
+import SiteMobile from './landing/SiteMobile.astro';
 ---
 
 <div class="ld" data-ld data-device="desktop" data-tour="idle">
@@ -60,7 +34,8 @@ const plans = [
 	</div>
 
 	<div class="ld__stage" data-stage>
-		<div class="ld__frame">
+		<!-- Desktop: browser window -->
+		<div class="ld__frame ld__frame--desktop" data-frame="desktop">
 			<div class="ld__chrome" aria-hidden="true">
 				<i></i><i></i><i></i>
 				<span>
@@ -68,234 +43,60 @@ const plans = [
 					Quillo · landing page (concept)
 				</span>
 			</div>
-			<div class="ld__notch" aria-hidden="true"></div>
-
-			<!-- The mini site. Its own scroll container, styled with container queries. -->
-			<div class="ld-site" data-site tabindex="0" aria-label="Interactive Quillo landing page">
-				<div class="ld-in">
-					<header class="ls-nav">
-						<span class="ls-logo"><img src="/images/case/quillo/app-icon.webp" alt="" width="26" height="26" />Quillo</span>
-						<nav class="ls-links">
-							<a href="#ls-features" data-jump>Product</a>
-							<a href="#ls-how" data-jump>How it works</a>
-							<a href="#ls-pricing" data-jump>For agencies</a>
-							<a href="#ls-pricing" data-jump>Pricing</a>
-							<a href="#ls-faq" data-jump>FAQ</a>
-						</nav>
-						<a class="ls-btn ls-btn--dark ls-btn--sm" href="#ls-join" data-jump>Join the waitlist</a>
-					</header>
-
-					<section class="ls-hero">
-						<p class="ls-badge"><em>New</em>Beta now open for Sanity teams · Contentful &amp; Strapi next</p>
-						<h2 class="ls-hero__title">Your website, edited right from your <span>pocket.</span></h2>
-						<p class="ls-hero__sub">
-							Quillo turns your headless CMS into a beautiful native app, starting with Sanity. Fix a typo, swap a photo or approve a post in seconds, no laptop needed.
-						</p>
-						<div class="ls-hero__ctas">
-							<a class="ls-btn ls-btn--dark" href="#ls-join" data-jump data-tour-id="hero-cta">Join the beta waitlist<i>→</i></a>
-							<button type="button" class="ls-btn ls-btn--light" data-toast="The 60-second demo video is in production.">Watch the 60s demo</button>
-						</div>
-						<div class="ls-hero__phone">
-							<Device width={230}><Home /></Device>
-						</div>
-						<span class="ls-float ls-float--l" aria-hidden="true">
-							<img src="/images/case/quillo/photos/icon-camera.webp" alt="" width="40" height="40" />Photo uploaded<small>Spring menu launch · Sanity</small>
-						</span>
-						<span class="ls-float ls-float--r" aria-hidden="true">
-							<img src="/images/case/quillo/photos/icon-check.webp" alt="" width="40" height="40" />Published to crumbandco.com<small>Spring menu launch</small>
-						</span>
-					</section>
-
-					<section class="ls-sec" id="ls-cms">
-						<p class="ls-eyebrow">Integrations</p>
-						<h3 class="ls-h">Which CMS runs <span>your website?</span></h3>
-						<p class="ls-lead">Quillo connects through each CMS’s official API. Sanity is live in beta, and the rest are on the way.</p>
-						<div class="ls-tabs" role="tablist" aria-label="Filter CMSs">
-							<button type="button" role="tab" aria-selected="true" data-filter="all">All CMSs</button>
-							<button type="button" role="tab" aria-selected="false" data-filter="headless">Headless</button>
-							<button type="button" role="tab" aria-selected="false" data-filter="builder">Website builders</button>
-							<button type="button" role="tab" aria-selected="false" data-filter="commerce">Commerce</button>
-						</div>
-						<div class="ls-cms">
-							{
-								cms.map((c) => (
-									<button
-										type="button"
-										class:list={['ls-cmscard', `is-${c.tone}`, { 'is-on': c.id === 'sanity' }]}
-										data-cms={c.id}
-										data-cat={c.cat}
-										data-name={c.name}
-										data-detail={detail[c.tone]}
-										aria-pressed={c.id === 'sanity' ? 'true' : 'false'}
-									>
-										<span class="ls-cmscard__top">
-											<i>{c.l}</i>
-											<em>{c.status}</em>
-										</span>
-										<strong>{c.name}</strong>
-										<span>{c.kind}</span>
-										<small>{c.has}</small>
-									</button>
-								))
-							}
-							<p class="ls-cms__empty">No commerce integrations yet. Tell us which one you use.</p>
-						</div>
-						<p class="ls-cms__detail" data-cms-detail aria-live="polite">
-							<strong>Sanity</strong> {detail.live}
-						</p>
-					</section>
-
-					<section class="ls-sec ls-sec--tint" id="ls-features">
-						<p class="ls-eyebrow">Why Quillo</p>
-						<h3 class="ls-h">The little website jobs, finally <span>phone-sized.</span></h3>
-						<div class="ls-bento">
-							<article class="ls-tile ls-tile--wide">
-								<strong>Reads your content model</strong>
-								<p>Quillo looks at your schema and builds native forms for every document type: text, images, references, rich text and custom fields.</p>
-								<pre><code>defineType(&#123;
-  name: 'menuItem',
-  fields: [
-    &#123; name: 'title', type: 'string' &#125;,
-    &#123; name: 'cover', type: 'image' &#125;,
-    &#123; name: 'price', type: 'number' &#125;,
-  ],
-&#125;)</code></pre>
-							</article>
-							<article class="ls-tile">
-								<img src="/images/case/quillo/photos/icon-camera.webp" alt="" width="56" height="56" />
-								<strong>Snap. Upload. Live.</strong>
-								<p>Shoot on your phone. Quillo resizes it, writes alt text and drops it into your post.</p>
-							</article>
-							<article class="ls-tile">
-								<img src="/images/case/quillo/photos/icon-bell.webp" alt="" width="56" height="56" />
-								<strong>Approvals on the go</strong>
-								<p>Review, comment and approve from a push notification. Your CMS roles still apply.</p>
-							</article>
-							<article class="ls-tile">
-								<img src="/images/case/quillo/photos/icon-plane.webp" alt="" width="56" height="56" />
-								<strong>Works offline</strong>
-								<p>Quillo queues your changes and syncs them the moment you’re back online.</p>
-							</article>
-							<article class="ls-tile ls-tile--polish">
-								<strong>AI polish &amp; alt text</strong>
-								<p class="ls-polish" data-polish>
-									<span class="ls-polish__before">“our new croisant is realy good”</span>
-									<span class="ls-polish__after">“Meet our new croissant: flaky, buttery and gone by noon.”</span>
-								</p>
-								<button type="button" class="ls-chipbtn" data-polish-btn data-tour-id="polish">✦ Polish</button>
-							</article>
-						</div>
-					</section>
-
-					<section class="ls-sec" id="ls-how">
-						<p class="ls-eyebrow">How Quillo works</p>
-						<h3 class="ls-h">Up and running in <span>three steps.</span></h3>
-						<ol class="ls-steps">
-							<li><i>1</i><strong>Connect your CMS</strong><span>Your developer adds the Quillo plugin to Sanity Studio once. Then you scan a QR code and you’re in.</span></li>
-							<li><i>2</i><strong>Quillo maps your content</strong><span>Your schema becomes native screens: lists, forms, image pickers and rich text, all automatically.</span></li>
-							<li><i>3</i><strong>Edit &amp; publish anywhere</strong><span>Fix it, snap it, approve it. Changes go straight to your CMS and your live site.</span></li>
-						</ol>
-					</section>
-
-					<section class="ls-sec ls-sec--tint" id="ls-pricing">
-						<p class="ls-eyebrow">Pricing</p>
-						<h3 class="ls-h">Simple pricing. <span>Free while you’re small.</span></h3>
-						<div class="ls-plans">
-							{
-								plans.map((p) => (
-									<article class:list={['ls-plan', { 'is-hot': p.hot }]} data-tour-id={p.hot ? 'pro' : undefined}>
-										<p class="ls-plan__name">
-											{p.name}
-											{p.hot && <em>Most popular</em>}
-										</p>
-										<p class="ls-plan__price">
-											<strong>{p.price}</strong>
-											<span>{p.per}</span>
-										</p>
-										<p class="ls-plan__blurb">{p.blurb}</p>
-										<a class="ls-btn ls-btn--block" href="#ls-join" data-jump>
-											{p.cta}
-										</a>
-										<ul>
-											{p.items.map((it) => (
-												<li>{it}</li>
-											))}
-										</ul>
-									</article>
-								))
-							}
-						</div>
-					</section>
-
-					<section class="ls-sec" id="ls-faq">
-						<p class="ls-eyebrow">FAQ</p>
-						<h3 class="ls-h">Questions, <span>answered.</span></h3>
-						<div class="ls-faq">
-							{
-								faqs.map(([q, a], i) => (
-									<details class="ls-qa" open={i === 0} data-tour-id={i === 2 ? 'faq' : undefined}>
-										<summary>
-											{q}
-											<i aria-hidden="true" />
-										</summary>
-										<p>{a}</p>
-									</details>
-								))
-							}
-						</div>
-					</section>
-
-					<section class="ls-cta" id="ls-join">
-						<h3>Your website is one tap <span>away.</span></h3>
-						<p>Be first in line. Sanity teams get beta access first, more CMSs soon.</p>
-						<form class="ls-form" data-join novalidate>
-							<label class="sr-only" for="ls-email">Email</label>
-							<input id="ls-email" type="email" placeholder="you@yourwebsite.com" autocomplete="off" data-email />
-							<button type="submit" class="ls-btn ls-btn--dark" data-tour-id="join">Join the waitlist</button>
-						</form>
-						<p class="ls-form__msg" data-join-msg aria-live="polite">iOS &amp; Android · Free for 1 site · No credit card</p>
-					</section>
-
-					<footer class="ls-foot">
-						<span class="ls-logo"><img src="/images/case/quillo/app-icon.webp" alt="" width="22" height="22" />Quillo</span>
-						<span>© 2026 Quillo. A product concept by Faruq So.</span>
-					</footer>
+			<div class="ld__screen">
+				<div class="ld__vp" data-vp="desktop" data-art-w="1440" tabindex="0" aria-label="Interactive Quillo landing page, desktop">
+					<div class="ld__sizer"><SiteDesktop /></div>
 				</div>
+				<div class="ld__sb" aria-hidden="true"><span class="ld__thumb"></span></div>
 			</div>
-			<span class="ld__toast" data-ld-toast role="status"></span>
 		</div>
+
+		<!-- Mobile: phone -->
+		<div class="ld__frame ld__frame--mobile" data-frame="mobile">
+			<div class="ld__screen">
+				<span class="ld__island" aria-hidden="true"></span>
+				<div class="ld__vp" data-vp="mobile" data-art-w="390" tabindex="0" aria-label="Interactive Quillo landing page, mobile">
+					<div class="ld__sizer"><SiteMobile /></div>
+				</div>
+				<div class="ld__sb" aria-hidden="true"><span class="ld__thumb"></span></div>
+			</div>
+		</div>
+
 		<span class="ld__cursor" data-cursor aria-hidden="true">
-			<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.6L10 19z" fill="#0b1020" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+			<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5 19 11l-6.2 1.6L9.6 19z" fill="#0b1020" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path></svg>
 		</span>
+		<p class="ld__toast" data-ld-toast role="status"></p>
 	</div>
-	<p class="ld__note">Fully interactive: scroll inside, switch devices, filter the CMS list, open the FAQ or join the (demo) waitlist.</p>
 </div>
 
 <style>
-	/* ---------- Shell: toolbar, stage, frames ---------- */
 	.ld {
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-5);
+		align-items: center;
+		gap: 20px;
+		font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 	}
 
+	/* ---------- Control bar ---------- */
 	.ld__bar {
 		display: flex;
-		align-items: center;
-		gap: var(--space-4);
 		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 10px 16px;
 	}
-
 	.ld__seg {
 		position: relative;
 		display: inline-grid;
 		grid-template-columns: 1fr 1fr;
 		padding: 4px;
 		border-radius: 99px;
-		background: rgba(255, 255, 255, 0.7);
-		box-shadow: inset 0 0 0 1px rgba(13, 26, 77, 0.08);
+		background: rgba(255, 255, 255, 0.6);
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
 	}
-
 	.ld__seg button {
 		position: relative;
 		z-index: 1;
@@ -307,21 +108,21 @@ const plans = [
 		border: 0;
 		background: none;
 		font: inherit;
-		font-size: var(--text-small);
-		color: var(--color-text-secondary);
+		font-size: 14px;
+		font-weight: 600;
+		color: #5f6780;
 		cursor: pointer;
-		transition: color var(--duration-fast) var(--ease-out);
+		transition: color 240ms;
 	}
-
 	.ld__seg button[aria-checked='true'] {
-		color: #ffffff;
+		color: #fff;
 	}
-
-	.ld__seg button:focus-visible {
-		outline: 2px solid var(--color-focus-ring);
+	.ld__seg button:focus-visible,
+	.ld__tourbtn:focus-visible {
+		outline: 2px solid #2f5bff;
+		outline-offset: 2px;
 		border-radius: 99px;
 	}
-
 	.ld__seg-thumb {
 		position: absolute;
 		top: 4px;
@@ -330,1227 +131,330 @@ const plans = [
 		width: calc(50% - 4px);
 		border-radius: 99px;
 		background: #0b1020;
-		transition: transform 420ms var(--ease-out);
+		transition: transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
 	}
-
 	[data-device='mobile'] .ld__seg-thumb {
 		transform: translateX(100%);
 	}
-
 	.ld__status {
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		margin-left: auto;
-		font-size: var(--text-small);
-		color: #1a2650;
+		margin: 0;
+		font-size: 13px;
+		font-weight: 600;
+		color: #2a3045;
 	}
-
 	.ld__dot {
 		width: 8px;
 		height: 8px;
 		border-radius: 50%;
 		background: #a3aabd;
 	}
-
 	[data-tour='playing'] .ld__dot {
 		background: #1fb86a;
-		box-shadow: 0 0 0 0 rgba(31, 184, 106, 0.5);
-		animation: ld-live 1.6s ease-out infinite;
+		animation: ld-blink 1.6s ease-in-out infinite;
 	}
-
-	@keyframes ld-live {
-		to {
-			box-shadow: 0 0 0 8px rgba(31, 184, 106, 0);
+	@keyframes ld-blink {
+		50% {
+			box-shadow: 0 0 0 5px rgba(31, 184, 106, 0.18);
 		}
 	}
-
 	.ld__tourbtn {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
-		padding: 9px 16px;
+		gap: 6px;
+		padding: 8px 14px;
 		border: 0;
 		border-radius: 99px;
-		background: #ffffff;
-		box-shadow: 0 4px 14px -6px rgba(13, 26, 77, 0.25);
+		background: rgba(255, 255, 255, 0.7);
 		font: inherit;
-		font-size: var(--text-small);
+		font-size: 13px;
+		font-weight: 600;
 		color: #0b1020;
 		cursor: pointer;
-		transition: transform var(--duration-instant) var(--ease-out);
 	}
-
-	.ld__tourbtn:active {
-		transform: scale(0.97);
-	}
-
 	.ld__ic-play,
 	[data-tour='playing'] .ld__ic-pause {
 		display: block;
 	}
-
 	.ld__ic-pause,
 	[data-tour='playing'] .ld__ic-play {
 		display: none;
 	}
 
+	/* ---------- Stage and frames ---------- */
 	.ld__stage {
 		position: relative;
 		display: flex;
 		justify-content: center;
-		align-items: flex-start;
-		min-height: 660px;
+		width: 100%;
 	}
-
 	.ld__frame {
 		position: relative;
-		width: 100%;
-		max-width: 1040px;
-		height: 640px;
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		border-radius: 16px;
-		background: #ffffff;
-		box-shadow:
-			0 40px 80px -30px rgba(13, 26, 77, 0.35),
-			0 0 0 1px rgba(13, 26, 77, 0.06);
-		transition:
-			max-width 700ms cubic-bezier(0.65, 0, 0.35, 1),
-			height 700ms cubic-bezier(0.65, 0, 0.35, 1),
-			border-radius 700ms cubic-bezier(0.65, 0, 0.35, 1),
-			padding 700ms cubic-bezier(0.65, 0, 0.35, 1),
-			background-color 400ms ease;
+		background: #fff;
 	}
-
+	[data-device='desktop'] .ld__frame--mobile,
+	[data-device='mobile'] .ld__frame--desktop {
+		display: none;
+	}
+	.ld__frame--desktop {
+		/* Whole first fold visible: the viewport keeps the hero's aspect, and the frame never
+		   grows taller than the window allows. */
+		width: min(100%, 1180px, calc((100svh - 230px) * 1440 / 1026));
+		min-width: min(100%, 320px);
+		border-radius: 18px;
+		box-shadow:
+			0 40px 80px -40px rgba(13, 31, 89, 0.45),
+			0 0 0 1px rgba(255, 255, 255, 0.7);
+	}
 	.ld__chrome {
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		height: 44px;
-		padding: 0 16px;
-		background: #f4f4f2;
+		gap: 6px;
+		height: 36px;
+		padding: 0 14px;
+		background: #f1f4fa;
+		border-bottom: 1px solid #e6e9f2;
 		flex-shrink: 0;
-		transition:
-			height 500ms ease,
-			opacity 300ms ease;
 	}
-
 	.ld__chrome i {
-		width: 11px;
-		height: 11px;
+		width: 10px;
+		height: 10px;
 		border-radius: 50%;
-		background: #ff5f57;
+		background: #dde2ec;
 	}
-
+	.ld__chrome i:nth-child(1) {
+		background: #ff6159;
+	}
 	.ld__chrome i:nth-child(2) {
-		background: #febc2e;
+		background: #ffbd2e;
 	}
-
 	.ld__chrome i:nth-child(3) {
-		background: #28c840;
+		background: #28c941;
 	}
-
 	.ld__chrome span {
 		display: inline-flex;
 		align-items: center;
 		gap: 6px;
 		margin: 0 auto;
 		padding: 4px 14px;
-		border-radius: 8px;
-		background: #ffffff;
-		font-size: var(--text-caption);
-		color: var(--color-text-secondary);
-		transform: translateX(-28px);
+		border-radius: 99px;
+		background: #fff;
+		font-size: 12px;
+		font-weight: 500;
+		color: #5f6780;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 70%;
 	}
-
-	.ld__notch {
+	.ld__frame--desktop .ld__screen {
+		aspect-ratio: 1440 / 1026;
+		min-height: 300px;
+	}
+	.ld__frame--mobile {
+		width: min(100%, 390px, calc((100svh - 200px) * 390 / 844));
+		min-width: min(100%, 280px);
+		padding: 10px;
+		border-radius: 54px;
+		background: linear-gradient(145deg, #2a2d33, #0f1114 40%, #1b1e23);
+		box-shadow:
+			0 40px 80px -36px rgba(13, 31, 89, 0.55),
+			inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+	}
+	.ld__frame--mobile .ld__screen {
+		aspect-ratio: 390 / 844;
+		min-height: 480px;
+		border-radius: 44px;
+		overflow: hidden;
+		background: #fff;
+	}
+	.ld__island {
+		position: absolute;
+		top: 10px;
+		left: 50%;
+		width: 96px;
+		height: 28px;
+		margin-left: -48px;
+		border-radius: 20px;
+		background: #000;
+		z-index: 4;
+	}
+	.ld__screen {
+		position: relative;
+		flex: 1;
+	}
+	.ld__vp {
+		position: absolute;
+		inset: 0;
+		overflow-x: hidden;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-width: none;
+		outline: 0;
+	}
+	.ld__vp::-webkit-scrollbar {
 		display: none;
 	}
-
-	/* Mobile: the same frame becomes a phone. */
-	[data-device='mobile'] .ld__frame {
-		max-width: 390px;
-		height: 760px;
-		padding: 12px;
-		border-radius: 56px;
-		background: #121417;
-	}
-
-	[data-device='mobile'] .ld__stage {
-		min-height: 780px;
-	}
-
-	[data-device='mobile'] .ld__chrome {
-		height: 0;
-		opacity: 0;
+	.ld__sizer {
+		position: relative;
 		overflow: hidden;
 	}
 
-	[data-device='mobile'] .ld__notch {
-		display: block;
+	/* ---------- Overlay scrollbar ---------- */
+	.ld__sb {
 		position: absolute;
-		top: 22px;
-		left: 50%;
-		width: 110px;
-		height: 30px;
-		margin-left: -55px;
-		border-radius: 20px;
-		background: #000;
+		top: 6px;
+		bottom: 6px;
+		right: 4px;
+		width: 10px;
 		z-index: 5;
+		opacity: 0;
+		transition: opacity 300ms;
 	}
-
-	[data-device='mobile'] .ld-site {
-		border-radius: 44px;
-		padding-top: 44px;
+	.ld__frame--mobile .ld__sb {
+		top: 44px;
+		bottom: 30px;
+		right: 3px;
 	}
-
-	.ld__cursor {
+	.ld__frame:hover .ld__sb {
+		opacity: 0.55;
+	}
+	.ld__frame.is-scrolling .ld__sb,
+	.ld__sb.is-drag,
+	.ld__sb:hover {
+		opacity: 1;
+	}
+	.ld__thumb {
 		position: absolute;
 		top: 0;
-		left: 0;
-		z-index: 20;
-		pointer-events: none;
-		opacity: 0;
-		transform: translate(var(--cx, 50%), var(--cy, 40%));
+		right: 2px;
+		width: 6px;
+		min-height: 28px;
+		border-radius: 3px;
+		background: rgba(11, 16, 32, 0.42);
+		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+		cursor: grab;
 		transition:
-			transform 900ms cubic-bezier(0.65, 0, 0.35, 1),
-			opacity 300ms ease;
-		filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+			width 160ms,
+			right 160ms,
+			background-color 160ms;
+		touch-action: none;
+	}
+	.ld__sb:hover .ld__thumb,
+	.ld__sb.is-drag .ld__thumb {
+		width: 8px;
+		right: 1px;
+		background: rgba(11, 16, 32, 0.6);
+	}
+	.ld__sb.is-drag .ld__thumb {
+		cursor: grabbing;
 	}
 
+	/* ---------- Tour cursor + toast ---------- */
+	.ld__cursor {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 10;
+		pointer-events: none;
+		opacity: 0;
+		transform: translate(var(--cx, 50%), var(--cy, 50%));
+		transition:
+			transform 900ms cubic-bezier(0.65, 0, 0.35, 1),
+			opacity 300ms;
+		filter: drop-shadow(0 4px 8px rgba(11, 16, 32, 0.3));
+	}
 	[data-tour='playing'] .ld__cursor {
 		opacity: 1;
 	}
-
-	.ld__cursor.is-click svg {
-		animation: ld-click 260ms ease;
+	.ld__cursor::after {
+		content: '';
+		position: absolute;
+		left: -12px;
+		top: -12px;
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+		background: rgba(47, 91, 255, 0.35);
+		transform: scale(0);
+		opacity: 0;
 	}
-
+	.ld__cursor.is-click::after {
+		animation: ld-click 500ms ease-out;
+	}
 	@keyframes ld-click {
-		50% {
-			transform: scale(0.82);
+		from {
+			transform: scale(0.3);
+			opacity: 1;
+		}
+		to {
+			transform: scale(1.4);
+			opacity: 0;
 		}
 	}
-
 	.ld__toast {
 		position: absolute;
 		left: 50%;
-		bottom: 22px;
-		z-index: 10;
+		bottom: 20px;
+		z-index: 11;
+		max-width: min(90%, 420px);
+		margin: 0;
 		padding: 10px 16px;
-		border-radius: 99px;
+		border-radius: 14px;
 		background: #0b1020;
 		color: #fff;
 		font-size: 13px;
-		white-space: nowrap;
-		transform: translate(-50%, 8px);
+		font-weight: 500;
+		line-height: 1.4;
+		text-align: center;
+		box-shadow: 0 16px 32px -12px rgba(11, 16, 32, 0.5);
 		opacity: 0;
-		transition:
-			opacity 220ms ease,
-			transform 320ms var(--ease-out);
+		transform: translate(-50%, 10px);
 		pointer-events: none;
+		transition:
+			opacity 240ms,
+			transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
 	}
-
 	.ld__toast.is-on {
 		opacity: 1;
 		transform: translate(-50%, 0);
 	}
 
-	.ld__note {
-		font-size: var(--text-small);
-		color: #1a2650;
-		opacity: 0.8;
-		text-align: center;
-	}
-
-	/* ---------- The mini site ---------- */
-	.ld-site {
-		--ls-blue: #2f5bff;
-		--ls-ink: #0b1020;
-		--ls-muted: #5f6780;
-		--ls-line: #e6e9f2;
-		--ls-tint: #f6f8fc;
-		position: relative;
-		flex: 1;
-		min-height: 0;
-		overflow-y: auto;
-		overflow-x: hidden;
-		overscroll-behavior: contain;
-		scroll-behavior: smooth;
-		container-type: inline-size;
-		background: #ffffff;
-		font-family: 'Plus Jakarta Sans', var(--font-sans);
-		color: var(--ls-ink);
-		scrollbar-width: thin;
-		outline: none;
-	}
-
-	.ld-site:focus-visible {
-		box-shadow: inset 0 0 0 3px var(--color-focus-ring);
-	}
-
-	.ld-in {
-		min-height: 100%;
-	}
-
-	.ld-site h2,
-	.ld-site h3,
-	.ld-site p,
-	.ld-site ul,
-	.ld-site ol,
-	.ld-site pre {
-		margin: 0;
-	}
-
-	.ls-nav {
-		position: sticky;
-		top: 0;
-		z-index: 4;
-		display: flex;
-		align-items: center;
-		gap: 24px;
-		margin: 14px 18px 0;
-		padding: 8px 8px 8px 16px;
-		border-radius: 99px;
-		background: rgba(255, 255, 255, 0.78);
-		backdrop-filter: blur(14px);
-		box-shadow: 0 6px 20px -12px rgba(13, 26, 77, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
-	}
-
-	.ls-logo {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		font-weight: 800;
-		font-size: 17px;
-		letter-spacing: -0.03em;
-	}
-
-	.ls-logo img {
-		border-radius: 7px;
-	}
-
-	.ls-links {
-		display: flex;
-		gap: 22px;
-		margin: 0 auto;
-		font-size: 13px;
-		color: var(--ls-ink);
-	}
-
-	.ls-links a {
-		transition: color 160ms ease;
-	}
-
-	.ls-links a:hover {
-		color: var(--ls-blue);
-	}
-
-	.ls-btn {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 10px;
-		height: 44px;
-		padding: 0 20px;
-		border: 0;
-		border-radius: 99px;
-		font: 600 14px/1 'Plus Jakarta Sans', var(--font-sans);
-		background: var(--ls-tint);
-		color: var(--ls-ink);
-		cursor: pointer;
-		white-space: nowrap;
-		transition:
-			transform 160ms var(--ease-out),
-			box-shadow 200ms var(--ease-out),
-			background-color 200ms ease;
-	}
-
-	.ls-btn:active {
-		transform: scale(0.97);
-	}
-
-	.ls-btn i {
-		font-style: normal;
-		display: grid;
-		place-items: center;
-		width: 26px;
-		height: 26px;
-		margin-right: -10px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.16);
-	}
-
-	.ls-btn--dark {
-		background: var(--ls-ink);
-		color: #fff;
-	}
-
-	.ls-btn--light {
-		background: #fff;
-		box-shadow: 0 6px 18px -10px rgba(13, 26, 77, 0.4);
-	}
-
-	.ls-btn--sm {
-		height: 38px;
-		padding: 0 16px;
-		font-size: 13px;
-	}
-
-	.ls-btn--block {
-		width: 100%;
-	}
-
-	@media (hover: hover) {
-		.ls-btn--dark:hover {
-			box-shadow: 0 10px 24px -10px rgba(11, 16, 32, 0.6);
+	@media (max-width: 47.99rem) {
+		.ld__frame--mobile {
+			width: min(100%, 390px, calc((100svh - 140px) * 390 / 844));
+			padding: 8px;
+			border-radius: 46px;
 		}
-	}
-
-	/* Hero */
-	.ls-hero {
-		position: relative;
-		margin: -60px 0 0;
-		padding: 110px 24px 0;
-		height: 720px;
-		overflow: hidden;
-		text-align: center;
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0) 62%, #ffffff 100%),
-			url('/images/case/quillo/photos/sky.webp') 50% 100% / cover no-repeat,
-			linear-gradient(180deg, #1c6be0 0%, #4a9bf5 45%, #9ccbff 100%);
-		color: #fff;
-	}
-
-	.ls-badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		padding: 5px 12px 5px 5px;
-		border-radius: 99px;
-		background: rgba(11, 16, 32, 0.85);
-		font-size: 12px;
-	}
-
-	.ls-badge em {
-		padding: 3px 9px;
-		border-radius: 99px;
-		background: #c8f25a;
-		color: #0b1020;
-		font-style: normal;
-		font-weight: 700;
-	}
-
-	.ls-hero__title {
-		max-width: 760px;
-		margin: 22px auto 0 !important;
-		font-weight: 800;
-		font-size: clamp(34px, 6.4cqi, 66px);
-		line-height: 1.02;
-		letter-spacing: -0.045em;
-		text-wrap: balance;
-	}
-
-	.ls-hero__title span,
-	.ls-h span,
-	.ls-cta h3 span {
-		font-family: 'Instrument Serif', serif;
-		font-style: italic;
-		font-weight: 400;
-		letter-spacing: -0.01em;
-	}
-
-	.ls-hero__sub {
-		max-width: 520px;
-		margin: 16px auto 0 !important;
-		font-size: 15px;
-		line-height: 1.55;
-		opacity: 0.92;
-	}
-
-	.ls-hero__ctas {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-top: 22px;
-	}
-
-	.ls-hero__phone {
-		display: flex;
-		justify-content: center;
-		margin-top: 30px;
-		animation: ls-float 6s ease-in-out infinite;
-	}
-
-	@keyframes ls-float {
-		50% {
-			transform: translateY(-8px);
-		}
-	}
-
-	.ls-float {
-		position: absolute;
-		display: grid;
-		grid-template-columns: 40px auto;
-		column-gap: 10px;
-		align-items: center;
-		padding: 10px 16px 10px 10px;
-		border-radius: 18px;
-		background: rgba(255, 255, 255, 0.86);
-		backdrop-filter: blur(12px);
-		box-shadow: 0 18px 40px -18px rgba(13, 26, 77, 0.45);
-		font-size: 13px;
-		font-weight: 600;
-		color: var(--ls-ink);
-		text-align: left;
-	}
-
-	.ls-float img {
-		grid-row: span 2;
-	}
-
-	.ls-float small {
-		font-size: 11px;
-		font-weight: 400;
-		color: var(--ls-muted);
-	}
-
-	.ls-float--l {
-		left: 7%;
-		top: 470px;
-		animation: ls-float 7s ease-in-out infinite;
-	}
-
-	.ls-float--r {
-		right: 7%;
-		top: 540px;
-		animation: ls-float 8s ease-in-out 1s infinite;
-	}
-
-	/* Sections */
-	.ls-sec {
-		padding: 72px 40px;
-		text-align: center;
-	}
-
-	.ls-sec--tint {
-		background: var(--ls-tint);
-	}
-
-	.ls-eyebrow {
-		display: inline-block;
-		padding: 5px 12px;
-		border-radius: 99px;
-		background: #e8edff;
-		color: var(--ls-blue);
-		font-size: 12px;
-		font-weight: 600;
-	}
-
-	.ls-h {
-		max-width: 620px;
-		margin: 14px auto 0 !important;
-		font-weight: 800;
-		font-size: clamp(28px, 4.4cqi, 44px);
-		line-height: 1.05;
-		letter-spacing: -0.04em;
-		text-wrap: balance;
-	}
-
-	.ls-h span,
-	.ls-cta h3 span {
-		color: var(--ls-blue);
-	}
-
-	.ls-lead {
-		max-width: 520px;
-		margin: 12px auto 0 !important;
-		font-size: 15px;
-		line-height: 1.55;
-		color: var(--ls-muted);
-	}
-
-	/* CMS picker */
-	.ls-tabs {
-		display: inline-flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 6px;
-		margin-top: 26px;
-		padding: 4px;
-		border-radius: 99px;
-		background: var(--ls-tint);
-	}
-
-	.ls-tabs button {
-		padding: 8px 14px;
-		border: 0;
-		border-radius: 99px;
-		background: none;
-		font: 600 13px/1 'Plus Jakarta Sans', var(--font-sans);
-		color: var(--ls-muted);
-		cursor: pointer;
-		transition:
-			background-color 200ms ease,
-			color 200ms ease;
-	}
-
-	.ls-tabs button[aria-selected='true'] {
-		background: #fff;
-		color: var(--ls-ink);
-		box-shadow: 0 2px 8px -3px rgba(13, 26, 77, 0.25);
-	}
-
-	.ls-cms {
-		display: grid;
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-		gap: 12px;
-		margin-top: 22px;
-		text-align: left;
-	}
-
-	.ls-cmscard {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		padding: 14px;
-		border: 0;
-		border-radius: 18px;
-		background: #fff;
-		box-shadow: inset 0 0 0 1px var(--ls-line);
-		font: inherit;
-		color: inherit;
-		text-align: left;
-		cursor: pointer;
-		transition:
-			transform 220ms var(--ease-out),
-			box-shadow 220ms var(--ease-out),
-			opacity 260ms ease;
-	}
-
-	.ls-cmscard[hidden] {
-		display: none;
-	}
-
-	@media (hover: hover) {
-		.ls-cmscard:hover {
-			transform: translateY(-3px);
-			box-shadow: inset 0 0 0 1px var(--ls-line), 0 14px 28px -18px rgba(13, 26, 77, 0.4);
-		}
-	}
-
-	.ls-cmscard.is-on {
-		box-shadow: inset 0 0 0 2px var(--ls-blue), 0 14px 28px -18px rgba(47, 91, 255, 0.5);
-	}
-
-	.ls-cmscard__top {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 8px;
-	}
-
-	.ls-cmscard i {
-		display: grid;
-		place-items: center;
-		width: 32px;
-		height: 32px;
-		border-radius: 10px;
-		background: #ff5a36;
-		color: #fff;
-		font-style: normal;
-		font-weight: 800;
-		font-size: 14px;
-	}
-
-	.ls-cmscard.is-next i {
-		background: #2f5bff;
-	}
-
-	.ls-cmscard.is-planned i {
-		background: #8b93ab;
-	}
-
-	.ls-cmscard em {
-		padding: 3px 8px;
-		border-radius: 99px;
-		font-style: normal;
-		font-size: 10.5px;
-		font-weight: 700;
-	}
-
-	.ls-cmscard.is-live em {
-		background: #e3f6ec;
-		color: #13945a;
-	}
-
-	.ls-cmscard.is-next em {
-		background: #e8edff;
-		color: var(--ls-blue);
-	}
-
-	.ls-cmscard.is-planned em {
-		background: var(--ls-tint);
-		color: var(--ls-muted);
-	}
-
-	.ls-cmscard strong {
-		font-size: 15px;
-	}
-
-	.ls-cmscard span {
-		font-size: 12px;
-		color: var(--ls-muted);
-	}
-
-	.ls-cmscard small {
-		margin-top: 6px;
-		font-size: 11px;
-		color: #a3aabd;
-	}
-
-	.ls-cms__empty {
-		display: none;
-		grid-column: 1 / -1;
-		padding: 28px;
-		border-radius: 18px;
-		background: var(--ls-tint);
-		color: var(--ls-muted);
-		font-size: 14px;
-		text-align: center;
-	}
-
-	.ls-cms.is-empty .ls-cms__empty {
-		display: block;
-	}
-
-	.ls-cms__detail {
-		max-width: 560px;
-		margin: 20px auto 0 !important;
-		font-size: 14px;
-		line-height: 1.55;
-		color: var(--ls-muted);
-		min-height: 3em;
-	}
-
-	.ls-cms__detail strong {
-		color: var(--ls-ink);
-	}
-
-	/* Bento */
-	.ls-bento {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 12px;
-		margin-top: 30px;
-		text-align: left;
-	}
-
-	.ls-tile {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		padding: 20px;
-		border-radius: 22px;
-		background: #fff;
-		box-shadow: 0 1px 0 var(--ls-line);
-		transition: transform 240ms var(--ease-out);
-	}
-
-	@media (hover: hover) {
-		.ls-tile:hover {
-			transform: translateY(-3px);
-		}
-	}
-
-	.ls-tile--wide {
-		grid-column: span 2;
-		grid-row: span 2;
-		background: linear-gradient(160deg, #eaf3ff, #ffffff 60%);
-	}
-
-	.ls-tile img {
-		width: 56px;
-		height: 56px;
-		margin: -6px 0 2px -6px;
-	}
-
-	.ls-tile strong {
-		font-size: 16px;
-		letter-spacing: -0.02em;
-	}
-
-	.ls-tile p {
-		font-size: 13px;
-		line-height: 1.5;
-		color: var(--ls-muted);
-	}
-
-	.ls-tile pre {
-		margin-top: auto !important;
-		padding: 16px;
-		border-radius: 14px;
-		background: #0b1020;
-		color: #c8f25a;
-		font: 12px/1.6 ui-monospace, 'SFMono-Regular', Menlo, monospace;
-		overflow: auto;
-	}
-
-	.ls-tile--polish {
-		grid-column: span 2;
-	}
-
-	.ls-polish {
-		position: relative;
-		min-height: 2.6em;
-		color: var(--ls-ink) !important;
-		font-size: 15px !important;
-	}
-
-	.ls-polish span {
-		display: block;
-		transition:
-			opacity 300ms ease,
-			transform 400ms var(--ease-out),
-			filter 300ms ease;
-	}
-
-	.ls-polish__before {
-		text-decoration: underline wavy #ff7a59 1px;
-		text-underline-offset: 4px;
-	}
-
-	.ls-polish__after {
-		position: absolute;
-		inset: 0;
-		opacity: 0;
-		transform: translateY(6px);
-		filter: blur(4px);
-	}
-
-	.ls-polish.is-done .ls-polish__before {
-		opacity: 0;
-		transform: translateY(-6px);
-		filter: blur(4px);
-	}
-
-	.ls-polish.is-done .ls-polish__after {
-		opacity: 1;
-		transform: none;
-		filter: none;
-	}
-
-	.ls-chipbtn {
-		align-self: flex-start;
-		margin-top: 4px;
-		padding: 8px 14px;
-		border: 0;
-		border-radius: 99px;
-		background: #e8edff;
-		color: var(--ls-blue);
-		font: 600 13px/1 'Plus Jakarta Sans', var(--font-sans);
-		cursor: pointer;
-	}
-
-	/* Steps */
-	.ls-steps {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 12px;
-		margin-top: 30px !important;
-		padding: 0;
-		list-style: none;
-		text-align: left;
-	}
-
-	.ls-steps li {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		padding: 20px;
-		border-radius: 22px;
-		background: var(--ls-tint);
-	}
-
-	.ls-steps i {
-		display: grid;
-		place-items: center;
-		width: 30px;
-		height: 30px;
-		margin-bottom: 8px;
-		border-radius: 50%;
-		background: var(--ls-blue);
-		color: #fff;
-		font-style: normal;
-		font-weight: 700;
-		font-size: 13px;
-	}
-
-	.ls-steps strong {
-		font-size: 15px;
-	}
-
-	.ls-steps span {
-		font-size: 13px;
-		line-height: 1.5;
-		color: var(--ls-muted);
-	}
-
-	/* Pricing */
-	.ls-plans {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 12px;
-		margin-top: 30px;
-		text-align: left;
-	}
-
-	.ls-plan {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		padding: 22px;
-		border-radius: 24px;
-		background: #fff;
-		box-shadow: inset 0 0 0 1px var(--ls-line);
-		transition:
-			transform 260ms var(--ease-out),
-			box-shadow 260ms var(--ease-out);
-	}
-
-	@media (hover: hover) {
-		.ls-plan:hover,
-		.ls-plan.is-hover {
-			transform: translateY(-4px);
-			box-shadow: inset 0 0 0 1px var(--ls-line), 0 24px 40px -24px rgba(13, 26, 77, 0.4);
-		}
-	}
-
-	.ls-plan.is-hot {
-		background: linear-gradient(160deg, #2f5bff, #1e3fd6);
-		color: #fff;
-		box-shadow: 0 24px 40px -22px rgba(47, 91, 255, 0.8);
-	}
-
-	.ls-plan__name {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-weight: 700;
-		font-size: 15px;
-	}
-
-	.ls-plan__name em {
-		padding: 3px 9px;
-		border-radius: 99px;
-		background: #c8f25a;
-		color: #0b1020;
-		font-style: normal;
-		font-size: 11px;
-	}
-
-	.ls-plan__price {
-		display: flex;
-		align-items: baseline;
-		gap: 6px;
-	}
-
-	.ls-plan__price strong {
-		font-size: 38px;
-		letter-spacing: -0.04em;
-	}
-
-	.ls-plan__price span,
-	.ls-plan__blurb {
-		font-size: 12.5px;
-		opacity: 0.7;
-	}
-
-	.ls-plan.is-hot .ls-btn {
-		background: #fff;
-	}
-
-	.ls-plan ul {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		padding: 0;
-		list-style: none;
-		font-size: 13px;
-	}
-
-	.ls-plan li::before {
-		content: '✓';
-		margin-right: 8px;
-		color: var(--ls-blue);
-		font-weight: 700;
-	}
-
-	.ls-plan.is-hot li::before {
-		color: #c8f25a;
-	}
-
-	/* FAQ */
-	.ls-faq {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		max-width: 640px;
-		margin: 28px auto 0;
-		text-align: left;
-	}
-
-	.ls-qa {
-		border-radius: 18px;
-		background: var(--ls-tint);
-		transition: background-color 200ms ease;
-	}
-
-	.ls-qa[open] {
-		background: #eef2ff;
-	}
-
-	.ls-qa summary {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 16px;
-		padding: 16px 18px;
-		font-weight: 600;
-		font-size: 15px;
-		cursor: pointer;
-		list-style: none;
-	}
-
-	.ls-qa summary::-webkit-details-marker {
-		display: none;
-	}
-
-	.ls-qa summary i {
-		position: relative;
-		width: 26px;
-		height: 26px;
-		border-radius: 50%;
-		background: #fff;
-		flex-shrink: 0;
-	}
-
-	.ls-qa summary i::before,
-	.ls-qa summary i::after {
-		content: '';
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		width: 10px;
-		height: 2px;
-		margin: -1px 0 0 -5px;
-		border-radius: 2px;
-		background: var(--ls-ink);
-		transition: transform 260ms var(--ease-out);
-	}
-
-	.ls-qa summary i::after {
-		transform: rotate(90deg);
-	}
-
-	.ls-qa[open] summary i::after {
-		transform: rotate(0);
-	}
-
-	.ls-qa p {
-		padding: 0 18px 18px;
-		font-size: 14px;
-		line-height: 1.55;
-		color: var(--ls-muted);
-	}
-
-	/* Final CTA */
-	.ls-cta {
-		margin: 0 18px;
-		padding: 64px 28px;
-		border-radius: 30px;
-		text-align: center;
-		background:
-			linear-gradient(180deg, rgba(11, 16, 32, 0) 40%, rgba(11, 16, 32, 0.15)),
-			url('/images/case/quillo/photos/sky.webp') 50% 100% / cover no-repeat,
-			#3b8ff2;
-		color: #fff;
-	}
-
-	.ls-cta h3 {
-		font-weight: 800;
-		font-size: clamp(28px, 4.6cqi, 46px);
-		line-height: 1.05;
-		letter-spacing: -0.04em;
-	}
-
-	.ls-cta h3 span {
-		color: #fff;
-	}
-
-	.ls-cta > p {
-		margin-top: 10px !important;
-		font-size: 15px;
-		opacity: 0.92;
-	}
-
-	.ls-form {
-		display: flex;
-		gap: 8px;
-		max-width: 440px;
-		margin: 24px auto 0;
-		padding: 6px;
-		border-radius: 99px;
-		background: #fff;
-		box-shadow: 0 18px 40px -20px rgba(11, 16, 32, 0.5);
-	}
-
-	.ls-form input {
-		flex: 1;
-		min-width: 0;
-		padding: 0 14px;
-		border: 0;
-		outline: none;
-		background: none;
-		font: 500 14px 'Plus Jakarta Sans', var(--font-sans);
-		color: var(--ls-ink);
-	}
-
-	.ls-form.is-error {
-		box-shadow: 0 0 0 2px #ff7a59, 0 18px 40px -20px rgba(11, 16, 32, 0.5);
-		animation: ls-shake 360ms ease;
-	}
-
-	@keyframes ls-shake {
-		25% {
-			transform: translateX(-5px);
-		}
-		75% {
-			transform: translateX(5px);
-		}
-	}
-
-	.ls-form.is-done {
-		background: #c8f25a;
-	}
-
-	.ls-form__msg {
-		margin-top: 14px !important;
-		font-size: 12.5px;
-		opacity: 0.9;
-	}
-
-	.ls-foot {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 12px;
-		padding: 28px 28px 32px;
-		font-size: 12px;
-		color: var(--ls-muted);
-	}
-
-	/* Narrow site (mobile device mode, or a small browser): reflow by container width. */
-	@container (max-width: 640px) {
-		.ls-links {
-			display: none;
-		}
-
-		.ls-nav {
-			justify-content: space-between;
-			margin: 10px 12px 0;
-		}
-
-		.ls-hero {
-			height: 700px;
-			padding: 96px 18px 0;
-		}
-
-		.ls-float {
-			display: none;
-		}
-
-		.ls-sec {
-			padding: 56px 20px;
-		}
-
-		.ls-cms {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 10px;
-		}
-
-		.ls-bento,
-		.ls-steps,
-		.ls-plans {
-			grid-template-columns: minmax(0, 1fr);
-		}
-
-		.ls-tile--wide,
-		.ls-tile--polish {
-			grid-column: auto;
-			grid-row: auto;
-		}
-
-		.ls-cta {
-			margin: 0 12px;
-			padding: 48px 20px;
-		}
-
-		.ls-form {
-			flex-direction: column;
-			border-radius: 24px;
-		}
-
-		.ls-form input {
-			height: 44px;
-		}
-
-		.ls-foot {
-			flex-direction: column;
-		}
-	}
-
-	@media (max-width: 64rem) {
-		.ld__frame {
-			height: 560px;
-		}
-
-		.ld__stage {
-			min-height: 580px;
+		.ld__frame--mobile .ld__screen {
+			min-height: 440px;
+			border-radius: 38px;
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.ld-site {
-			scroll-behavior: auto;
-		}
-
-		.ls-hero__phone,
-		.ls-float {
-			animation: none;
-		}
-
 		.ld__cursor {
-			display: none;
+			transition: none;
 		}
 	}
 </style>
 
 <script>
 	const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+	type Dev = 'desktop' | 'mobile';
 
 	for (const root of document.querySelectorAll<HTMLElement>('[data-ld]')) {
-		const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+		const $ = <T extends Element = HTMLElement>(s: string, el: ParentNode = root) => el.querySelector<T>(s)!;
 		const stage = $('[data-stage]');
-		const site = $('[data-site]');
 		const cursor = $('[data-cursor]');
 		const toastEl = $('[data-ld-toast]');
 		const tourLabel = $('[data-tour-label]');
 		const tourBtnLabel = $('[data-tour-btn-label]');
-		const detail = $('[data-cms-detail]');
 		const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		let toastTimer = 0;
 
@@ -1558,88 +462,349 @@ const plans = [
 			toastEl.textContent = text;
 			toastEl.classList.add('is-on');
 			clearTimeout(toastTimer);
-			toastTimer = window.setTimeout(() => toastEl.classList.remove('is-on'), 2200);
+			toastTimer = window.setTimeout(() => toastEl.classList.remove('is-on'), 2600);
 		};
 
+		/* ---- Each viewport: scale-to-fit, overlay scrollbar, reveals ---- */
+		type View = { vp: HTMLElement; art: HTMLElement; sizer: HTMLElement; frame: HTMLElement; k: number; sync: () => void };
+		const views = {} as Record<Dev, View>;
+
+		for (const vp of root.querySelectorAll<HTMLElement>('[data-vp]')) {
+			const dev = vp.dataset.vp as Dev;
+			const artW = Number(vp.dataset.artW);
+			const sizer = $('.ld__sizer', vp);
+			const art = $('.qs', vp);
+			const frame = vp.closest<HTMLElement>('.ld__frame')!;
+			const sb = $('.ld__sb', frame);
+			const thumb = $('.ld__thumb', sb);
+			const view: View = { vp, art, sizer, frame, k: 1, sync: () => {} };
+			views[dev] = view;
+			let fade = 0;
+
+			const bar = () => {
+				const h = sb.clientHeight;
+				const ratio = vp.clientHeight / vp.scrollHeight;
+				const th = Math.max(28, h * ratio);
+				const max = vp.scrollHeight - vp.clientHeight;
+				thumb.style.height = `${th}px`;
+				thumb.style.transform = `translateY(${max > 0 ? (vp.scrollTop / max) * (h - th) : 0}px)`;
+				sb.style.display = ratio >= 1 ? 'none' : '';
+			};
+
+			const reveal = () => {
+				const vr = vp.getBoundingClientRect();
+				for (const el of art.querySelectorAll<HTMLElement>('[data-in]:not(.is-seen)')) {
+					const r = el.getBoundingClientRect();
+					if (r.top < vr.bottom - vr.height * 0.08 && r.bottom > vr.top) el.classList.add('is-seen');
+				}
+			};
+
+			const fit = () => {
+				const w = vp.clientWidth;
+				if (!w) return;
+				view.k = w / artW;
+				art.style.transform = `scale(${view.k})`;
+				sizer.style.height = `${art.offsetHeight * view.k}px`;
+				bar();
+				reveal();
+			};
+			view.sync = fit;
+
+			new ResizeObserver(fit).observe(vp);
+			new ResizeObserver(fit).observe(art);
+			fit();
+			addEventListener('resize', fit);
+			addEventListener('load', fit);
+			art.addEventListener('toggle', fit, true);
+
+			let raf = 0;
+			vp.addEventListener(
+				'scroll',
+				() => {
+					cancelAnimationFrame(raf);
+					raf = requestAnimationFrame(() => {
+						bar();
+						reveal();
+					});
+					frame.classList.add('is-scrolling');
+					clearTimeout(fade);
+					fade = window.setTimeout(() => frame.classList.remove('is-scrolling'), 900);
+				},
+				{ passive: true },
+			);
+
+			// Drag the thumb, or click the track to page.
+			thumb.addEventListener('pointerdown', (e) => {
+				e.preventDefault();
+				thumb.setPointerCapture(e.pointerId);
+				sb.classList.add('is-drag');
+				const startY = e.clientY;
+				const startTop = vp.scrollTop;
+				const span = sb.clientHeight - thumb.offsetHeight;
+				const max = vp.scrollHeight - vp.clientHeight;
+				const move = (ev: PointerEvent) => {
+					vp.scrollTop = startTop + ((ev.clientY - startY) / span) * max;
+				};
+				const up = () => {
+					sb.classList.remove('is-drag');
+					thumb.removeEventListener('pointermove', move);
+					thumb.removeEventListener('pointerup', up);
+					thumb.removeEventListener('pointercancel', up);
+				};
+				thumb.addEventListener('pointermove', move);
+				thumb.addEventListener('pointerup', up);
+				thumb.addEventListener('pointercancel', up);
+			});
+			sb.addEventListener('pointerdown', (e) => {
+				if (e.target === thumb) return;
+				const r = thumb.getBoundingClientRect();
+				vp.scrollBy({ top: (e.clientY < r.top ? -1 : 1) * vp.clientHeight * 0.85, behavior: reduce ? 'auto' : 'smooth' });
+			});
+
+			wire(view, dev);
+		}
+
 		/* ---- Device switch ---- */
-		const setDevice = (d: 'desktop' | 'mobile') => {
+		const current = () => root.dataset.device as Dev;
+		const setDevice = (d: Dev) => {
 			root.dataset.device = d;
 			root.querySelectorAll<HTMLElement>('[data-device-btn]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.deviceBtn === d)));
+			requestAnimationFrame(() => views[d].sync());
 		};
 		root.querySelectorAll<HTMLElement>('[data-device-btn]').forEach((b) =>
 			b.addEventListener('click', () => {
 				stopTour(true);
-				setDevice(b.dataset.deviceBtn as 'desktop' | 'mobile');
+				setDevice(b.dataset.deviceBtn as Dev);
 			}),
 		);
 		if (matchMedia('(max-width: 47.99rem)').matches) setDevice('mobile');
 
-		/* ---- In-site behaviour ---- */
-		const scrollToEl = (el: Element) => {
-			const top = (el as HTMLElement).offsetTop - 70;
-			site.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
-		};
+		/* ---- In-site behaviour (delegated per artboard) ---- */
+		function scrollToEl(view: View, el: Element, offset = 24) {
+			const top = view.vp.scrollTop + el.getBoundingClientRect().top - view.vp.getBoundingClientRect().top - offset * view.k;
+			view.vp.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+		}
 
-		site.addEventListener('click', (event) => {
-			const t = event.target as Element;
-			const jump = t.closest<HTMLAnchorElement>('[data-jump]');
-			if (jump) {
+		function wire(view: View, dev: Dev) {
+			const art = view.art;
+			const chapterTimer = { id: 0 };
+			const checks = art.querySelector<HTMLElement>('[data-join-msg]');
+			const checksHTML = checks?.innerHTML ?? '';
+
+			const setChapter = (player: HTMLElement, i: number) => {
+				player.dataset.ch = String(i);
+				player.querySelectorAll<HTMLElement>('[data-chapter]').forEach((b) => b.setAttribute('aria-selected', String(Number(b.dataset.chapter) === i)));
+				const label = player.querySelector<HTMLElement>('[data-chap-label]');
+				const names = ['Connect', 'Map your content', 'Edit & snap', 'Approve & publish'];
+				const times = ['0:00', '0:12', '0:24', '0:42'];
+				if (label) label.innerHTML = `<em>${times[i]}</em>${names[i]}`;
+			};
+
+			const play = (player: HTMLElement) => {
+				clearInterval(chapterTimer.id);
+				player.classList.add('is-playing');
+				let i = 0;
+				setChapter(player, 0);
+				chapterTimer.id = window.setInterval(() => {
+					i++;
+					if (i > 3) {
+						clearInterval(chapterTimer.id);
+						player.classList.remove('is-playing');
+						setChapter(player, 0);
+						return;
+					}
+					setChapter(player, i);
+				}, 2600);
+			};
+
+			art.addEventListener('click', (event) => {
+				const t = event.target as Element;
+
+				const jump = t.closest<HTMLElement>('[data-jump]');
+				if (jump) {
+					event.preventDefault();
+					const sec = art.querySelector(`[data-sec="${jump.dataset.jump}"]`);
+					art.querySelector('.m-hero')?.classList.remove('is-menu');
+					if (sec) scrollToEl(view, sec, 0);
+				}
+
+				const menu = t.closest<HTMLElement>('[data-menu]');
+				if (menu) {
+					const hero = art.querySelector('.m-hero')!;
+					menu.setAttribute('aria-expanded', String(hero.classList.toggle('is-menu')));
+				}
+
+				const msg = t.closest<HTMLElement>('[data-toast]');
+				if (msg) toast(msg.dataset.toast!);
+
+				const card = t.closest<HTMLElement>('[data-cms]');
+				if (card) {
+					art.querySelectorAll('[data-cms]').forEach((c) => {
+						c.classList.toggle('is-on', c === card);
+						c.setAttribute('aria-pressed', String(c === card));
+					});
+					toast(`${card.dataset.name} ${card.dataset.detail}`);
+				}
+
+				const tab = t.closest<HTMLElement>('[data-filter]');
+				if (tab) {
+					const f = tab.dataset.filter!;
+					art.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-selected', String(b === tab)));
+					let shown = 0;
+					art.querySelectorAll<HTMLElement>('[data-cms]').forEach((c) => {
+						const on = f === 'all' || c.dataset.cat === f;
+						c.hidden = !on;
+						if (on) shown++;
+					});
+					const wrap = art.querySelector<HTMLElement>('.d-cms__wrap, .m-cms')!;
+					wrap.classList.toggle('is-empty', shown === 0);
+					if (f !== 'all') wrap.classList.add('is-all');
+					else if (!wrap.dataset.expanded) wrap.classList.remove('is-all');
+				}
+
+				if (t.closest('[data-more]')) {
+					const wrap = art.querySelector<HTMLElement>('.m-cms')!;
+					wrap.dataset.expanded = '1';
+					wrap.classList.add('is-all');
+					(t.closest('[data-more]') as HTMLElement).textContent = 'Vote for the next integration →';
+				}
+
+				const playBtn = t.closest<HTMLElement>('[data-play]');
+				if (playBtn) play(playBtn.closest<HTMLElement>('[data-player]')!);
+				const ch = t.closest<HTMLElement>('[data-chapter]');
+				if (ch) setChapter(ch.closest<HTMLElement>('[data-player]')!, Number(ch.dataset.chapter));
+
+				const polish = t.closest<HTMLElement>('[data-polish]');
+				if (polish) polish.setAttribute('aria-pressed', String(polish.getAttribute('aria-pressed') !== 'true'));
+
+				const approve = t.closest<HTMLElement>('[data-approve]');
+				if (approve) {
+					const note = approve.closest<HTMLElement>('[data-approve-card]')!;
+					const done = note.classList.toggle('is-done');
+					approve.querySelector('span')!.textContent = done ? 'Approved' : 'Approve';
+					const pill = note.querySelector<HTMLElement>('[data-approve-pill]')!;
+					pill.textContent = done ? 'Approved' : 'In review';
+					pill.classList.toggle('qs-pill--ok', done);
+					pill.classList.toggle('qs-pill--live', !done);
+				}
+
+				const sw = t.closest<HTMLElement>('[data-switch]');
+				if (sw) sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'));
+
+				const pick = t.closest<HTMLElement>('[data-pick]');
+				if (pick) pick.parentElement!.querySelectorAll('[data-pick]').forEach((r) => r.classList.toggle('is-on', r === pick));
+
+				const step = t.closest<HTMLElement>('[data-step]');
+				if (step) {
+					step.parentElement!.querySelectorAll('[data-step]').forEach((s) => s.classList.toggle('is-on', s === step));
+					const vis = art.querySelector<HTMLElement>('.d-how__vis, .m-how');
+					if (vis) vis.dataset.active = step.dataset.step;
+				}
+
+				const pt = t.closest<HTMLElement>('[data-plan-tab]');
+				if (pt) {
+					const plans = JSON.parse(art.querySelector('[data-plans]')!.textContent!) as { id: string; name: string; price: string; unit: string; desc: string; cta: string; items: string[] }[];
+					const pl = plans.find((x) => x.id === pt.dataset.planTab)!;
+					art.querySelectorAll('[data-plan-tab]').forEach((b) => b.setAttribute('aria-selected', String(b === pt)));
+					const card = art.querySelector<HTMLElement>('[data-plan]')!;
+					card.dataset.plan = pl.id;
+					(['name', 'price', 'unit', 'desc', 'cta'] as const).forEach((k) => (card.querySelector(`[data-p="${k}"]`)!.textContent = pl[k]));
+					const ul = card.querySelector('[data-p="items"]')!;
+					const tpl = ul.querySelector('li')!;
+					ul.replaceChildren(
+						...pl.items.map((it) => {
+							const li = tpl.cloneNode(true) as HTMLElement;
+							li.lastChild!.textContent = it;
+							return li;
+						}),
+					);
+					const cta = card.querySelector<HTMLElement>('[data-p-cta]')!;
+					if (pl.id === 'agency') {
+						cta.removeAttribute('data-jump');
+						cta.dataset.toast = 'Agency demos open with the beta. Join the waitlist to book one.';
+					} else {
+						cta.dataset.jump = 'join';
+						delete cta.dataset.toast;
+					}
+					card.classList.remove('is-swap');
+					void card.offsetWidth;
+					card.classList.add('is-swap');
+				}
+			});
+
+			// Keyboard: role=button cards.
+			art.addEventListener('keydown', (e) => {
+				const el = (e.target as HTMLElement).closest<HTMLElement>('[role="button"]');
+				if (el && (e.key === 'Enter' || e.key === ' ')) {
+					e.preventDefault();
+					el.click();
+				}
+			});
+
+			// One FAQ open at a time.
+			art.querySelectorAll<HTMLDetailsElement>('[data-faq]').forEach((d) =>
+				d.addEventListener('toggle', () => {
+					if (d.open) art.querySelectorAll<HTMLDetailsElement>('[data-faq]').forEach((o) => o !== d && (o.open = false));
+				}),
+			);
+
+			// Swipe dots for the mobile use-case carousel.
+			const swipe = art.querySelector<HTMLElement>('[data-swipe]');
+			const dots = art.querySelectorAll('[data-swipe-dots] i');
+			swipe?.addEventListener(
+				'scroll',
+				() => {
+					const i = Math.round(swipe.scrollLeft / (swipe.scrollWidth / 3));
+					dots.forEach((d, j) => d.classList.toggle('is-on', j === Math.min(2, i)));
+				},
+				{ passive: true },
+			);
+
+			// Waitlist demo form: nothing is sent anywhere.
+			const form = art.querySelector<HTMLFormElement>('[data-join]')!;
+			const email = form.querySelector<HTMLInputElement>('[data-email]')!;
+			const msgEl = art.querySelector<HTMLElement>('[data-join-msg]')!;
+			form.addEventListener('submit', (event) => {
 				event.preventDefault();
-				const el = site.querySelector(jump.getAttribute('href')!);
-				if (el) scrollToEl(el);
-			}
-			const msg = t.closest<HTMLElement>('[data-toast]');
-			if (msg) toast(msg.dataset.toast!);
+				form.classList.remove('is-error', 'is-done');
+				void form.offsetWidth;
+				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+					form.classList.add('is-error');
+					msgEl.textContent = 'That doesn’t look like an email address yet.';
+					return;
+				}
+				form.classList.add('is-done');
+				msgEl.textContent = 'You’re on the list. (This is a demo, so nothing was sent.)';
+			});
 
-			const card = t.closest<HTMLElement>('[data-cms]');
-			if (card) {
-				site.querySelectorAll('[data-cms]').forEach((c) => {
-					c.classList.toggle('is-on', c === card);
-					c.setAttribute('aria-pressed', String(c === card));
+			(view as View & { reset?: () => void }).reset = () => {
+				email.value = '';
+				form.classList.remove('is-done', 'is-error');
+				msgEl.innerHTML = checksHTML;
+				art.querySelectorAll<HTMLElement>('[data-polish]').forEach((p) => p.setAttribute('aria-pressed', 'false'));
+				art.querySelectorAll<HTMLElement>('[data-approve-card].is-done [data-approve]').forEach((b) => b.click());
+				const faqs = art.querySelectorAll<HTMLDetailsElement>('[data-faq]');
+				faqs.forEach((d, i) => (d.open = i === 0));
+				art.querySelector<HTMLElement>('[data-filter="all"]')?.click();
+				art.querySelector<HTMLElement>('[data-step="0"]')?.click();
+				art.querySelector<HTMLElement>('[data-plan-tab="pro"]')?.click();
+				const sanity = art.querySelector<HTMLElement>('[data-cms="sanity"]');
+				art.querySelectorAll('[data-cms]').forEach((c) => {
+					c.classList.toggle('is-on', c === sanity);
+					c.setAttribute('aria-pressed', String(c === sanity));
 				});
-				detail.innerHTML = `<strong>${card.dataset.name}</strong> ${card.dataset.detail}`;
-			}
-
-			const tab = t.closest<HTMLElement>('[data-filter]');
-			if (tab) {
-				const f = tab.dataset.filter!;
-				site.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-selected', String(b === tab)));
-				let shown = 0;
-				site.querySelectorAll<HTMLElement>('[data-cms]').forEach((c) => {
-					const on = f === 'all' || c.dataset.cat === f;
-					c.hidden = !on;
-					if (on) shown++;
+				art.querySelectorAll<HTMLElement>('[data-player]').forEach((pl) => {
+					clearInterval(chapterTimer.id);
+					pl.classList.remove('is-playing');
+					setChapter(pl, 0);
 				});
-				site.querySelector('.ls-cms')!.classList.toggle('is-empty', shown === 0);
-			}
-
-			if (t.closest('[data-polish-btn]')) {
-				const p = site.querySelector('[data-polish]')!;
-				p.classList.toggle('is-done');
-				(t.closest('[data-polish-btn]') as HTMLElement).textContent = p.classList.contains('is-done') ? '↺ Undo' : '✦ Polish';
-			}
-		});
-
-		const form = site.querySelector<HTMLFormElement>('[data-join]')!;
-		const email = form.querySelector<HTMLInputElement>('[data-email]')!;
-		const joinMsg = site.querySelector<HTMLElement>('[data-join-msg]')!;
-		form.addEventListener('submit', (event) => {
-			event.preventDefault(); // Demo only: nothing is sent anywhere.
-			form.classList.remove('is-error', 'is-done');
-			void form.offsetWidth;
-			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-				form.classList.add('is-error');
-				joinMsg.textContent = 'That doesn’t look like an email address yet.';
-				return;
-			}
-			form.classList.add('is-done');
-			joinMsg.textContent = 'You’re on the list. (This is a demo, so nothing was sent.)';
-		});
+			};
+			void dev;
+		}
 
 		/* ---- Autoplay tour ---- */
 		let token = 0;
 		let playing = false;
-		let visible = false;
 		let userTook = false;
 
 		const setTourState = (s: 'playing' | 'paused' | 'idle') => {
@@ -1652,105 +817,115 @@ const plans = [
 		const moveCursor = (el: Element) => {
 			const s = stage.getBoundingClientRect();
 			const r = el.getBoundingClientRect();
-			cursor.style.setProperty('--cx', `${r.left - s.left + r.width * 0.55}px`);
+			cursor.style.setProperty('--cx', `${r.left - s.left + Math.min(r.width * 0.55, 60)}px`);
 			cursor.style.setProperty('--cy', `${r.top - s.top + r.height * 0.55}px`);
 		};
 
-		const click = async (el: HTMLElement, my: number) => {
-			moveCursor(el);
-			await sleep(950);
-			if (my !== token) return false;
-			cursor.classList.remove('is-click');
-			void cursor.offsetWidth;
-			cursor.classList.add('is-click');
-			el.click();
-			await sleep(350);
-			return my === token;
-		};
-
-		const typeInto = async (input: HTMLInputElement, text: string, my: number) => {
-			input.value = '';
-			for (const ch of text) {
-				if (my !== token) return false;
-				input.value += ch;
-				await sleep(70);
-			}
-			return true;
-		};
-
-		const q = <T extends HTMLElement>(s: string) => site.querySelector<T>(s)!;
-
 		const tour = async () => {
 			const my = ++token;
-			setTourState('playing');
 			const ok = () => my === token;
+			setTourState('playing');
+
+			const click = async (el: HTMLElement | null, wait = 900) => {
+				if (!el || !ok()) return ok();
+				moveCursor(el);
+				await sleep(wait);
+				if (!ok()) return false;
+				cursor.classList.remove('is-click');
+				void cursor.offsetWidth;
+				cursor.classList.add('is-click');
+				el.click();
+				await sleep(380);
+				return ok();
+			};
+			const hold = async (ms: number) => {
+				await sleep(ms);
+				return ok();
+			};
+
 			while (ok()) {
-				site.scrollTo({ top: 0, behavior: 'smooth' });
-				q('[data-polish]').classList.remove('is-done');
-				q('[data-polish-btn]').textContent = '✦ Polish';
-				await sleep(1200);
-				if (!ok()) return;
-				moveCursor(q('[data-tour-id="hero-cta"]'));
-				await sleep(1500);
-				if (!ok()) return;
+				const view = views[current()];
+				const q = <T extends HTMLElement>(s: string) => view.art.querySelector<T>(s);
+				const goto = async (sec: string, ms = 1300) => {
+					scrollToEl(view, q(`[data-sec="${sec}"]`)!, 0);
+					return hold(ms);
+				};
+				const mobile = current() === 'mobile';
 
-				scrollToEl(q('#ls-cms'));
-				await sleep(1100);
-				if (!(await click(q('[data-cms="contentful"]'), my))) return;
-				await sleep(1300);
-				if (!(await click(q('[data-filter="builder"]'), my))) return;
-				await sleep(900);
-				if (!(await click(q('[data-filter="all"]'), my))) return;
-				if (!(await click(q('[data-cms="sanity"]'), my))) return;
-				await sleep(1000);
+				view.vp.scrollTo({ top: 0, behavior: 'smooth' });
+				if (!(await hold(1200))) return;
+				moveCursor(q('[data-tour-id="hero-cta"]')!);
+				if (!(await hold(1800))) return;
 
-				scrollToEl(q('#ls-features'));
-				await sleep(1100);
-				q('[data-polish-btn]').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-				await sleep(700);
-				if (!(await click(q('[data-polish-btn]'), my))) return;
-				await sleep(1500);
+				if (!(await goto('cms'))) return;
+				if (!(await click(q('[data-cms="contentful"]')))) return;
+				if (!(await hold(1400))) return;
+				if (!(await click(q('[data-filter="builder"]')))) return;
+				if (!(await hold(1000))) return;
+				if (!(await click(q('[data-filter="all"]')))) return;
+				if (!(await click(q('[data-cms="sanity"]')))) return;
+				if (!(await hold(1000))) return;
 
-				scrollToEl(q('#ls-pricing'));
-				await sleep(1100);
-				const pro = q('[data-tour-id="pro"]');
-				moveCursor(pro);
-				pro.classList.add('is-hover');
-				await sleep(1500);
-				pro.classList.remove('is-hover');
-				if (!ok()) return;
+				if (!(await goto('demo'))) return;
+				if (!(await click(q('[data-play]')))) return;
+				if (!(await hold(4200))) return;
 
-				scrollToEl(q('#ls-faq'));
-				await sleep(1100);
-				const faq = q<HTMLDetailsElement>('[data-tour-id="faq"]');
-				if (!(await click(faq.querySelector('summary')!, my))) return;
-				await sleep(1800);
+				if (!(await goto('features'))) return;
+				const polish = q('[data-tour-id="polish"]')!;
+				scrollToEl(view, polish.closest('article')!, mobile ? 24 : 120);
+				if (!(await hold(1100))) return;
+				if (!(await click(polish))) return;
+				if (!(await hold(1300))) return;
+				if (!(await click(q('[data-approve]')))) return;
+				if (!(await hold(1300))) return;
 
-				scrollToEl(q('#ls-join'));
-				await sleep(1100);
+				if (!(await goto('how'))) return;
+				if (mobile) scrollToEl(view, q('.m-steps')!, 260);
+				if (!(await click(q('[data-step="1"]'), 1100))) return;
+				if (!(await hold(1300))) return;
+
+				if (!(await goto('pricing'))) return;
+				if (mobile) {
+					if (!(await click(q('[data-plan-tab="agency"]')))) return;
+					if (!(await hold(1300))) return;
+					if (!(await click(q('[data-plan-tab="pro"]')))) return;
+				} else {
+					const pro = q('[data-tour-id="pro"]')!;
+					moveCursor(pro);
+					pro.classList.add('is-hover');
+					if (!(await hold(1600))) return;
+					pro.classList.remove('is-hover');
+				}
+
+				if (!(await goto('faq'))) return;
+				if (!(await click(q('[data-tour-id="faq"] summary')))) return;
+				if (!(await hold(1800))) return;
+
+				if (!(await goto('join'))) return;
+				const email = q<HTMLInputElement>('[data-email]')!;
 				moveCursor(email);
-				await sleep(900);
-				if (!(await typeInto(email, 'you@crumbandco.com', my))) return;
-				if (!(await click(q('[data-tour-id="join"]'), my))) return;
-				await sleep(2600);
-				if (!ok()) return;
-
-				// Reset for the next loop.
+				if (!(await hold(900))) return;
 				email.value = '';
-				form.classList.remove('is-done');
-				joinMsg.textContent = 'iOS & Android · Free for 1 site · No credit card';
-				faq.open = false;
-				setDevice(root.dataset.device === 'desktop' ? 'mobile' : 'desktop');
-				await sleep(900);
+				for (const ch of 'you@crumbandco.com') {
+					if (!ok()) return;
+					email.value += ch;
+					await sleep(65);
+				}
+				if (!(await click(q('[data-tour-id="join"]')))) return;
+				if (!(await hold(2600))) return;
+
+				(view as View & { reset?: () => void }).reset?.();
+				setDevice(mobile ? 'desktop' : 'mobile');
+				if (!(await hold(900))) return;
 			}
 		};
 
-		const stopTour = (byUser = false) => {
+		function stopTour(byUser = false) {
 			token++;
 			if (byUser) userTook = true;
-			site.querySelectorAll('.is-hover').forEach((e) => e.classList.remove('is-hover'));
+			root.querySelectorAll('.is-hover').forEach((e) => e.classList.remove('is-hover'));
 			setTourState(byUser ? 'paused' : 'idle');
-		};
+		}
 
 		// Any real interaction inside the stage hands control to the visitor.
 		const takeOver = (event: Event) => {
@@ -1773,9 +948,8 @@ const plans = [
 		} else {
 			new IntersectionObserver(
 				([entry]) => {
-					visible = entry.isIntersecting;
-					if (visible && !userTook && !playing) tour();
-					if (!visible && playing) stopTour(false);
+					if (entry.isIntersecting && !userTook && !playing) tour();
+					if (!entry.isIntersecting && playing) stopTour(false);
 				},
 				{ threshold: 0.45 },
 			).observe(stage);

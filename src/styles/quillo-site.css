@@ -1,0 +1,390 @@
+/*
+ * Quillo landing page — shared primitives for the 1:1 Figma artboards
+ * (desktop 1440, mobile 390). Everything is in true artboard px; the
+ * LandingDemo shell scales the artboard to fit its frame.
+ */
+.qs {
+	--b: #2f5bff;
+	--b-deep: #1e3fd6;
+	--lime: #c8f25a;
+	--ink: #0b1020;
+	--ink7: #2a3045;
+	--ink5: #5f6780;
+	--ink3: #a3aabd;
+	--line: #e6e9f2;
+	--s50: #f6f8fc;
+	--s100: #eef2fa;
+	--ok: #1fb86a;
+	--warn: #f5a524;
+	--ease: cubic-bezier(0.23, 1, 0.32, 1);
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform-origin: 0 0;
+	background: #fff;
+	color: var(--ink);
+	font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+	font-size: 16px;
+	line-height: 1.4;
+	-webkit-font-smoothing: antialiased;
+	text-align: left;
+}
+
+.qs :where(h1, h2, h3, h4, p, ul, ol, li, figure, blockquote, dl, dd) {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.qs :where(button, input) {
+	font: inherit;
+	color: inherit;
+	border: 0;
+	background: none;
+	margin: 0;
+	padding: 0;
+}
+
+.qs :where(button, a, summary, label, [data-cms], [data-pick]) {
+	cursor: pointer;
+}
+
+.qs :where(a) {
+	color: inherit;
+	text-decoration: none;
+}
+
+.qs :where(img) {
+	display: block;
+	max-width: none;
+}
+
+.qs :where(button, a, summary, input):focus-visible {
+	outline: 2px solid var(--b);
+	outline-offset: 3px;
+}
+
+/* Section header: eyebrow, two-tone heading, lead */
+.qs-head {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	text-align: center;
+}
+
+.qs-head--left {
+	align-items: flex-start;
+	text-align: left;
+}
+
+.qs-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 14px 6px 12px;
+	border-radius: 999px;
+	background: rgba(47, 91, 255, 0.08);
+	color: var(--b);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.25;
+	white-space: nowrap;
+}
+
+.qs-eyebrow svg {
+	transition: transform 600ms var(--ease);
+}
+
+.qs-eyebrow:hover svg,
+.is-seen .qs-eyebrow svg {
+	transform: rotate(18deg) scale(1.15);
+}
+
+.qs-h {
+	font-size: 52px;
+	font-weight: 700;
+	letter-spacing: -2.2px;
+	line-height: 1.06;
+}
+
+.qs-h em,
+.qs-serif {
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-style: italic;
+	font-weight: 400;
+	font-size: 1.19em;
+	letter-spacing: -0.5px;
+	color: var(--b);
+}
+
+.qs-lead {
+	font-size: 18px;
+	line-height: 1.55;
+	letter-spacing: -0.2px;
+	color: var(--ink5);
+}
+
+/* Buttons */
+.qs-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 12px 12px 22px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	transition:
+		transform 180ms var(--ease),
+		box-shadow 180ms var(--ease),
+		background-color 180ms var(--ease);
+}
+
+.qs-btn:hover {
+	transform: translateY(-1px);
+}
+
+.qs-btn:active {
+	transform: scale(0.97);
+}
+
+.qs-btn--dark {
+	background: var(--ink);
+	color: #fff;
+}
+
+.qs-btn--white {
+	background: #fff;
+	color: var(--ink);
+}
+
+.qs-btn--blue {
+	background: var(--b);
+	color: #fff;
+	box-shadow: 0 16px 32px -12px rgba(47, 91, 255, 0.7);
+}
+
+.qs-btn__arrow {
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.18);
+	transition: transform 220ms var(--ease);
+}
+
+.qs-btn--white .qs-btn__arrow {
+	background: var(--ink);
+	color: #fff;
+}
+
+.qs-btn:hover .qs-btn__arrow {
+	transform: translateX(3px);
+}
+
+/* 3D sticker tile */
+.qs-sticker {
+	position: absolute;
+	display: grid;
+	place-items: center;
+	border-radius: 23%;
+	background: rgba(255, 255, 255, 0.94);
+	border: 1.5px solid #fff;
+	box-shadow: 0 14px 28px -4px rgba(26, 51, 128, 0.2);
+	animation: qs-float 6s ease-in-out infinite;
+	animation-delay: var(--d, 0s);
+}
+
+.qs-sticker img {
+	width: calc(100% - 14px);
+	height: calc(100% - 14px);
+	object-fit: contain;
+}
+
+@keyframes qs-float {
+	50% {
+		transform: translateY(-8px) rotate(-2deg);
+	}
+}
+
+/* Glass card */
+.qs-glass {
+	background: rgba(255, 255, 255, 0.8);
+	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(16px);
+	border: 1.2px solid #fff;
+	box-shadow: 0 16px 40px rgba(31, 51, 115, 0.1);
+}
+
+/* Status pills */
+.qs-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 11.5px;
+	font-weight: 600;
+	line-height: 1.3;
+	white-space: nowrap;
+}
+
+.qs-pill::before {
+	content: '';
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+.qs-pill--nodot::before {
+	display: none;
+}
+
+.qs-pill--live {
+	background: rgba(47, 91, 255, 0.1);
+	color: var(--b);
+}
+
+.qs-pill--next {
+	background: rgba(245, 165, 36, 0.14);
+	color: var(--warn);
+}
+
+.qs-pill--planned {
+	background: rgba(163, 170, 189, 0.2);
+	color: var(--ink5);
+}
+
+.qs-pill--ok {
+	background: rgba(31, 184, 106, 0.12);
+	color: var(--ok);
+}
+
+.qs-pill--draft {
+	background: rgba(163, 170, 189, 0.2);
+	color: var(--ink5);
+}
+
+/* CMS logo tile */
+.qs-logo {
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+	width: 44px;
+	height: 44px;
+	border-radius: 14px;
+	color: #fff;
+	font-size: 20px;
+	font-weight: 800;
+}
+
+/* Quillo wordmark */
+.qs-mark {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 22px;
+	font-weight: 800;
+	letter-spacing: -0.8px;
+}
+
+.qs-mark i {
+	display: grid;
+	place-items: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 11px;
+	background: linear-gradient(135deg, #5c99ff, #1f40db);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+	color: #fff;
+}
+
+/* Circle icons */
+.qs-circle {
+	display: grid;
+	place-items: center;
+	flex-shrink: 0;
+	border-radius: 50%;
+}
+
+/* Reveal on scroll inside the mockup */
+.qs [data-in] {
+	opacity: 0;
+	transform: translateY(24px);
+	transition:
+		opacity 700ms var(--ease),
+		transform 700ms var(--ease);
+}
+
+.qs [data-in].is-seen {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.qs [data-in] {
+		opacity: 1;
+		transform: none;
+	}
+	.qs-sticker {
+		animation: none;
+	}
+}
+
+/* Accordion */
+.qs-faq details summary {
+	list-style: none;
+}
+
+.qs-faq details summary::-webkit-details-marker {
+	display: none;
+}
+
+/* Toggle */
+.qs-toggle {
+	position: relative;
+	width: 38px;
+	height: 22px;
+	border-radius: 11px;
+	background: var(--line);
+	transition: background-color 220ms var(--ease);
+	flex-shrink: 0;
+}
+
+.qs-toggle::after {
+	content: '';
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 2px 4px rgba(11, 16, 32, 0.2);
+	transition: transform 220ms var(--ease);
+}
+
+.qs-toggle[aria-checked='true'] {
+	background: var(--ok);
+}
+
+.qs-toggle[aria-checked='true']::after {
+	transform: translateX(16px);
+}
+
+/* Phones inside the artboards keep their true size. */
+.qs .qd {
+	max-width: none;
+}
+
+.qs,
+.qs *,
+.qs *::before,
+.qs *::after {
+	box-sizing: border-box;
+}
