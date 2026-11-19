@@ -1,0 +1,40 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CaseStudyPage from '../../components/CaseStudyPage.astro';
+import { caseStudies } from '../../data/caseStudies';
+import { projects, subpageNavItems } from '../../data/site';
+import { getNextInWork } from '../../data/workNav';
+import { absoluteUrl, articleJsonLd } from '../../lib/seo';
+
+export function getStaticPaths() {
+	return caseStudies.map((study) => ({ params: { slug: study.slug } }));
+}
+
+const { slug } = Astro.params;
+const study = caseStudies.find((s) => s.slug === slug);
+if (!study) throw new Error(`Unknown case study: ${slug}`);
+
+const project = projects.find((p) => p.slug === slug);
+if (!project) throw new Error(`No project card for case study: ${slug}`);
+
+const next = getNextInWork(slug);
+const pageTitle = `${study.title} — case study`;
+const pageDescription = `${study.summary} ${study.role}`;
+const pageUrl = absoluteUrl(`/work/${slug}`);
+---
+
+<Layout
+	title={pageTitle}
+	description={pageDescription}
+	navItems={subpageNavItems}
+	type="article"
+	image={study.ogImage ?? project.image}
+	jsonLd={articleJsonLd({
+		title: pageTitle,
+		description: pageDescription,
+		url: pageUrl,
+		image: absoluteUrl(study.ogImage ?? project.image),
+	})}
+>
+	<CaseStudyPage study={study} project={project} next={next} />
+</Layout>

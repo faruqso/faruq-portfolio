@@ -4,6 +4,11 @@ import PageIntro from '../components/PageIntro.astro';
 import Button from '../components/Button.astro';
 import { subpageNavItems, testimonials } from '../data/site';
 import { bookingUrl, sprint } from '../data/leads';
+import { absoluteUrl, webPageJsonLd } from '../lib/seo';
+
+const pageTitle = 'Launch Website Sprint — your startup site, designed and live in about 2 weeks';
+const pageDescription =
+	'For early-stage AI and SaaS founders: message, Figma design and a Framer build, live in about 2 weeks. From $2,000.';
 
 // Until the Zeeg link is set, "Book a call" goes to the contact form.
 const callHref = bookingUrl || '/#contact';
@@ -13,9 +18,10 @@ const quote = testimonials.items[1];
 ---
 
 <Layout
-	title="Launch Website Sprint — your startup site, designed and live in about 2 weeks"
-	description="For early-stage AI and SaaS founders: message, Figma design and a Framer build, live in about 2 weeks. From $2,000."
+	title={pageTitle}
+	description={pageDescription}
 	navItems={subpageNavItems}
+	jsonLd={webPageJsonLd({ title: pageTitle, description: pageDescription, url: absoluteUrl('/sprint') })}
 >
 	<div class="container page">
 		<PageIntro eyebrow={sprint.eyebrow} title={sprint.title} lead={sprint.lead}>

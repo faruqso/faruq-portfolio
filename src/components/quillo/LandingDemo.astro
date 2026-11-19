@@ -15,7 +15,7 @@ const cms = [
 	{ id: 'payload', l: 'P', name: 'Payload', kind: 'Headless · Open source', has: 'Collections · Globals', status: 'Planned', tone: 'planned', cat: 'headless' },
 	{ id: 'prismic', l: 'P', name: 'Prismic', kind: 'Headless · Slices', has: 'Documents · Slices', status: 'Planned', tone: 'planned', cat: 'headless' },
 	{ id: 'hygraph', l: 'H', name: 'Hygraph', kind: 'Headless · GraphQL', has: 'Models · Assets', status: 'Planned', tone: 'planned', cat: 'headless' },
-	{ id: 'keystone', l: 'K', name: 'Keystone', kind: 'Headless · Open source', has: 'Lists · Fields · Images', status: 'Planned', tone: 'planned', cat: 'headless' },
+	{ id: 'wordpress', l: 'W', name: 'WordPress', kind: 'Traditional · Headless', has: 'Posts · Pages · Media', status: 'Planned', tone: 'planned', cat: 'builder' },
 ];
 const detail: Record<string, string> = {
 	live: 'is live in beta. Your developer adds the Quillo plugin to the Studio once, then you scan a QR code and you’re in.',
@@ -24,7 +24,7 @@ const detail: Record<string, string> = {
 };
 const faqs = [
 	['Does Quillo change anything in my CMS?', 'No. Quillo uses Sanity’s official APIs with an editor token you control and can revoke anytime. Your schema, content and hosting stay where they are.'],
-	['Which CMSs are supported?', 'Sanity is live in beta. Contentful and Strapi are next, then Storyblok, Payload, Prismic, Hygraph and Keystone.'],
+	['Which CMSs are supported?', 'Sanity is live in beta. Contentful and Strapi are next, then Storyblok, Payload, Prismic, Hygraph and WordPress.'],
 	['What about custom fields and plugins?', 'Standard fields get native mobile editors. Custom Studio input components show as read-only previews on your phone.'],
 	['Can I limit what clients can edit?', 'Yes. Your CMS roles and permissions still apply, and the Agency plan adds client-safe roles so clients edit only what they should.'],
 ];
@@ -35,17 +35,8 @@ const plans = [
 ];
 ---
 
-<div class="ld" data-ld data-device="desktop" data-view="overview" data-tour="idle">
+<div class="ld" data-ld data-device="desktop" data-tour="idle">
 	<div class="ld__bar">
-		<div class="ld__seg ld__seg--view" role="radiogroup" aria-label="Preview mode">
-			<button type="button" role="radio" aria-checked="true" data-view-btn="overview">
-				Full page
-			</button>
-			<button type="button" role="radio" aria-checked="false" data-view-btn="interactive">
-				Interactive
-			</button>
-			<span class="ld__seg-thumb ld__seg-thumb--view" aria-hidden="true"></span>
-		</div>
 		<div class="ld__seg" role="radiogroup" aria-label="Preview device">
 			<button type="button" role="radio" aria-checked="true" data-device-btn="desktop">
 				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
@@ -86,12 +77,12 @@ const plans = [
 						<span class="ls-logo"><img src="/images/case/quillo/app-icon.webp" alt="" width="26" height="26" />Quillo</span>
 						<nav class="ls-links">
 							<a href="#ls-features" data-jump>Product</a>
-							<a href="#ls-demo" data-jump>Community</a>
-							<a href="#ls-cms" data-jump>Developers</a>
+							<a href="#ls-how" data-jump>How it works</a>
+							<a href="#ls-pricing" data-jump>For agencies</a>
 							<a href="#ls-pricing" data-jump>Pricing</a>
-							<a href="#ls-faq" data-jump>Blog</a>
+							<a href="#ls-faq" data-jump>FAQ</a>
 						</nav>
-						<a class="ls-btn ls-btn--dark ls-btn--sm" href="#ls-join" data-jump>Get started</a>
+						<a class="ls-btn ls-btn--dark ls-btn--sm" href="#ls-join" data-jump>Join the waitlist</a>
 					</header>
 
 					<section class="ls-hero">
@@ -101,8 +92,8 @@ const plans = [
 							Quillo turns your headless CMS into a beautiful native app, starting with Sanity. Fix a typo, swap a photo or approve a post in seconds, no laptop needed.
 						</p>
 						<div class="ls-hero__ctas">
-							<a class="ls-btn ls-btn--dark" href="#ls-join" data-jump data-tour-id="hero-cta">Get started for free<i>→</i></a>
-							<a class="ls-btn ls-btn--light" href="#ls-demo" data-jump>Watch mobile demo</a>
+							<a class="ls-btn ls-btn--dark" href="#ls-join" data-jump data-tour-id="hero-cta">Join the beta waitlist<i>→</i></a>
+							<button type="button" class="ls-btn ls-btn--light" data-toast="The 60-second demo video is in production.">Watch the 60s demo</button>
 						</div>
 						<div class="ls-hero__phone">
 							<Device width={230}><Home /></Device>
@@ -152,19 +143,6 @@ const plans = [
 						<p class="ls-cms__detail" data-cms-detail aria-live="polite">
 							<strong>Sanity</strong> {detail.live}
 						</p>
-					</section>
-
-					<section class="ls-sec ls-sec--demo" id="ls-demo">
-						<p class="ls-eyebrow">Product demo</p>
-						<h3 class="ls-h">See Quillo in <span>60 seconds.</span></h3>
-						<p class="ls-lead">A quick walkthrough of connecting Sanity and publishing from your phone.</p>
-						<div class="ls-demo">
-							<div class="ls-demo__frame" role="img" aria-label="Video placeholder for the 60-second Quillo demo">
-								<button type="button" class="ls-demo__play" data-toast="The 60-second demo video is in production." aria-label="Play demo">
-									<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"></path></svg>
-								</button>
-							</div>
-						</div>
 					</section>
 
 					<section class="ls-sec ls-sec--tint" id="ls-features">
@@ -290,9 +268,7 @@ const plans = [
 			<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.6L10 19z" fill="#0b1020" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path></svg>
 		</span>
 	</div>
-	<p class="ld__note">
-		<strong>Full page</strong> shows the whole landing at once (read-only). <strong>Interactive</strong> is the scrollable mockup with desktop/mobile frames, autoplay tour and live controls.
-	</p>
+	<p class="ld__note">Fully interactive: scroll inside, switch devices, filter the CMS list, open the FAQ or join the (demo) waitlist.</p>
 </div>
 
 <style>
@@ -357,16 +333,8 @@ const plans = [
 		transition: transform 420ms var(--ease-out);
 	}
 
-	[data-device='mobile'] .ld__seg:not(.ld__seg--view) > .ld__seg-thumb {
+	[data-device='mobile'] .ld__seg-thumb {
 		transform: translateX(100%);
-	}
-
-	[data-view='interactive'] .ld__seg--view > .ld__seg-thumb--view {
-		transform: translateX(100%);
-	}
-
-	.ld__seg--view .ld__seg-thumb--view {
-		background: #2f5bff;
 	}
 
 	.ld__status {
@@ -438,7 +406,7 @@ const plans = [
 	.ld__frame {
 		position: relative;
 		width: 100%;
-		max-width: 1440px;
+		max-width: 1040px;
 		height: 640px;
 		display: flex;
 		flex-direction: column;
@@ -503,14 +471,11 @@ const plans = [
 
 	/* Mobile: the same frame becomes a phone. */
 	[data-device='mobile'] .ld__frame {
-		--ld-screen-w: 366px;
-		--ld-r-outer: calc(var(--ld-screen-w) * 0.153);
-		--ld-r-screen: calc(var(--ld-screen-w) * 0.1196);
 		max-width: 390px;
 		height: 760px;
 		padding: 12px;
-		border-radius: calc(var(--ld-r-outer) + 12px);
-		background: linear-gradient(145deg, #2a2d33, #0f1114 40%, #1b1e23);
+		border-radius: 56px;
+		background: #121417;
 	}
 
 	[data-device='mobile'] .ld__stage {
@@ -537,7 +502,7 @@ const plans = [
 	}
 
 	[data-device='mobile'] .ld-site {
-		border-radius: var(--ld-r-screen);
+		border-radius: 44px;
 		padding-top: 44px;
 	}
 
@@ -601,51 +566,6 @@ const plans = [
 	}
 
 	/* ---------- The mini site ---------- */
-	/* Custom scroll track — only in interactive mode */
-	.ld-site {
-		scrollbar-width: thin;
-		scrollbar-color: rgba(15, 20, 40, 0.22) transparent;
-	}
-
-	.ld-site::-webkit-scrollbar {
-		width: 8px;
-	}
-
-	.ld-site::-webkit-scrollbar-track {
-		margin: 6px 0;
-		background: transparent;
-	}
-
-	.ld-site::-webkit-scrollbar-thumb {
-		border: 2px solid transparent;
-		border-radius: 99px;
-		background: rgba(15, 20, 40, 0.18);
-		background-clip: padding-box;
-	}
-
-	[data-view='overview'] .ld-site {
-		overflow: hidden;
-		scrollbar-width: none;
-		pointer-events: none;
-		user-select: none;
-	}
-
-	[data-view='overview'] .ld-site::-webkit-scrollbar {
-		display: none;
-	}
-
-	[data-view='overview'] .ld-in {
-		transform-origin: top center;
-		transform: scale(var(--ld-fit, 1));
-	}
-
-	[data-view='overview'] .ld__cursor,
-	[data-view='overview'] .ld__tourbtn,
-	[data-view='overview'] .ld__status {
-		opacity: 0.35;
-		pointer-events: none;
-	}
-
 	.ld-site {
 		--ls-blue: #2f5bff;
 		--ls-ink: #0b1020;
@@ -663,6 +583,7 @@ const plans = [
 		background: #ffffff;
 		font-family: 'Plus Jakarta Sans', var(--font-sans);
 		color: var(--ls-ink);
+		scrollbar-width: thin;
 		outline: none;
 	}
 
@@ -672,13 +593,6 @@ const plans = [
 
 	.ld-in {
 		min-height: 100%;
-		width: 1440px;
-		max-width: none;
-		margin-inline: auto;
-	}
-
-	[data-device='mobile'] .ld-in {
-		width: 390px;
 	}
 
 	.ld-site h2,
@@ -862,49 +776,6 @@ const plans = [
 		flex-wrap: wrap;
 		gap: 10px;
 		margin-top: 22px;
-	}
-
-	/* 60s demo */
-	.ls-sec--demo {
-		text-align: center;
-	}
-
-	.ls-demo {
-		margin-top: 28px;
-	}
-
-	.ls-demo__frame {
-		position: relative;
-		margin-inline: auto;
-		max-width: 960px;
-		aspect-ratio: 16 / 9;
-		border-radius: 24px;
-		overflow: hidden;
-		background:
-			linear-gradient(145deg, rgba(11, 16, 32, 0.08), rgba(47, 91, 255, 0.12)),
-			linear-gradient(180deg, #dceeff, #f6f8fc);
-		box-shadow: 0 32px 64px -24px rgba(13, 26, 77, 0.28);
-	}
-
-	.ls-demo__play {
-		position: absolute;
-		inset: 0;
-		display: grid;
-		place-items: center;
-		color: #ffffff;
-		background: radial-gradient(circle at 50% 50%, rgba(11, 16, 32, 0.35), rgba(11, 16, 32, 0.55));
-		cursor: pointer;
-		transition: background-color 200ms ease;
-	}
-
-	.ls-demo__play svg {
-		width: 72px;
-		height: 72px;
-		padding: 22px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.92);
-		color: var(--ls-blue);
-		box-shadow: 0 16px 40px -12px rgba(11, 16, 32, 0.45);
 	}
 
 	.ls-hero__phone {
@@ -1680,38 +1551,8 @@ const plans = [
 		const tourLabel = $('[data-tour-label]');
 		const tourBtnLabel = $('[data-tour-btn-label]');
 		const detail = $('[data-cms-detail]');
-		const inner = site.querySelector<HTMLElement>('.ld-in')!;
 		const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		let toastTimer = 0;
-
-		const fitOverview = () => {
-			if (root.dataset.view !== 'overview') {
-				inner.style.removeProperty('--ld-fit');
-				return;
-			}
-			site.scrollTop = 0;
-			const scale = Math.min(
-				1,
-				(site.clientWidth - 8) / inner.offsetWidth,
-				(site.clientHeight - 8) / inner.scrollHeight,
-			);
-			inner.style.setProperty('--ld-fit', String(scale));
-		};
-
-		let stopTour = (_byUser = false) => {};
-
-		const setView = (view: 'overview' | 'interactive') => {
-			root.dataset.view = view;
-			root.querySelectorAll<HTMLElement>('[data-view-btn]').forEach((b) =>
-				b.setAttribute('aria-checked', String(b.dataset.viewBtn === view)),
-			);
-			if (view === 'overview') stopTour(true);
-			fitOverview();
-		};
-
-		new ResizeObserver(() => fitOverview()).observe(site);
-		window.addEventListener('resize', fitOverview, { passive: true });
-		setView(root.dataset.view === 'interactive' ? 'interactive' : 'overview');
 
 		const toast = (text: string) => {
 			toastEl.textContent = text;
@@ -1724,7 +1565,6 @@ const plans = [
 		const setDevice = (d: 'desktop' | 'mobile') => {
 			root.dataset.device = d;
 			root.querySelectorAll<HTMLElement>('[data-device-btn]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.deviceBtn === d)));
-			fitOverview();
 		};
 		root.querySelectorAll<HTMLElement>('[data-device-btn]').forEach((b) =>
 			b.addEventListener('click', () => {
@@ -1905,19 +1745,12 @@ const plans = [
 			}
 		};
 
-		stopTour = (byUser = false) => {
+		const stopTour = (byUser = false) => {
 			token++;
 			if (byUser) userTook = true;
 			site.querySelectorAll('.is-hover').forEach((e) => e.classList.remove('is-hover'));
 			setTourState(byUser ? 'paused' : 'idle');
 		};
-
-		root.querySelectorAll<HTMLElement>('[data-view-btn]').forEach((b) =>
-			b.addEventListener('click', () => {
-				userTook = true;
-				setView(b.dataset.viewBtn as 'overview' | 'interactive');
-			}),
-		);
 
 		// Any real interaction inside the stage hands control to the visitor.
 		const takeOver = (event: Event) => {

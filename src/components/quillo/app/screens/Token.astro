@@ -1,0 +1,28 @@
+---
+/** 10b Paste token — the fallback connect flow. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+---
+
+<div class="qa-screen qa-token">
+	<StatusBar />
+	<header class="qa-bar"><span class="qa-circle"><Icon name="chevron-left" size={22} stroke={2.4} /></span></header>
+	<h3 class="qa-token__title">Connect with a token</h3>
+	<p class="qa-token__sub">For developers or setups without the Studio plugin. Use a token with Editor permissions.</p>
+
+	<p class="qa-label" style="top:227px"><span>Project ID</span></p>
+	<span class="qa-field" style="top:249px">x7k2m9qa</span>
+	<p class="qa-label" style="top:320px"><span>Dataset</span></p>
+	<span class="qa-field qa-field--center" style="top:342px">production<Icon name="chevron-down" size={16} /></span>
+	<p class="qa-label" style="top:413px"><span>API token</span></p>
+	<span class="qa-field qa-field--focus qa-field--mono" style="top:435px">sk•••••••••••••••••••••Q4fT<Icon name="eye-off" size={18} /></span>
+
+	<div class="qa-info">
+		<span class="qa-info__icon"><Icon name="lock" size={16} /></span>
+		<p>Create one in sanity.io/manage → API → Tokens. Quillo stores it encrypted on this phone.<em>Open Sanity manage<Icon name="external" size={12} stroke={2.4} /></em></p>
+	</div>
+	<span class="qa-chip qa-chip--green qa-token__ok"><Icon name="check" size={14} stroke={3} />Token works · Editor role · schema found</span>
+
+	<span class="qa-btn qa-btn--dark qa-btn--cta qa-token__cta">Connect<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i></span>
+	<span class="qa-homebar" aria-hidden="true"></span>
+</div>

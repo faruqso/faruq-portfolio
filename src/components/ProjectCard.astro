@@ -4,11 +4,11 @@ import type { Project } from '../lib/types';
 type Props = { project: Project };
 
 const { project } = Astro.props;
-const caseHref = `#case-${project.slug}`;
+const caseHref = project.href ?? `/work/${project.slug}`;
 ---
 
 <article class="project">
-	<a class="project__preview" href={caseHref} data-case-study={project.slug} tabindex="-1" aria-hidden="true">
+	<a class="project__preview" href={caseHref} tabindex="-1" aria-hidden="true">
 		<picture>
 			<source media="(max-width: 47.99rem)" srcset={project.imageMobile} width="342" height="360" />
 			<img src={project.image} alt="" width="1280" height="570" loading="lazy" decoding="async" />
@@ -23,7 +23,7 @@ const caseHref = `#case-${project.slug}`;
 		<div class="project__role">
 			<p class="project__label">My role / scope</p>
 			<p class="project__scope">{project.scope}</p>
-			<a class="project__link" href={caseHref} data-case-study={project.slug} aria-haspopup="dialog">
+			<a class="project__link" href={caseHref}>
 				View case study<span class="sr-only">: {project.title}</span>
 				<img src="/icons/arrow-up-right-accent.svg" alt="" width="24" height="24" />
 			</a>
@@ -76,49 +76,52 @@ const caseHref = `#case-${project.slug}`;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: var(--space-3);
+		gap: 14px;
 		flex: 1 1 0;
 		min-width: 0;
 	}
 
 	.project__label {
-		font-size: var(--text-micro);
+		font-size: 0.6875rem;
 		letter-spacing: 0.09em;
 		text-transform: uppercase;
 		line-height: normal;
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
 	.project__title {
-		font-size: var(--text-project);
-		line-height: 1.1;
-		letter-spacing: -1.2px;
+		font-size: 1.625rem;
+		font-weight: 400;
+		letter-spacing: -0.7px;
+		line-height: normal;
+		margin: 0;
 	}
 
-	.project__outcome {
-		font-size: var(--text-body-lg);
-		line-height: 1.55;
-	}
-
+	.project__outcome,
 	.project__scope {
 		font-size: var(--text-body);
 		line-height: var(--leading-relaxed);
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
 	.project__link {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--space-2);
-		height: 48px;
+		gap: var(--space-3);
+		margin-top: var(--space-2);
+		font-size: var(--text-small);
+		font-weight: 600;
 		color: var(--color-accent);
+		text-decoration: none;
 	}
 
 	.project__link img {
 		transition: transform var(--duration-fast) var(--ease-out);
 	}
 
-	@media (max-width: 60rem) {
+	@media (max-width: 47.99rem) {
 		.project__details {
 			flex-direction: column;
 			gap: var(--space-5);
@@ -126,20 +129,6 @@ const caseHref = `#case-${project.slug}`;
 
 		.project__identity {
 			flex-basis: auto;
-		}
-	}
-
-	@media (max-width: 47.99rem) {
-		.project {
-			gap: var(--space-5);
-		}
-
-		.project__details {
-			gap: var(--space-4);
-		}
-
-		.project__scope {
-			font-size: var(--text-small);
 		}
 	}
 </style>

@@ -1,0 +1,45 @@
+---
+/** 20 Review changes — field-level diffs from a teammate. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+const p = '/images/case/quillo/photos';
+---
+
+<div class="qa-screen qa-reviewscreen">
+	<StatusBar />
+	<header class="qa-bar">
+		<span class="qa-circle"><Icon name="chevron-left" size={22} stroke={2.4} /></span>
+		<p class="qa-bar__title"><strong>Review</strong></p>
+		<em class="qa-chip qa-chip--blue qa-chip--lg">In review</em>
+	</header>
+	<div class="qa-who">
+		<img class="qa-avatar" src={`${p}/avatar-priya.webp`} alt="" width="44" height="44" />
+		<span><strong>Catering for offices</strong><span>Priya edited 3 fields · 8 min ago</span></span>
+	</div>
+	<div class="qa-diffs">
+		<section class="qa-card qa-diff">
+			<p>Title</p>
+			<del>− Office catering</del>
+			<ins>+ Catering for offices, from 10 people</ins>
+		</section>
+		<section class="qa-card qa-diff">
+			<p>Price per head</p>
+			<del>− $12</del>
+			<ins>+ $14</ins>
+		</section>
+		<section class="qa-card qa-diff qa-diff--img">
+			<p>Cover image</p>
+			<span>
+				<img src={`${p}/baker.webp`} alt="" width="130" height="84" class="qa-diff__before" />
+				<Icon name="arrow" size={20} />
+				<img src={`${p}/pastries.webp`} alt="" width="130" height="84" class="qa-diff__after" />
+			</span>
+		</section>
+		<span class="qa-comment"><Icon name="message" size={20} />Add a comment for Priya…</span>
+	</div>
+	<footer class="qa-dock">
+		<span class="qa-btn qa-btn--soft qa-btn--lg">Request changes</span>
+		<span class="qa-btn qa-btn--dark qa-btn--lg qa-btn--grow">Approve &amp; publish<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i></span>
+	</footer>
+	<span class="qa-homebar" aria-hidden="true"></span>
+</div>

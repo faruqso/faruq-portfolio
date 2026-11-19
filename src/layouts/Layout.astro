@@ -1,45 +1,44 @@
 ---
 import '../styles/global.css';
 import type { NavItem } from '../lib/types';
+import type { SeoProps } from '../lib/seo';
+import Seo from '../components/Seo.astro';
 import { site } from '../data/site';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 
-type Props = {
-	title?: string;
-	description?: string;
+type Props = SeoProps & {
 	navItems?: NavItem[];
-	/** Landing-page mode: no nav, no links anywhere in the header or footer. */
+	/** Landing-page mode: no nav, no links everywhere in the header or footer. */
 	minimal?: boolean;
 };
 
 const {
 	title = site.title,
 	description = site.description,
+	image,
+	type,
+	noindex,
+	jsonLd,
 	navItems = [],
 	minimal = false,
 } = Astro.props;
 
-const pageTitle = `${title} · ${site.name}`;
-const canonical = new URL(Astro.url.pathname, site.url).href;
+const pathname = Astro.url.pathname;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content={description} />
-		<title>{pageTitle}</title>
-		<link rel="canonical" href={canonical} />
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content={site.name} />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:url" content={canonical} />
-		<meta name="twitter:card" content="summary" />
+		<Seo
+			title={title}
+			description={description}
+			pathname={pathname}
+			image={image}
+			type={type}
+			noindex={noindex}
+			jsonLd={jsonLd}
+		/>
 	</head>
 	<body>
 		<a class="skip-link" href="#main">Skip to content</a>

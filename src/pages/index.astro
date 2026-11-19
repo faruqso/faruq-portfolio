@@ -7,11 +7,16 @@ import Process from '../components/Process.astro';
 import Testimonials from '../components/Testimonials.astro';
 import About from '../components/About.astro';
 import Contact from '../components/Contact.astro';
-import CaseStudySheet from '../components/CaseStudySheet.astro';
 import { navItems, projects, site, work } from '../data/site';
+import { homeJsonLd } from '../lib/seo';
 ---
 
-<Layout title={site.title} description={site.description} navItems={navItems}>
+<Layout
+	title={site.title}
+	description={site.description}
+	navItems={navItems}
+	jsonLd={homeJsonLd()}
+>
 	<Hero />
 
 	<section id="work" class="work" aria-labelledby="work-heading">
@@ -32,8 +37,6 @@ import { navItems, projects, site, work } from '../data/site';
 	<Testimonials />
 	<About />
 	<Contact />
-
-	<CaseStudySheet />
 </Layout>
 
 <style>

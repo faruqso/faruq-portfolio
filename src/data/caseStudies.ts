@@ -1,8 +1,9 @@
 /**
- * Case-study content shown in the bottom sheet.
+ * Case-study page content (`/work/[slug]`).
  * Layout follows Figma "MightyOcto — Case study" (node 4042:186014).
- * Only MightyOcto has a written case study in Figma. The others use their homepage copy;
- * any field left `pending` renders the "Content pending" box from the template.
+ * Quillo lives in `src/data/quillo.ts` with a custom page template.
+ * Optional `problemHeading` / `decisionHeading` / `resultHeading` should summarize the story
+ * (many readers skim headings only).
  */
 
 export type Block = {
@@ -27,16 +28,25 @@ export type CaseStudy = {
 	summary: string;
 	role: string;
 	tools?: { primary: string; note?: string };
+	/** Story-style section title (not generic "The context"). */
+	problemHeading?: string;
+	decisionHeading?: string;
+	resultHeading?: string;
 	problem: Block;
 	decision: Block;
+	/** Optional honest close — what you learned or would change. */
+	reflection?: string;
+	reflectionHeading?: string;
 	deliverables: { title: string; description: string }[];
 	/** Real project visuals shown under the deliverables. `wide` spans the full row. */
 	gallery?: GalleryImage[];
 	result: Block & { note?: string };
 	/** Optional meta shown in the intro (client, timeline …). */
 	facts?: { label: string; value: string }[];
-	/** One-line descriptor used in the "Next project" band of the previous case study. */
+	/** One-line descriptor used in the "Next project" band. */
 	nextLine: string;
+	/** Override OG image (defaults to project card image). */
+	ogImage?: string;
 };
 
 const decisionPlaceholder: Block = {
@@ -62,12 +72,17 @@ export const caseStudies: CaseStudy[] = [
 			{ label: 'Timeline', value: 'Feb – Aug 2025' },
 			{ label: 'Engagement', value: 'Upwork, ongoing' },
 		],
+		problemHeading: 'A founder validating AI docs had designs but no brand trust',
+		decisionHeading: 'Brand first, then AI as co-pilot beside the writer',
+		resultHeading: 'Shipped MVP, returned for v1.5 — no invented metrics',
 		problem: {
 			text: 'MightyOcto uses AI agents to write and maintain software documentation. The founder came to me while the team was still validating the market: there were early designs, but no brand he believed in. Logo, fonts and colours were all open. He needed one designer to give the product a face, an interface and a launch page, while working alongside the developers already in Slack.',
 		},
 		decision: {
 			text: 'I started with the brand, because every screen after it depended on it. The guideline maps the user journey (Discover, Activate, Elevate) onto the system: Outfit for marketing headlines, Inter for the product, Roboto Slab for story moments, all rooted in one seed colour, Mighty Aqua. In the app, AI is a co-pilot, not a takeover. The dashboard offers “Start from scratch” right next to “Start with Octo AI”, and the assistant lives in a side panel instead of in the editor.',
 		},
+		reflection:
+			'If I repeated the engagement, I would push for earlier engineering pairing on the editor — a few layout assumptions shifted once real data hit the UI.',
 		deliverables: [
 			{
 				title: 'Brand guideline',

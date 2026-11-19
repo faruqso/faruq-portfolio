@@ -1,0 +1,12 @@
+/* TEAM */
+Designer & developer: Faruq So
+Site: https://faruqso.com
+Contact: faruq.soremekun@gmail.com
+Location: Available remotely
+
+/* THANKS */
+Clients, collaborators, and everyone who trusted the work.
+
+/* SITE */
+Built with: Astro
+Last update: 2026

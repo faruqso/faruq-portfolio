@@ -31,3 +31,7 @@ pnpm-debug.log*
 
 # Private notes (sales scripts, drafts)
 notes/
+.preview-quillo/
+
+# resume PDF build scratch
+scripts/resume/.out/

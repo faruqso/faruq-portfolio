@@ -1,0 +1,33 @@
+---
+/** 07 Published — "It's live!" with the live page preview. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+const p = '/images/case/quillo/photos';
+// Confetti scattered around the badge (x, y in screen px).
+const bits = [[150,70],[300,82],[64,115],[318,170],[54,183],[338,222],[100,250],[290,286],[76,300],[348,128],[262,60],[118,40],[44,232],[330,300],[200,48],[236,296]];
+---
+
+<div class="qa-screen qa-published">
+	<span class="qa-published__sky" aria-hidden="true"></span>
+	<StatusBar light />
+	<span class="qa-confetti" aria-hidden="true">{bits.map(([x, y], i) => <i style={`--i:${i};--x:${x}px;--y:${y}px`}></i>)}</span>
+	<span class="qa-published__badge" aria-hidden="true"><img src={`${p}/icon-check.webp`} alt="" width="96" height="96" /></span>
+	<h3 class="qa-published__title">It’s <em>live!</em></h3>
+	<p class="qa-published__text">
+		“<span data-published-title>Spring menu launch</span>” is now on crumbandco.com. Published in 2.1 seconds.
+	</p>
+	<div class="qa-browser">
+		<div class="qa-browser__bar">
+			<i></i><i></i><i></i>
+			<span><Icon name="lock" size={12} stroke={2.6} />crumbandco.com/menu</span>
+		</div>
+		<img src={`${p}/pastries.webp`} alt="" width="960" height="768" data-published-image />
+		<div class="qa-browser__foot">
+			<span><em>New · Spring</em><strong data-published-title>Spring menu launch</strong></span>
+			<b>$4.50</b>
+		</div>
+	</div>
+	<span class="qa-btn qa-btn--dark qa-btn--cta qa-published__share">Share the link<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i></span>
+	<button type="button" class="qa-btn qa-btn--outline qa-published__back" data-act="home">Back to home</button>
+	<span class="qa-homebar" aria-hidden="true"></span>
+</div>

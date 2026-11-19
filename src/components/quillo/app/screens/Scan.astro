@@ -1,0 +1,43 @@
+---
+/** 10 Scan to connect — the phone camera over the Quillo tab in Sanity Studio. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+import { qrPattern } from '../qr';
+
+const qr = qrPattern();
+---
+
+<div class="qa-screen qa-scan">
+	<StatusBar light />
+	<header class="qa-camera__top">
+		<span class="qa-circle qa-circle--glass"><Icon name="x" size={20} stroke={2.6} /></span>
+		<strong class="qa-scan__title">Scan to connect</strong>
+		<span class="qa-circle qa-circle--glass"><Icon name="bolt" size={20} /></span>
+	</header>
+
+	<div class="qa-studio" aria-hidden="true">
+		<span class="qa-studio__side"><i></i><i></i><i class="is-on"></i><i></i></span>
+		<span class="qa-studio__brand">Quillo</span>
+		<svg class="qa-studio__qr" viewBox="0 0 25 25" fill="#0b1020" set:html={qr} />
+		<span class="qa-studio__hint">Scan with the Quillo app</span>
+	</div>
+	<span class="qa-brackets" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+	<span class="qa-scanline" aria-hidden="true"></span>
+
+	<div class="qa-found">
+		<span class="qa-found__check"><Icon name="check" size={16} stroke={3} /></span>
+		<span><strong>Found Crumb &amp; Co. Bakery</strong><span>Sanity · production · Editor access</span></span>
+	</div>
+
+	<section class="qa-sheet qa-sheet--static">
+		<span class="qa-grabber"></span>
+		<h3 class="qa-sheet__title qa-sheet__title--sm">Connect your Sanity Studio</h3>
+		<ol class="qa-steps">
+			<li><i>1</i><span><strong>Open your Studio and click the Quillo tab</strong><span>Your developer adds it once, in about 5 minutes</span></span></li>
+			<li><i>2</i><span><strong>Point your phone at the QR code</strong><span>You get an editor-only token you can revoke anytime</span></span></li>
+		</ol>
+		<span class="qa-btn qa-btn--dark qa-btn--cta qa-scan__cta">Connect Crumb &amp; Co.<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i></span>
+		<span class="qa-scan__link"><Icon name="key" size={18} />Paste an API token instead</span>
+		<span class="qa-homebar" aria-hidden="true"></span>
+	</section>
+</div>

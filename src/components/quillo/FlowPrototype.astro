@@ -1,0 +1,525 @@
+---
+/**
+ * "Try the flow" — the core loop built from the coded Quillo screens.
+ * Home → open the review → edit the title → add a photo → schedule → live.
+ * The real buttons inside the screens drive it; the next one pulses.
+ */
+import Device from './app/Device.astro';
+import Home from './app/screens/Home.astro';
+import Editor from './app/screens/Editor.astro';
+import PublishSheet from './app/screens/PublishSheet.astro';
+import Camera from './app/screens/Camera.astro';
+import Published from './app/screens/Published.astro';
+
+const steps = ['Open the review', 'Edit the title', 'Add a photo', 'Schedule it', 'It’s live'];
+---
+
+<div class="flow" data-flow data-state="home" data-photo="false">
+	<div class="flow__device">
+		<Device width={300} interactive>
+			<div class="fl fl--home"><Home /></div>
+			<div class="fl fl--editor"><Editor title="" /></div>
+			<div class="fl fl--sheet"><PublishSheet /></div>
+			<div class="fl fl--camera"><Camera /></div>
+			<div class="fl fl--published"><Published /></div>
+			<span class="fl-toast" data-toast role="status"></span>
+			<span class="fl-flash" aria-hidden="true"></span>
+		</Device>
+	</div>
+
+	<div class="flow__side">
+		<p class="flow__hint" data-hint aria-live="polite">Tap the review card on the phone.</p>
+		<ol class="flow__steps">
+			{
+				steps.map((step, i) => (
+					<li class="flow__step" data-step={i}>
+						<span class="flow__num">{String(i + 1).padStart(2, '0')}</span>
+						{step}
+					</li>
+				))
+			}
+		</ol>
+		<button type="button" class="flow__restart" data-restart>
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>
+			Start again
+		</button>
+	</div>
+</div>
+
+<style>
+	.flow {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(2rem, 6vw, 6rem);
+	}
+
+	.flow__device {
+		position: relative;
+	}
+
+	/* Screen layers inside the device */
+	.fl {
+		position: absolute;
+		inset: 0;
+		visibility: hidden;
+		opacity: 0;
+		transition:
+			opacity 320ms cubic-bezier(0.23, 1, 0.32, 1),
+			transform 460ms cubic-bezier(0.32, 0.72, 0, 1),
+			visibility 0s linear 460ms;
+	}
+
+	.fl--editor {
+		transform: translateX(28%);
+	}
+
+	.fl--camera {
+		transform: translateY(6%) scale(0.98);
+	}
+
+	.fl--published {
+		transform: scale(1.04);
+	}
+
+	[data-state='home'] .fl--home,
+	[data-state='editor'] .fl--editor,
+	[data-state='publish'] .fl--editor,
+	[data-state='camera'] .fl--camera,
+	[data-state='published'] .fl--published,
+	[data-state='publish'] .fl--sheet {
+		visibility: visible;
+		opacity: 1;
+		transform: none;
+		transition:
+			opacity 320ms cubic-bezier(0.23, 1, 0.32, 1),
+			transform 460ms cubic-bezier(0.32, 0.72, 0, 1),
+			visibility 0s;
+	}
+
+	/* The sheet slides up from the bottom; the scrim fades. */
+	.fl--sheet {
+		transform: none;
+	}
+
+	.fl--sheet :global(.qa-sheet) {
+		transform: translateY(105%);
+		transition: transform 520ms cubic-bezier(0.32, 0.72, 0, 1);
+	}
+
+	.fl--sheet :global(.qa-scrim) {
+		opacity: 0;
+		transition: opacity 320ms ease;
+	}
+
+	[data-state='publish'] .fl--sheet :global(.qa-sheet) {
+		transform: none;
+	}
+
+	[data-state='publish'] .fl--sheet :global(.qa-scrim) {
+		opacity: 1;
+	}
+
+	/* Photo just taken: the cover settles in. */
+	[data-photo='true'] .fl--editor :global([data-cover]) {
+		animation: cover-in 700ms cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	@keyframes cover-in {
+		from {
+			transform: scale(1.12);
+			filter: brightness(1.6);
+		}
+	}
+
+	/* Confetti bursts on arrival */
+	[data-state='published'] .fl--published :global(.qa-confetti i) {
+		animation: burst 900ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+		animation-delay: calc(var(--i) * 25ms);
+	}
+
+	[data-state='published'] .fl--published :global(.qa-published__badge) {
+		animation: badge-in 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+	}
+
+	@keyframes burst {
+		from {
+			opacity: 0;
+			transform: translate(calc(180px - var(--x)), calc(190px - var(--y))) scale(0.4);
+		}
+	}
+
+	@keyframes badge-in {
+		from {
+			opacity: 0;
+			transform: rotate(-20deg) scale(0.6);
+		}
+	}
+
+	/* The next thing to tap */
+	.flow :global(.qa-next) {
+		position: relative;
+		outline: 2.5px solid #2f5bff;
+		outline-offset: 4px;
+		animation: next-pulse 1.6s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+	}
+
+	.flow :global(.qa-camera .qa-next) {
+		outline-color: #c8f25a;
+	}
+
+	@keyframes next-pulse {
+		0%,
+		100% {
+			outline-offset: 4px;
+			outline-color: rgba(47, 91, 255, 1);
+		}
+		60% {
+			outline-offset: 10px;
+			outline-color: rgba(47, 91, 255, 0);
+		}
+	}
+
+	.flow :global([data-act]) {
+		cursor: pointer;
+	}
+
+	.flow :global([data-act]:focus-visible) {
+		outline: 3px solid #2f5bff;
+		outline-offset: 3px;
+	}
+
+	/* Toast and flash */
+	.fl-toast {
+		position: absolute;
+		left: 50%;
+		top: 112px;
+		z-index: 60;
+		padding: 9px 16px;
+		border-radius: 99px;
+		background: #0b1020;
+		color: #fff;
+		font: 600 13px/1.2 'Plus Jakarta Sans', sans-serif;
+		white-space: nowrap;
+		transform: translate(-50%, -8px);
+		opacity: 0;
+		transition:
+			opacity 220ms ease,
+			transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
+		pointer-events: none;
+	}
+
+	.fl-toast.is-on {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+
+	.fl-flash {
+		position: absolute;
+		inset: 0;
+		z-index: 70;
+		background: #fff;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.fl-flash.is-on {
+		animation: flash 450ms ease-out;
+	}
+
+	@keyframes flash {
+		0% {
+			opacity: 0.95;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	/* Side panel */
+	.flow__side {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		width: 20rem;
+		max-width: 100%;
+	}
+
+	.flow__hint {
+		font-size: var(--text-body-lg);
+		line-height: var(--leading-body);
+		color: var(--color-text);
+		min-height: 3.4em;
+	}
+
+	.flow__steps {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.flow__step {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: var(--space-4);
+		padding-block: 14px;
+		border-top: 1px solid var(--color-border);
+		font-size: var(--text-body);
+		color: var(--color-text-secondary);
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	.flow__step::after {
+		content: '';
+		position: absolute;
+		top: -1px;
+		left: 0;
+		height: 1px;
+		width: 100%;
+		background: var(--color-accent);
+		transform: scaleX(0);
+		transform-origin: 0 50%;
+		transition: transform 500ms var(--ease-out);
+	}
+
+	.flow__num {
+		font-size: var(--text-caption);
+		letter-spacing: var(--tracking-eyebrow);
+		color: var(--color-text-secondary);
+	}
+
+	.flow__step.is-done {
+		color: var(--color-text);
+	}
+
+	.flow__step.is-current {
+		color: var(--color-accent);
+	}
+
+	.flow__step.is-current::after,
+	.flow__step.is-done::after {
+		transform: scaleX(1);
+	}
+
+	.flow__step.is-current .flow__num {
+		color: var(--color-accent);
+	}
+
+	.flow__restart {
+		align-self: flex-start;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-pill);
+		background: transparent;
+		font: inherit;
+		font-size: var(--text-small);
+		color: var(--color-text);
+		cursor: pointer;
+		transition:
+			background-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-instant) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.flow__restart:hover {
+			background: var(--color-bg-subtle);
+		}
+
+		.flow__restart:hover svg {
+			transform: rotate(-60deg);
+		}
+	}
+
+	.flow__restart svg {
+		transition: transform 320ms var(--ease-out);
+	}
+
+	.flow__restart:active {
+		transform: scale(0.97);
+	}
+
+	@media (max-width: 47.99rem) {
+		.flow {
+			flex-direction: column;
+			gap: var(--space-6);
+		}
+
+		.flow__side {
+			width: 100%;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fl,
+		.fl--sheet :global(.qa-sheet) {
+			transform: none !important;
+		}
+
+		.flow :global(.qa-next) {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	type State = 'home' | 'editor' | 'camera' | 'publish' | 'published';
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-flow]')) {
+		const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+		const title = $<HTMLInputElement>('.fl--editor [data-title]');
+		const toast = $('[data-toast]');
+		const flash = $('.fl-flash');
+		const hint = $('[data-hint]');
+		const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+		const scheduleLabel = $('[data-schedule-label]');
+		const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const draft = 'Spring menu launch';
+		let typed = false;
+		let typer = 0;
+		let toastTimer = 0;
+
+		// Targets that drive the flow, per state.
+		const target = {
+			home: $('.fl--home [data-act="open"]'),
+			editorPhoto: $('.fl--editor [data-act="replace"]'),
+			editorPublish: $('.fl--editor [data-act="publish"]'),
+			camera: $('.fl--camera [data-act="shutter"]'),
+			publish: $('.fl--sheet [data-act="schedule"]'),
+			published: $('.fl--published [data-act="home"]'),
+		};
+		// Make the non-button review card keyboard-operable.
+		target.home.setAttribute('role', 'button');
+		target.home.setAttribute('aria-label', 'Open “Spring menu launch”');
+
+		const hints: Record<string, string> = {
+			home: 'Tap the review card on the phone.',
+			editor: 'The title is a real field: type your own. Then tap Replace to add a photo.',
+			editorPhoto: 'Photo added. Now tap Publish to site.',
+			camera: 'Tap the shutter.',
+			publish: 'Pick any day and time, then schedule it.',
+			published: 'Live, with your title. Tap Back to home to go again.',
+		};
+
+		const showToast = (text: string) => {
+			toast.textContent = text;
+			toast.classList.add('is-on');
+			clearTimeout(toastTimer);
+			toastTimer = window.setTimeout(() => toast.classList.remove('is-on'), 1700);
+		};
+
+		const typeTitle = () => {
+			if (typed) return;
+			typed = true;
+			if (reduce) {
+				title.value = draft;
+				return;
+			}
+			let i = 0;
+			title.value = '';
+			clearInterval(typer);
+			typer = window.setInterval(() => {
+				title.value = draft.slice(0, ++i);
+				if (i >= draft.length) {
+					clearInterval(typer);
+					showToast('Saved · Sanity');
+				}
+			}, 55);
+		};
+
+		const render = () => {
+			const state = root.dataset.state as State;
+			const photo = root.dataset.photo === 'true';
+			const current = { home: 0, editor: photo ? 2 : 1, camera: 2, publish: 3, published: 4 }[state];
+			steps.forEach((el, i) => {
+				el.classList.toggle('is-current', i === current);
+				el.classList.toggle('is-done', i < current);
+			});
+			hint.textContent = state === 'editor' && photo ? hints.editorPhoto : hints[state];
+
+			const next =
+				state === 'editor' ? (photo ? target.editorPublish : target.editorPhoto) : target[state as keyof typeof target];
+			Object.values(target).forEach((el) => {
+				el.classList.toggle('qa-next', el === next);
+				el.tabIndex = el === next ? 0 : -1;
+			});
+			title.tabIndex = state === 'editor' ? 0 : -1;
+			root.querySelectorAll<HTMLElement>('.fl--sheet button').forEach((b) => (b.tabIndex = state === 'publish' ? 0 : -1));
+			return next;
+		};
+
+		const go = (state: State) => {
+			const hadFocus = root.contains(document.activeElement);
+			root.dataset.state = state;
+			if (state === 'editor') window.setTimeout(typeTitle, 420);
+			if (state === 'published') {
+				const t = title.value.trim() || draft;
+				root.querySelectorAll('.fl--published [data-published-title]').forEach((el) => (el.textContent = t));
+			}
+			const next = render();
+			if (hadFocus) window.setTimeout(() => next.focus({ preventScroll: true }), 80);
+		};
+
+		const reset = () => {
+			typed = false;
+			clearInterval(typer);
+			title.value = '';
+			root.dataset.photo = 'false';
+			go('home');
+		};
+
+		const act = (el: HTMLElement) => {
+			const a = el.dataset.act;
+			const state = root.dataset.state;
+			if (!el.classList.contains('qa-next') && a !== 'back') return;
+			if (a === 'open') go('editor');
+			else if (a === 'replace') go('camera');
+			else if (a === 'shutter') {
+				flash.classList.remove('is-on');
+				void flash.offsetWidth;
+				flash.classList.add('is-on');
+				root.dataset.photo = 'true';
+				window.setTimeout(() => {
+					go('editor');
+					showToast('Photo added · alt text on');
+				}, 260);
+			} else if (a === 'publish') go('publish');
+			else if (a === 'schedule') {
+				go('published');
+				showToast(scheduleLabel.textContent!.replace('Schedule for', 'Scheduled ·'));
+			} else if (a === 'home') reset();
+			else if (a === 'back' && state === 'camera') go('editor');
+		};
+
+		root.addEventListener('click', (event) => {
+			const el = (event.target as Element).closest<HTMLElement>('[data-act]');
+			if (el && root.contains(el)) act(el);
+
+			// Day and time pickers in the publish sheet
+			const pick = (event.target as Element).closest<HTMLElement>('.qa-day, .qa-time');
+			if (pick) {
+				pick.parentElement!.querySelectorAll('.is-on').forEach((o) => o.classList.remove('is-on'));
+				pick.classList.add('is-on');
+				const day = root.querySelector<HTMLElement>('.qa-day.is-on')!.dataset.short;
+				const time = root.querySelector<HTMLElement>('.qa-time.is-on')!.dataset.value;
+				scheduleLabel.textContent = time === 'Custom' ? `Schedule for ${day}, pick a time` : `Schedule for ${day}, ${time}`;
+			}
+		});
+
+		root.addEventListener('keydown', (event) => {
+			const el = (event.target as Element).closest<HTMLElement>('[data-act][role="button"]');
+			if (el && (event.key === 'Enter' || event.key === ' ')) {
+				event.preventDefault();
+				act(el);
+			}
+		});
+
+		root.querySelector('[data-restart]')!.addEventListener('click', reset);
+		render();
+	}
+</script>

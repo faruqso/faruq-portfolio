@@ -1,0 +1,58 @@
+---
+/** 19 Publish options — a bottom sheet laid over the Editor. Days and times are selectable. */
+import Icon from '../Icon.astro';
+
+const days = [
+	['Thu', '2'],
+	['Fri', '3'],
+	['Sat', '4'],
+	['Sun', '5'],
+	['Mon', '6'],
+];
+const times = ['7:00 AM', '9:00 AM', '12:00 PM', 'Custom'];
+---
+
+<div class="qa-sheet-wrap" data-sheet>
+	<span class="qa-scrim"></span>
+	<section class="qa-sheet" aria-label="Publish options">
+		<span class="qa-grabber"></span>
+		<h3 class="qa-sheet__title">Ready to go live?</h3>
+		<p class="qa-sheet__sub">Spring menu launch · Menu item</p>
+
+		<div class="qa-option">
+			<span class="qa-option__icon qa-tone-blue-ink"><Icon name="send" size={20} /></span>
+			<span><strong>Publish now</strong><span>Goes live on crumbandco.com instantly</span></span>
+			<i class="qa-radio"></i>
+		</div>
+		<div class="qa-option is-on">
+			<span class="qa-option__icon qa-tone-sun-ink"><Icon name="calendar" size={20} /></span>
+			<span><strong>Schedule</strong><span>Pick a date and time</span></span>
+			<i class="qa-radio is-on"><Icon name="check" size={13} stroke={3} /></i>
+		</div>
+
+		<div class="qa-days" data-group="day">
+			{
+				days.map(([d, n]) => (
+					<button type="button" class:list={['qa-day', { 'is-on': d === 'Fri' }]} data-value={`${d}, ${n}`} data-short={d}>
+						<span>{d}</span>
+						<strong>{n}</strong>
+					</button>
+				))
+			}
+		</div>
+		<div class="qa-times" data-group="time">
+			{
+				times.map((t) => (
+					<button type="button" class:list={['qa-time', { 'is-on': t === '9:00 AM' }]} data-value={t}>
+						{t}
+					</button>
+				))
+			}
+		</div>
+		<p class="qa-tz"><Icon name="globe" size={16} />Times in your site’s timezone (GMT+1)</p>
+		<button type="button" class="qa-btn qa-btn--dark qa-btn--cta" data-act="schedule">
+			<span data-schedule-label>Schedule for Fri, 9:00 AM</span><i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i>
+		</button>
+		<span class="qa-homebar" aria-hidden="true"></span>
+	</section>
+</div>

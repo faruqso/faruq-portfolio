@@ -75,18 +75,19 @@ export const quillo = {
 	landing: {
 		label: '08 / Landing page',
 		title: 'One page to sell it',
-		text: 'The page leads with the job, not the tech — 1440px desktop and a mobile frame, matching Figma “🌐 Landing page”. A CMS picker answers “will it work with my site?” first, then See Quillo in 60 seconds, features, setup, pricing and FAQ. Primary CTA: Get started for free.',
+		text: 'The page leads with the job, not the tech. A CMS picker answers “will it work with my site?” first, then a 60-second demo, features, setup, use cases, pricing and FAQ. The main call to action is Join the waitlist; Book a demo is only for agencies.',
 	},
 
 	result: {
 		label: '09 / Where it stands',
-		title: 'Fully designed, build still in progress.',
-		text: 'What you can explore here is the full design story: 24 app screens, brand, this landing page and the Studio connect flow as interactive prototypes. The native app and backend are ongoing work — scoped around React Native/Expo with webhooks and push.',
+		title: 'Designed, not shipped. Yet.',
+		text: 'The design is complete: 24 app screens, the app icon, a landing page for desktop and mobile, and the Studio plugin flow. Next comes a 60-second demo video, then the MVP: React Native/Expo plus a small backend for webhooks and push notifications, roughly two to three months for one developer.',
 		roadmap: [
-			{ cms: 'Sanity', status: 'Designed · first integration', first: true },
-			{ cms: 'Contentful · Strapi', status: 'In exploration' },
-			{ cms: 'Storyblok · Payload · Prismic · Hygraph · WordPress', status: 'Roadmap' },
+			{ cms: 'Sanity', status: 'First integration', first: true },
+			{ cms: 'Contentful · Strapi', status: 'Next up' },
+			{ cms: 'Storyblok · Payload · Prismic · Hygraph · WordPress', status: 'Planned' },
 		],
+		note: 'Self-initiated concept. There are no users, stats or testimonials yet, so none are shown here.',
 	},
 
 	next: { slug: 'ishasplace', name: 'Ishasplace', line: 'Spa & beauty · Brand, ecommerce and appointment booking' },

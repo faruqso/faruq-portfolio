@@ -1,0 +1,89 @@
+---
+/** 21 Offline — the content list with queued changes. Set data-online="true" on an ancestor to sync. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+import TabBar from '../TabBar.astro';
+const p = '/images/case/quillo/photos';
+
+const items = [
+	{ t: 'Spring menu launch', s: 'In review', tone: 'blue', m: 'Menu item · 12m', img: 'pastries', q: true },
+	{ t: 'About our sourdough', s: 'Published', tone: 'green', m: 'Page · 2h ago', img: 'sky', q: true },
+	{ t: 'Meet Amara, our head baker', s: 'Published', tone: 'green', m: 'Team · Yesterday', img: 'avatar-amara', q: true },
+	{ t: 'Easter pre-orders open', s: 'Scheduled', tone: 'sun', m: 'Post · Fri, 9:00 AM', img: 'pastries', q: false },
+	{ t: 'Catering for offices', s: 'Draft', tone: 'grey', m: 'Page · Mar 12', img: 'avatar-priya', q: false },
+];
+const filters = [
+	['All', '48'],
+	['Posts', '21'],
+	['Pages', '9'],
+	['Menu', '14'],
+	['Team', '4'],
+];
+---
+
+<div class="qa-screen qa-content">
+	<StatusBar />
+	<header class="qa-content__head">
+		<h3>Content</h3>
+		<p>Crumb &amp; Co. · 48 documents</p>
+		<span class="qa-circle qa-circle--blue"><Icon name="plus" size={22} stroke={2.4} /></span>
+	</header>
+	<div class="qa-search">
+		<Icon name="search" size={20} stroke={2.2} />
+		<span>Search posts, pages, menu…</span>
+		<i><Icon name="filter" size={18} stroke={2.4} /></i>
+	</div>
+	<div class="qa-filters">
+		{
+			filters.map(([f, c], i) => (
+				<span class:list={['qa-filter', { 'is-on': i === 0 }]}>
+					{f}
+					<em>{c}</em>
+				</span>
+			))
+		}
+	</div>
+
+	<div class="qa-net">
+		<div class="qa-net__state qa-net__state--off">
+			<span class="qa-net__icon"><Icon name="wifi-off" size={18} /></span>
+			<span><strong>You’re offline</strong><span>3 changes saved on this phone · syncs automatically</span></span>
+		</div>
+		<div class="qa-net__state qa-net__state--on">
+			<span class="qa-net__icon"><Icon name="check" size={18} stroke={2.8} /></span>
+			<span><strong>Back online</strong><span>3 changes synced to Sanity just now</span></span>
+		</div>
+	</div>
+
+	<ul class="qa-list">
+		{
+			items.map((it) => (
+				<li class="qa-list__item">
+					<img src={`${p}/${it.img}.webp`} alt="" width="56" height="56" />
+					<span class="qa-list__body">
+						<strong>{it.t}</strong>
+						<span>
+							<em class:list={['qa-chip', `qa-chip--${it.tone}`]}>{it.s}</em>
+							{it.m}
+						</span>
+					</span>
+					{it.q ? (
+						<span class="qa-queue">
+							<span class="qa-queue__off">
+								<Icon name="cloud" size={14} stroke={2.4} />
+								Queued
+							</span>
+							<span class="qa-queue__on">
+								<Icon name="check" size={14} stroke={3} />
+								Synced
+							</span>
+						</span>
+					) : (
+						<Icon name="chevron-right" size={20} class="qa-list__chev" />
+					)}
+				</li>
+			))
+		}
+	</ul>
+	<TabBar active="content" />
+</div>

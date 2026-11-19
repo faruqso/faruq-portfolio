@@ -6,6 +6,18 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["astro", "dev", "--port", "4321"],
       "port": 4321
+    },
+    {
+      "name": "quillo-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["astro", "preview", "--outDir", ".preview-quillo", "--port", "4330"],
+      "port": 4330
+    },
+    {
+      "name": "canos-video",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8766", "--bind", "127.0.0.1", "--directory", "C:/Users/HP/Documents/Roast-tools/canos-video"],
+      "port": 8766
     }
   ]
 }

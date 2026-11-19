@@ -1,0 +1,149 @@
+---
+/** 03 Home — and, with brand="northwind", 23 White-label Home. Same component, different data and theme. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+import TabBar from '../TabBar.astro';
+
+type Props = { brand?: 'quillo' | 'northwind' };
+const { brand = 'quillo' } = Astro.props;
+const p = '/images/case/quillo/photos';
+
+const data = {
+	quillo: {
+		person: 'Amara',
+		avatar: `${p}/avatar-amara.webp`,
+		site: 'Crumb & Co. Bakery',
+		cms: 'Sanity · production',
+		url: 'crumbandco.com',
+		logo: '🥐',
+		stats: [
+			['12', 'Edits this week'],
+			['3', 'Drafts'],
+			['1', 'Scheduled'],
+		],
+		actions: [
+			['feather', 'New post', 'blue'],
+			['camera', 'Snap photo', 'coral'],
+			['list', 'Edit menu', 'green'],
+			['calendar', 'Schedule', 'sun'],
+		],
+		review: { title: 'Spring menu launch', sub: 'Edited by Tobi · 12 min ago', thumb: `${p}/pastries.webp` },
+		recent: [
+			{ title: 'About our sourdough', sub: 'Page · 2h ago', status: 'Published', tone: 'green', thumb: `${p}/sky.webp` },
+			{ title: 'Weekend opening hours', sub: 'Settings · Yesterday', status: 'Draft', tone: 'grey', thumb: `${p}/pastries.webp` },
+		],
+	},
+	northwind: {
+		person: 'Marcus',
+		avatar: `${p}/avatar-marcus.webp`,
+		site: 'Northwind Realty',
+		cms: 'Contentful · master',
+		url: 'northwindrealty.com',
+		logo: 'N',
+		stats: [
+			['26', 'Listings live'],
+			['4', 'Open houses'],
+			['1', 'Price drops'],
+		],
+		actions: [
+			['feather', 'New listing', 'blue'],
+			['camera', 'Snap photos', 'coral'],
+			['home', 'Open house', 'green'],
+			['calendar', 'Schedule', 'sun'],
+		],
+		review: { title: '14 Elm Street listing', sub: 'Price & photos · Dana · 5m', thumb: `${p}/sky.webp` },
+		recent: [
+			{ title: 'Spring market report', sub: 'Page · 2h ago', status: 'Published', tone: 'green', thumb: `${p}/sky.webp` },
+			{ title: 'Agent: Dana Brooks', sub: 'Settings · Yesterday', status: 'Draft', tone: 'grey', thumb: `${p}/avatar-priya.webp` },
+		],
+	},
+}[brand];
+---
+
+<div class:list={['qa-screen qa-home', `qa-brand-${brand}`]}>
+	<StatusBar />
+
+	<header class="qa-home__head">
+		<img class="qa-avatar" src={data.avatar} alt="" width="44" height="44" />
+		<p class="qa-home__hello">
+			<span>Good morning,</span>
+			<strong>{data.person} 👋</strong>
+		</p>
+		{brand === 'northwind' && <span class="qa-home__brandchip"><i>N</i>Northwind</span>}
+		<span class="qa-circle"><Icon name="search" /></span>
+		<span class="qa-circle qa-circle--dot"><Icon name="bell" /></span>
+	</header>
+
+	<section class="qa-site">
+		<div class="qa-site__top">
+			<span class="qa-site__logo">{data.logo}</span>
+			<span class="qa-site__name">
+				<strong>{data.site}</strong>
+				<span>{data.cms}</span>
+			</span>
+			<span class="qa-site__switch"><Icon name="chevron-down" size={16} stroke={2.4} /></span>
+		</div>
+		<p class="qa-site__live"><i></i>Live · {data.url}</p>
+		<div class="qa-site__stats">
+			{
+				data.stats.map(([n, l]) => (
+					<span>
+						<strong>{n}</strong>
+						{l}
+					</span>
+				))
+			}
+		</div>
+	</section>
+
+	<h3 class="qa-h">Quick actions</h3>
+	<div class="qa-actions">
+		{
+			data.actions.map(([icon, label, tone]) => (
+				<span class="qa-action">
+					<span class:list={['qa-action__icon', `qa-tone-${tone}`]}>
+						<Icon name={icon} size={20} />
+					</span>
+					{label}
+				</span>
+			))
+		}
+	</div>
+
+	<section class="qa-card qa-review" data-act="open">
+		<div class="qa-review__head">
+			<h3>Needs your review</h3>
+			<span>See all</span>
+		</div>
+		<div class="qa-review__item">
+			<img src={data.review.thumb} alt="" width="52" height="52" />
+			<span>
+				<strong>{data.review.title}</strong>
+				<span>{data.review.sub}</span>
+			</span>
+			<em class="qa-chip qa-chip--blue">In review</em>
+		</div>
+		<div class="qa-review__actions">
+			<span class="qa-btn qa-btn--dark"><Icon name="check" size={18} stroke={2.6} />Approve &amp; publish</span>
+			<span class="qa-btn qa-btn--soft">Preview</span>
+		</div>
+	</section>
+
+	<h3 class="qa-h qa-h--recent">Recent edits</h3>
+	<div class="qa-recent">
+		{
+			data.recent.map((r) => (
+				<div class="qa-row">
+					<img src={r.thumb} alt="" width="44" height="44" />
+					<span>
+						<strong>{r.title}</strong>
+						<span>{r.sub}</span>
+					</span>
+					<em class:list={['qa-chip', `qa-chip--${r.tone}`]}>{r.status}</em>
+				</div>
+			))
+		}
+	</div>
+
+	<TabBar active="home" />
+</div>

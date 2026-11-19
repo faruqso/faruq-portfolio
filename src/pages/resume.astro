@@ -1,0 +1,369 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import '../styles/resume.css';
+import { subpageNavItems, email, site } from '../data/site';
+import {
+	resumeMeta,
+	resumeStats,
+	resumeVersions,
+	resumeEducation,
+	resumeRecognition,
+	resumeLanguages,
+	resumePdfs,
+	type ResumeVersion,
+} from '../data/resume';
+import { absoluteUrl, webPageJsonLd } from '../lib/seo';
+
+const initialVersion: ResumeVersion =
+	Astro.url.searchParams.get('v') === 'engineer' ? 'engineer' : 'designer';
+
+const pageTitle = 'Resume — Faruq Soremekun, product designer & design engineer';
+const pageDescription =
+	'Interactive resume with Upwork stats, client work, skills and PDF download. Product designer and design engineer versions.';
+
+const contactLinks: { label: string; href?: string }[] = [
+	{ label: email, href: `mailto:${email}` },
+	{ label: 'faruqso.com', href: site.url },
+	{ label: 'linkedin.com/in/faruq-so', href: 'https://www.linkedin.com/in/faruq-so' },
+	{ label: 'github.com/faruqso', href: resumeMeta.github },
+	{ label: resumeMeta.location },
+];
+---
+
+<Layout
+	title={pageTitle}
+	description={pageDescription}
+	navItems={subpageNavItems}
+	jsonLd={webPageJsonLd({ title: pageTitle, description: pageDescription, url: absoluteUrl('/resume') })}
+>
+	<div class="resume" data-resume-root data-version={initialVersion} data-email={email}>
+		<div class="container resume-intro" data-entrance-group>
+			<p class="eyebrow" data-entrance>{resumeMeta.eyebrow}</p>
+			<div data-entrance>
+				<h1 class="resume-intro__name">{resumeMeta.name}</h1>
+				{
+					(Object.keys(resumeVersions) as ResumeVersion[]).map((key) => (
+						<p
+							class="resume-role-line"
+							data-version-swap
+							data-version-panel={key}
+							hidden={key !== initialVersion}
+						>
+							{resumeVersions[key].roleLine}
+						</p>
+					))
+				}
+			</div>
+
+			<div class="resume-intro__controls" data-entrance>
+				<div
+					class="resume-toggle"
+					data-resume-toggle
+					data-active={initialVersion}
+					role="group"
+					aria-label="Resume version"
+				>
+					<span class="resume-toggle__pill" aria-hidden="true"></span>
+					<button
+						type="button"
+						class="resume-toggle__option"
+						data-version-option="designer"
+						aria-selected={initialVersion === 'designer'}
+					>
+						Product Designer
+					</button>
+					<button
+						type="button"
+						class="resume-toggle__option"
+						data-version-option="engineer"
+						aria-selected={initialVersion === 'engineer'}
+					>
+						Design Engineer
+					</button>
+				</div>
+
+				<a
+					class="ds-button ds-button--primary resume-no-print"
+					data-resume-pdf
+					href={resumePdfs[initialVersion]}
+					download
+				>
+					<span>Download PDF</span>
+					<img src="/icons/arrow-up-right-white.svg" alt="" width="24" height="24" class="ds-button__icon" />
+				</a>
+
+				<button type="button" class="resume-copy resume-no-print" data-copy-email>
+					<img
+						class="resume-copy__icon--copy"
+						src="/icons/icon-copy.svg"
+						alt=""
+						width="16"
+						height="16"
+					/>
+					<img
+						class="resume-copy__icon--check"
+						src="/icons/icon-check.svg"
+						alt=""
+						width="16"
+						height="16"
+					/>
+					<span data-copy-label>Copy email</span>
+				</button>
+			</div>
+
+			<nav class="resume-contact" aria-label="Contact" data-entrance>
+				{
+					contactLinks.map((item) =>
+						item.href ? (
+							<a
+								href={item.href}
+								target={item.href.startsWith('http') ? '_blank' : undefined}
+								rel="noopener noreferrer"
+							>
+								{item.label}
+							</a>
+						) : (
+							<span>{item.label}</span>
+						),
+					)
+				}
+			</nav>
+		</div>
+
+		<section class="resume-stats resume-no-print" aria-label="Proof" data-resume-stats>
+			<div class="container resume-stats__grid">
+				{
+					resumeStats.map((stat) => (
+						<div class="resume-stat">
+							<p
+								class="resume-stat__value"
+								data-display={stat.display}
+								{...(stat.countUp
+									? {
+											'data-count': stat.countUp.target,
+											'data-prefix': stat.countUp.prefix ?? '',
+											'data-suffix': stat.countUp.suffix ?? '',
+											'data-decimals': stat.countUp.decimals ?? 0,
+										}
+									: {})}
+							>
+								{stat.display}
+							</p>
+							<p class="resume-stat__label">{stat.label}</p>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="resume-section" aria-labelledby="summary-heading" data-reveal>
+			<div class="container resume-row">
+				<div class="resume-row__label">
+					<p class="eyebrow" data-reveal-item>01 / SUMMARY</p>
+					<h2 id="summary-heading" class="resume-row__title" data-reveal-item>In short</h2>
+				</div>
+				{
+					(Object.keys(resumeVersions) as ResumeVersion[]).map((key) => (
+						<p
+							class="resume-row__body"
+							data-version-swap
+							data-version-panel={key}
+							data-reveal-item
+							hidden={key !== initialVersion}
+						>
+							{resumeVersions[key].summary}
+						</p>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="resume-section" aria-labelledby="experience-heading" data-reveal>
+			<div class="container">
+				<div class="resume-block-head">
+					<p class="eyebrow" data-reveal-item>02 / EXPERIENCE</p>
+					<h2 id="experience-heading" class="resume-row__title" data-reveal-item>Where I have worked</h2>
+				</div>
+
+				{
+					(Object.keys(resumeVersions) as ResumeVersion[]).map((key) => {
+						const content = resumeVersions[key];
+						return (
+							<div data-version-panel={key} hidden={key !== initialVersion} data-version-swap>
+								<div class="resume-umbrella">
+									<span class="resume-umbrella__title">{content.umbrella.title}</span>
+									<span class="resume-umbrella__spacer" aria-hidden="true"></span>
+									<span class="resume-umbrella__meta">{content.umbrella.meta}</span>
+								</div>
+								<div class="resume-accordion">
+									{content.roles.map((role) => (
+										<article
+											class:list={['resume-role', role.defaultOpen && 'is-open']}
+											data-default-open={role.defaultOpen || undefined}
+										>
+											<button
+												type="button"
+												class="resume-role__header"
+												aria-expanded={role.defaultOpen ? 'true' : 'false'}
+											>
+												<span class="resume-role__dates">{role.dates}</span>
+												<span class="resume-role__client-wrap">
+													<span class="resume-role__client">{role.client}</span>
+													<span class="resume-role__descriptor">{role.descriptor}</span>
+												</span>
+												<span class="resume-role__toggle" aria-hidden="true">
+													<img class="resume-role__icon-plus" src="/icons/icon-plus.svg" alt="" width="20" height="20" />
+													<img class="resume-role__icon-minus" src="/icons/icon-minus.svg" alt="" width="20" height="20" />
+												</span>
+											</button>
+											<div class="resume-role__panel">
+												<div class="resume-role__panel-inner">
+													<div class="resume-role__detail">
+														<div>
+															<ul class="resume-bullets">
+																{role.bullets.map((bullet) => (
+																	<li>{bullet}</li>
+																))}
+															</ul>
+															{
+																role.caseStudy && (
+																	<a class="resume-link" href={role.caseStudy.href}>
+																		{role.caseStudy.label}
+																		<img src="/icons/arrow-up-right-accent.svg" alt="" width="16" height="16" />
+																	</a>
+																)
+															}
+														</div>
+														{
+															role.quote && (
+																<figure class="resume-quote">
+																	<blockquote>“{role.quote.text}”</blockquote>
+																	<figcaption>{role.quote.attribution}</figcaption>
+																</figure>
+															)
+														}
+													</div>
+												</div>
+											</div>
+										</article>
+									))}
+								</div>
+							</div>
+						);
+					})
+				}
+			</div>
+		</section>
+
+		<section class="resume-section resume-section--band" aria-labelledby="spotlight-heading" data-reveal>
+			<div class="container">
+				{
+					(Object.keys(resumeVersions) as ResumeVersion[]).map((key) => {
+						const spot = resumeVersions[key].spotlight;
+						return (
+							<div data-version-panel={key} hidden={key !== initialVersion} data-version-swap>
+								<div class="resume-block-head">
+									<p class="eyebrow" data-reveal-item>{spot.eyebrow}</p>
+									<h2 id="spotlight-heading" class="resume-row__title" data-reveal-item>
+										{spot.title}
+									</h2>
+								</div>
+								<div class="resume-spotlight-card">
+									<div class="resume-spotlight-card__media">
+										<img src={spot.image} alt={spot.imageAlt} width="720" height="480" loading="lazy" />
+									</div>
+									<div class="resume-spotlight-card__text">
+										<p class="resume-spotlight-card__meta" data-reveal-item>{spot.meta}</p>
+										<p class="resume-spotlight-card__body" data-reveal-item>{spot.body}</p>
+										{
+											spot.caseStudy && (
+												<a class="resume-link" href={spot.caseStudy.href} data-reveal-item>
+													{spot.caseStudy.label}
+													<img src="/icons/arrow-up-right-accent.svg" alt="" width="16" height="16" />
+												</a>
+											)
+										}
+									</div>
+								</div>
+							</div>
+						);
+					})
+				}
+			</div>
+		</section>
+
+		<section class="resume-section" aria-labelledby="skills-heading" data-reveal>
+			<div class="container">
+				<div class="resume-block-head">
+					<p class="eyebrow" data-reveal-item>04 / SKILLS</p>
+					<h2 id="skills-heading" class="resume-row__title" data-reveal-item>What I bring</h2>
+				</div>
+				{
+					(Object.keys(resumeVersions) as ResumeVersion[]).map((key) => (
+						<div data-version-panel={key} hidden={key !== initialVersion} data-version-swap>
+							<div class="resume-skills">
+								{resumeVersions[key].skills.map((group) => (
+									<div class="resume-skill-group">
+										<h3>{group.title}</h3>
+										<ul class="resume-chips">
+											{group.chips.map((chip) => (
+												<li>{chip}</li>
+											))}
+										</ul>
+									</div>
+								))}
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="resume-section" aria-label="Education, recognition and languages" data-reveal>
+			<div class="container resume-meta">
+				<div>
+					<p class="eyebrow" data-reveal-item>{resumeEducation.eyebrow}</p>
+					<h3 class="resume-meta__title" data-reveal-item>{resumeEducation.title}</h3>
+					<p class="resume-meta__detail" data-reveal-item>{resumeEducation.detail}</p>
+				</div>
+				<div>
+					<p class="eyebrow" data-reveal-item>{resumeRecognition.eyebrow}</p>
+					<h3 class="resume-meta__title" data-reveal-item>{resumeRecognition.title}</h3>
+					<p class="resume-meta__detail" data-reveal-item>{resumeRecognition.detail}</p>
+				</div>
+				<div>
+					<p class="eyebrow" data-reveal-item>{resumeLanguages.eyebrow}</p>
+					<h3 class="resume-meta__title" data-reveal-item>{resumeLanguages.title}</h3>
+					<p class="resume-meta__detail" data-reveal-item>{resumeLanguages.detail}</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="resume-section" aria-labelledby="hire-heading">
+			<div class="container resume-cta">
+				<div>
+					<h2 id="hire-heading" class="resume-cta__title">Hiring a product designer?</h2>
+					<p class="resume-cta__lead">Email me, or grab the PDF for your hiring team.</p>
+				</div>
+				<Button href={`mailto:${email}`}>Email me</Button>
+			</div>
+		</section>
+	</div>
+</Layout>
+
+<style is:global>
+	/* Primary download on resume: no forced min-width on smaller screens */
+	.resume .ds-button[data-resume-pdf] {
+		min-width: 0;
+	}
+</style>
+
+<script>
+	import { initResumePage } from '../scripts/resume';
+
+	document.querySelectorAll<HTMLElement>('[data-resume-root]').forEach((root) => {
+		const email = root.dataset.email ?? '';
+		initResumePage(root, email);
+	});
+</script>

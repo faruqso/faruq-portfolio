@@ -5,14 +5,18 @@ import Checklist from '../components/Checklist.astro';
 import Button from '../components/Button.astro';
 import { subpageNavItems } from '../data/site';
 import { checklist } from '../data/leads';
+import { absoluteUrl, webPageJsonLd } from '../lib/seo';
 
 const total = checklist.sections.reduce((sum, section) => sum + section.items.length, 0);
+const pageTitle = `${checklist.title} — a free ${total}-point checklist`;
+const pageDescription = `${total} checks to run before your AI startup homepage goes live: the first 5 seconds, explaining the AI, proof, next steps and the basics.`;
 ---
 
 <Layout
-	title={`${checklist.title} — a free ${total}-point checklist`}
-	description={`${total} checks to run before your AI startup homepage goes live: the first 5 seconds, explaining the AI, proof, next steps and the basics.`}
+	title={pageTitle}
+	description={pageDescription}
 	navItems={subpageNavItems}
+	jsonLd={webPageJsonLd({ title: pageTitle, description: pageDescription, url: absoluteUrl('/checklist') })}
 >
 	<div class="container page">
 		<PageIntro eyebrow={checklist.eyebrow} title={checklist.title} lead={checklist.lead} />
@@ -106,7 +110,7 @@ const total = checklist.sections.reduce((sum, section) => sum + section.items.le
 		}
 
 		.cta__description::after {
-			content: ' faruq-portfolio.faruqso.workers.dev/audit';
+			content: ' faruqso.com/audit';
 			color: var(--color-accent);
 		}
 	}

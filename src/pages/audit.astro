@@ -6,12 +6,18 @@ import Checklist from '../components/Checklist.astro';
 import AboutAvatar from '../components/AboutAvatar.astro';
 import { email, formAccessKey, site } from '../data/site';
 import { audit } from '../data/leads';
+import { absoluteUrl, webPageJsonLd } from '../lib/seo';
+
+const pageTitle = 'Free 5-minute homepage audit';
+const pageDescription =
+	"Send your startup homepage and get a 5-minute Loom within 48 hours: what a first-time visitor understands, where they'd leave, and the one change to make first.";
 ---
 
 <Layout
-	title="Free 5-minute homepage audit"
-	description="Send your startup homepage and get a 5-minute Loom within 48 hours: what a first-time visitor understands, where they'd leave, and the one change to make first."
+	title={pageTitle}
+	description={pageDescription}
 	minimal
+	jsonLd={webPageJsonLd({ title: pageTitle, description: pageDescription, url: absoluteUrl('/audit') })}
 >
 	<AboutAvatar slot="brand" />
 

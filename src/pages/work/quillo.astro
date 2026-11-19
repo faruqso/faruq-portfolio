@@ -1,0 +1,1318 @@
+---
+/**
+ * Quillo case study — built from Figma "My Portfolio" → "Quillo — Case study" (node 4135:176980),
+ * with the motion notes beside it (node 4139:177089). Self-initiated concept, labelled as such.
+ */
+import '@fontsource/plus-jakarta-sans/700.css';
+import '@fontsource/plus-jakarta-sans/800.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Device from '../../components/quillo/app/Device.astro';
+import Home from '../../components/quillo/app/screens/Home.astro';
+import Editor from '../../components/quillo/app/screens/Editor.astro';
+import PublishSheet from '../../components/quillo/app/screens/PublishSheet.astro';
+import Camera from '../../components/quillo/app/screens/Camera.astro';
+import Published from '../../components/quillo/app/screens/Published.astro';
+import Token from '../../components/quillo/app/screens/Token.astro';
+import Review from '../../components/quillo/app/screens/Review.astro';
+import Notifications from '../../components/quillo/app/screens/Notifications.astro';
+import Lock from '../../components/quillo/app/screens/Lock.astro';
+import LandingDemo from '../../components/quillo/LandingDemo.astro';
+import CodedHero from '../../components/quillo/CodedHero.astro';
+import StudioPlugin from '../../components/quillo/StudioPlugin.astro';
+import FlowPrototype from '../../components/quillo/FlowPrototype.astro';
+import ScanDemo from '../../components/quillo/ScanDemo.astro';
+import OfflineDemo from '../../components/quillo/OfflineDemo.astro';
+import ThemeSwitch from '../../components/quillo/ThemeSwitch.astro';
+import { primaryCta, subpageNavItems } from '../../data/site';
+import { getNextInWork } from '../../data/workNav';
+import { quillo as q } from '../../data/quillo';
+import { absoluteUrl, articleJsonLd } from '../../lib/seo';
+
+const img = (name: string) => `/images/case/quillo/${name}.webp`;
+
+const pageTitle = 'Quillo — case study';
+const pageDescription =
+	'Quillo is a self-initiated startup concept: a mobile app for editing a website built on a headless CMS. Product strategy, brand, 24 app screens, landing page and the Sanity connect flow.';
+const pageUrl = absoluteUrl('/work/quillo');
+const nextProject = getNextInWork('quillo');
+---
+
+<Layout
+	title={pageTitle}
+	description={pageDescription}
+	navItems={subpageNavItems}
+	type="article"
+	image="/images/og/quillo.png"
+	jsonLd={articleJsonLd({
+		title: pageTitle,
+		description: pageDescription,
+		url: pageUrl,
+		image: absoluteUrl('/images/og/quillo.png'),
+		datePublished: '2025-01-01',
+	})}
+>
+	<script is:inline>document.documentElement.classList.add('js');</script>
+	<article class="qcs">
+		<!-- Intro -->
+		<header class="container qcs-intro">
+			<a class="qcs-back" href="/#work" data-reveal>
+				<img src="/icons/arrow-right.svg" alt="" width="24" height="24" />
+				Back to work
+			</a>
+			<p class="eyebrow" data-reveal style="--d:1">{q.eyebrow}</p>
+			<h1 class="qcs-intro__title" data-reveal style="--d:2">{q.title}</h1>
+			<p class="qcs-intro__summary" data-reveal style="--d:3">{q.summary}</p>
+			<div class="qcs-credits" data-reveal style="--d:4">
+				<div class="qcs-credits__role">
+					<p class="qcs-meta">My role / scope</p>
+					<p class="qcs-credits__text">{q.role}</p>
+				</div>
+				<div class="qcs-credits__tools">
+					<p class="qcs-meta">Tools / implementation</p>
+					<p class="qcs-credits__text">{q.tools}</p>
+					<p class="qcs-credits__note">{q.toolsNote}</p>
+				</div>
+			</div>
+		</header>
+
+		<!-- Hero visual -->
+		<div class="container qcs-hero" data-hero>
+			<div class="qcs-hero__frame" data-reveal style="--d:5">
+				<CodedHero />
+			</div>
+		</div>
+
+		<!-- Problem and decision -->
+		<div class="container qcs-pair">
+			{
+				[q.problem, q.decision].map((item, i) => (
+					<section class="qcs-pair__item" data-reveal style={`--d:${i}`}>
+						<p class="eyebrow">{item.label}</p>
+						<h2 class="text-display">{item.title}</h2>
+						<p class="text-lead">{item.text}</p>
+					</section>
+				))
+			}
+		</div>
+
+		<!-- 03 Connect -->
+		<section class="container qcs-section qcs-section--tight" aria-labelledby="connect-title">
+			<div class="qcs-split">
+				<div class="qcs-split__head" data-reveal>
+					<p class="eyebrow">{q.connect.label}</p>
+					<h2 id="connect-title" class="text-display">{q.connect.title}</h2>
+				</div>
+				<p class="text-lead qcs-split__body" data-reveal style="--d:1">
+					{q.connect.text.split('npx sanity schema deploy')[0]}<code>npx sanity schema deploy</code>{q.connect.text.split('npx sanity schema deploy')[1]}
+				</p>
+			</div>
+			<div class="qcs-board qcs-connect">
+				<figure class="qcs-connect__studio" data-reveal="left">
+					<div class="qcs-connect__scroll"><StudioPlugin /></div>
+					<figcaption>Studio plugin <em>Installed once by the developer. Shows the QR code.</em></figcaption>
+				</figure>
+				<figure class="qcs-connect__phone" data-reveal style="--d:2">
+					<ScanDemo width={196} />
+					<figcaption>Scan to connect <em>The editor scans it.</em></figcaption>
+				</figure>
+				<figure class="qcs-connect__phone" data-reveal style="--d:3">
+					<Device width={196} label="Connect with a token: project ID, dataset and API token fields"><Token /></Device>
+					<figcaption>Paste token <em>The fallback.</em></figcaption>
+				</figure>
+			</div>
+		</section>
+
+		<!-- 04 Core flow -->
+		<section class="qcs-band" aria-labelledby="flow-title">
+			<div class="container qcs-section">
+				<div class="qcs-split">
+					<div class="qcs-split__head" data-reveal>
+						<p class="eyebrow">{q.flow.label}</p>
+						<h2 id="flow-title" class="text-display">{q.flow.title}</h2>
+					</div>
+					<p class="text-lead qcs-split__body" data-reveal style="--d:1">{q.flow.text}</p>
+				</div>
+			</div>
+
+			<div class="qcs-pin" data-pin>
+				<div class="qcs-pin__sticky">
+					<ol class="container qcs-flow" data-flow-row>
+						{
+							q.flow.screens.map((s, i) => (
+								<li class="qcs-flow__item" data-flow-item={i} data-reveal style={`--d:${i}`}>
+									<Device width={228} label={`${s.title}: ${s.sub}`}>
+										{s.src === 'home' && <Home />}
+										{s.src === 'editor' && <Editor />}
+										{s.src === 'camera' && <Camera />}
+										{s.src === 'publish' && (
+											<>
+												<Editor />
+												<PublishSheet />
+											</>
+										)}
+										{s.src === 'published' && <Published />}
+									</Device>
+									<p class="qcs-caption">
+										<span class="qcs-caption__title">
+											{s.num}&nbsp;&nbsp;{s.title}
+										</span>
+										<span class="qcs-caption__sub">{s.sub}</span>
+									</p>
+								</li>
+							))
+						}
+					</ol>
+					<div class="container qcs-pin__progress" aria-hidden="true"><span data-pin-bar></span></div>
+				</div>
+			</div>
+
+			<div class="container qcs-section qcs-section--flush">
+				<div class="qcs-try" data-reveal>
+					<div class="qcs-try__head">
+						<p class="eyebrow">Prototype</p>
+						<h3 class="qcs-try__title">{q.flow.tryTitle}</h3>
+						<p class="text-lead">{q.flow.tryText}</p>
+					</div>
+					<FlowPrototype />
+				</div>
+			</div>
+		</section>
+
+		<!-- 05 Edge states -->
+		<section class="container qcs-section" aria-labelledby="states-title">
+			<div class="qcs-split">
+				<div class="qcs-split__head" data-reveal>
+					<p class="eyebrow">{q.states.label}</p>
+					<h2 id="states-title" class="text-display">{q.states.title}</h2>
+				</div>
+				<p class="text-lead qcs-split__body" data-reveal style="--d:1">{q.states.text}</p>
+			</div>
+			<ol class="qcs-states">
+				<li class="qcs-states__item" data-reveal>
+					<OfflineDemo width={256} />
+					<p class="qcs-caption">
+						<span class="qcs-caption__title">01&nbsp;&nbsp;Offline</span>
+						<span class="qcs-caption__sub">Drafts save without signal. Flip the switch to sync.</span>
+					</p>
+				</li>
+				{
+					q.states.screens.map((s, i) => (
+						<li class="qcs-states__item qcs-lift" data-reveal style={`--d:${i + 1}`}>
+							<Device width={256} label={`${s.title}: ${s.sub}`}>
+								{s.src === 'review' && <Review />}
+								{s.src === 'notifications' && <Notifications />}
+								{s.src === 'lock' && <Lock />}
+							</Device>
+							<p class="qcs-caption">
+								<span class="qcs-caption__title">
+									{s.num}&nbsp;&nbsp;{s.title}
+								</span>
+								<span class="qcs-caption__sub">{s.sub}</span>
+							</p>
+						</li>
+					))
+				}
+			</ol>
+		</section>
+
+		<!-- 06 White-label -->
+		<section class="qcs-dark" aria-labelledby="business-title">
+			<div class="container qcs-section qcs-business">
+				<div class="qcs-business__copy">
+					<p class="eyebrow" data-reveal>{q.business.label}</p>
+					<h2 id="business-title" class="text-display" data-reveal style="--d:1">{q.business.title}</h2>
+					<p class="text-lead" data-reveal style="--d:2">{q.business.text}</p>
+					<dl class="qcs-pricing" data-reveal style="--d:3">
+						<p class="qcs-meta">Concept pricing</p>
+						{
+							q.business.pricing.map((p) => (
+								<div class:list={['qcs-pricing__row', { 'is-highlight': 'highlight' in p }]}>
+									<dt>{p.plan}</dt>
+									<dd>{p.price}</dd>
+								</div>
+							))
+						}
+					</dl>
+				</div>
+				<div class="qcs-business__demo" data-reveal style="--d:2">
+					<ThemeSwitch width={290} />
+				</div>
+			</div>
+		</section>
+
+		<!-- 07 Brand -->
+		<section class="container qcs-section" aria-labelledby="brand-title">
+			<div class="qcs-split">
+				<div class="qcs-split__head" data-reveal>
+					<p class="eyebrow">{q.brand.label}</p>
+					<h2 id="brand-title" class="text-display">{q.brand.title}</h2>
+				</div>
+				<p class="text-lead qcs-split__body" data-reveal style="--d:1">{q.brand.text}</p>
+			</div>
+			<div class="qcs-brand">
+				<div class="qcs-brand__type" data-reveal>
+					<p class="qcs-meta">Type</p>
+					<p class="qcs-specimen">
+						Your website, edited right from your <span class="qcs-specimen__accent">pocket.</span>
+					</p>
+					<p class="qcs-brand__note">Plus Jakarta Sans · Instrument Serif Italic for one accent word</p>
+				</div>
+				<div class="qcs-brand__icon" data-reveal style="--d:1">
+					<img src={img('app-icon')} alt="Quillo app icon: a white quill on a blue rounded square" width="360" height="360" loading="lazy" />
+					<p>App icon</p>
+				</div>
+				<ul class="qcs-swatches">
+					<li class="qcs-swatch qcs-swatch--blue" data-reveal style="--d:0"><span>Primary blue</span><span>#2F5BFF</span></li>
+					<li class="qcs-swatch qcs-swatch--lime" data-reveal style="--d:1"><span>Lime</span><span>#C8F25A</span></li>
+					<li class="qcs-swatch qcs-swatch--sky" data-reveal style="--d:2"><span>Sky</span><span>Gradient backgrounds</span></li>
+					<li class="qcs-swatch qcs-swatch--glass" data-reveal style="--d:3"><span>Glass</span><span>White cards with blur</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<!-- 08 Landing page -->
+		<section class="qcs-band" aria-labelledby="landing-title">
+			<div class="container qcs-section">
+				<div class="qcs-split">
+					<div class="qcs-split__head" data-reveal>
+						<p class="eyebrow">{q.landing.label}</p>
+						<h2 id="landing-title" class="text-display">{q.landing.title}</h2>
+					</div>
+					<p class="text-lead qcs-split__body" data-reveal style="--d:1">{q.landing.text}</p>
+				</div>
+				<div class="qcs-live" data-reveal>
+					<LandingDemo />
+				</div>
+			</div>
+		</section>
+
+		<!-- 09 Where it stands -->
+		<section class="container qcs-section qcs-result" aria-labelledby="result-title">
+			<div class="qcs-result__intro" data-reveal>
+				<p class="eyebrow">{q.result.label}</p>
+				<h2 id="result-title" class="text-display">{q.result.title}</h2>
+			</div>
+			<div class="qcs-result__body">
+				<p class="text-lead" data-reveal style="--d:1">{q.result.text}</p>
+				<div class="qcs-roadmap">
+					<p class="qcs-meta" data-reveal style="--d:2">Integration roadmap</p>
+					<ul>
+						{
+							q.result.roadmap.map((r, i) => (
+								<li class="qcs-roadmap__row" data-reveal style={`--d:${i + 3}`}>
+									<span>{r.cms}</span>
+									<span class:list={['qcs-roadmap__status', { 'is-first': 'first' in r }]}>{r.status}</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+				<p class="qcs-result__note" data-reveal style="--d:6">{q.result.note}</p>
+			</div>
+		</section>
+
+		<!-- Next project -->
+		<a class="qcs-next" href={nextProject.href}>
+			<span class="container qcs-next__inner">
+				<span class="qcs-next__details">
+					<span class="eyebrow">Next project</span>
+					<span class="qcs-next__name">{nextProject.title}</span>
+					<span class="qcs-next__line">{nextProject.line}</span>
+				</span>
+				<span class="qcs-next__cta">
+					View case study
+					<img src="/icons/arrow-up-right-accent.svg" alt="" width="24" height="24" />
+				</span>
+			</span>
+		</a>
+
+		<!-- Close -->
+		<div class="container qcs-close">
+			<div class="qcs-close__copy">
+				<h2 class="text-display">Have a launch coming up?</h2>
+				<p class="text-lead">Tell me about your project.</p>
+			</div>
+			<Button href={primaryCta.href}>{primaryCta.label}</Button>
+		</div>
+	</article>
+</Layout>
+
+<style>
+	.qcs {
+		--q-blue: #2f5bff;
+		--q-lime: #c8f25a;
+		--q-ink: #0f1430;
+		--q-sky: linear-gradient(180deg, #7fb2ff 0%, #b9d6ff 55%, #e7f1ff 100%);
+		padding-bottom: 40px;
+		overflow-x: clip;
+	}
+
+	/* Reveal on scroll (fade up, once). Elements stay visible without JS. */
+	:global(.js) [data-reveal] {
+		opacity: 0;
+		transform: translateY(16px);
+		transition:
+			opacity 500ms var(--ease-out),
+			transform 600ms var(--ease-out);
+		transition-delay: calc(var(--d, 0) * 70ms);
+	}
+
+	:global(.js) [data-reveal='left'] {
+		transform: translateX(-28px);
+	}
+
+	:global(.js) [data-reveal].is-in {
+		opacity: 1;
+		transform: none;
+	}
+
+	/* Intro */
+	.qcs-intro {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 36px;
+		padding-block: 56px 64px;
+	}
+
+	.qcs-back {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		height: 48px;
+		font-size: var(--text-small);
+	}
+
+	.qcs-back img {
+		transform: rotate(180deg);
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.qcs-back:hover img {
+			transform: rotate(180deg) translateX(3px);
+		}
+	}
+
+	.qcs-intro__title {
+		font-size: clamp(3rem, 7vw, 6.25rem);
+		line-height: 1.02;
+		letter-spacing: -0.055em;
+	}
+
+	.qcs-intro__summary {
+		max-width: 1050px;
+		font-size: clamp(1.625rem, 3.4vw, 3rem);
+		line-height: 1.12;
+		letter-spacing: -0.04em;
+		color: var(--color-text-secondary);
+		text-wrap: balance;
+	}
+
+	.qcs-credits {
+		display: flex;
+		gap: var(--space-8);
+		width: 100%;
+		padding-top: var(--space-5);
+	}
+
+	.qcs-credits__role {
+		flex: 1 1 650px;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+	}
+
+	.qcs-credits__tools {
+		flex: 1 1 566px;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+	}
+
+	.qcs-meta {
+		font-size: 0.6875rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		line-height: normal;
+		color: var(--color-text-secondary);
+	}
+
+	.qcs-credits__text {
+		font-size: var(--text-body-lg);
+		line-height: var(--leading-relaxed);
+	}
+
+	.qcs-credits__note {
+		font-size: var(--text-small);
+		line-height: var(--leading-body);
+		color: var(--color-text-secondary);
+	}
+
+	/* Hero */
+	.qcs-hero {
+		padding-bottom: var(--space-9);
+	}
+
+	.qcs-hero__frame {
+		overflow: hidden;
+		border-radius: 24px;
+	}
+
+	.qcs-hero__frame img {
+		width: 100%;
+		height: auto;
+		transform: scale(var(--hero-scale, 1));
+		transform-origin: 50% 0;
+	}
+
+	/* Problem / decision */
+	.qcs-pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 80px;
+		padding-bottom: var(--space-9);
+	}
+
+	.qcs-pair__item {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+	}
+
+	/* Sections */
+	.qcs-section {
+		display: flex;
+		flex-direction: column;
+		gap: 56px;
+		padding-block: var(--space-10);
+	}
+
+	.qcs-section--tight {
+		padding-top: var(--space-4);
+	}
+
+	.qcs-section--flush {
+		padding-top: var(--space-8);
+	}
+
+	.qcs-band {
+		background: var(--color-bg-subtle);
+	}
+
+	.qcs-split {
+		display: grid;
+		grid-template-columns: minmax(0, 480px) minmax(0, 700px);
+		justify-content: space-between;
+		gap: var(--space-7) 100px;
+	}
+
+	.qcs-split__head {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+	}
+
+	.qcs-split__head .text-display {
+		text-wrap: balance;
+	}
+
+	.qcs-split__body code {
+		padding: 1px 6px;
+		border-radius: 6px;
+		background: var(--color-bg-subtle);
+		font-size: 0.9em;
+		color: var(--color-text);
+	}
+
+	.qcs-board {
+		border-radius: 24px;
+		background: var(--color-bg-subtle);
+	}
+
+	.qcs-caption {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.qcs-caption__title {
+		font-size: 15px;
+		color: var(--color-text);
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	.qcs-caption__sub {
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	/* 03 Connect */
+	.qcs-connect {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto auto;
+		align-items: end;
+		gap: 32px;
+		padding: 64px 48px;
+	}
+
+	.qcs-connect figure {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.qcs-connect__studio img {
+		width: 100%;
+		height: auto;
+	}
+
+	.qcs-connect figcaption {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		font-size: 15px;
+	}
+
+	.qcs-connect figcaption em {
+		font-style: normal;
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	/* 04 Pinned flow row */
+	.qcs-pin__sticky {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+	}
+
+	.qcs-flow {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 24px;
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+	}
+
+	.qcs-flow__item {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.qcs-flow__item :global(.qd) {
+		width: 100%;
+		transition:
+			transform 500ms var(--ease-out),
+			box-shadow 500ms var(--ease-out);
+	}
+
+	.qcs-flow__item.is-active :global(.qd) {
+		transform: translateY(-14px);
+		box-shadow: 0 44px 70px -24px rgba(13, 18, 38, 0.45);
+	}
+
+	.qcs-flow__item.is-active .qcs-caption__title {
+		color: var(--color-accent);
+	}
+
+	.qcs-pin__progress {
+		height: 2px;
+		background: var(--color-border);
+		display: none;
+	}
+
+	.qcs-pin__progress span {
+		display: block;
+		height: 100%;
+		width: 100%;
+		background: var(--color-accent);
+		transform: scaleX(var(--p, 0));
+		transform-origin: 0 50%;
+	}
+
+	/* Desktop: pin the row and step through it with scroll. */
+	@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+		.qcs-pin {
+			height: 220vh;
+		}
+
+		.qcs-pin__sticky {
+			position: sticky;
+			top: max(24px, calc(50vh - 340px));
+		}
+
+		.qcs-pin__progress {
+			display: block;
+		}
+	}
+
+	/* Try the flow */
+	.qcs-try {
+		display: grid;
+		grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+		align-items: center;
+		gap: var(--space-8);
+		padding: 64px;
+		border-radius: 24px;
+		background: var(--color-surface-solid);
+		box-shadow: 0 1px 0 var(--color-border);
+	}
+
+	.qcs-try__head {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.qcs-try__title {
+		font-size: var(--text-project);
+		line-height: var(--leading-tight);
+		letter-spacing: var(--tracking-title);
+	}
+
+	/* 05 Edge states */
+	.qcs-states {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 40px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.qcs-states__item {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.qcs-states__item :global(.qd) {
+		width: 100%;
+	}
+
+	.qcs-states__item :global(.offline) {
+		align-items: stretch;
+	}
+
+	.qcs-lift :global(.qd) {
+		transition:
+			transform 320ms var(--ease-out),
+			box-shadow 320ms var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.qcs-lift:hover :global(.qd) {
+			transform: translateY(-8px);
+			box-shadow: 0 40px 64px -24px rgba(13, 18, 38, 0.42);
+		}
+
+		.qcs-lift:hover .qcs-caption__title {
+			color: var(--color-accent);
+		}
+	}
+
+	/* 06 Dark */
+	.qcs-dark {
+		background: #131416;
+		color: #ffffff;
+	}
+
+	.qcs-dark .eyebrow,
+	.qcs-dark .qcs-meta {
+		color: #a1a6a4;
+	}
+
+	.qcs-dark .text-lead {
+		color: #bcc1bf;
+	}
+
+	.qcs-business {
+		display: grid;
+		grid-template-columns: minmax(0, 520px) auto;
+		justify-content: space-between;
+		align-items: center;
+		gap: var(--space-8);
+	}
+
+	.qcs-business__copy {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+	}
+
+	.qcs-pricing {
+		margin: 0;
+		padding-top: var(--space-4);
+	}
+
+	.qcs-pricing .qcs-meta {
+		padding-bottom: 12px;
+	}
+
+	.qcs-pricing__row {
+		display: flex;
+		justify-content: space-between;
+		padding-block: 14px;
+		border-top: 1px solid rgba(255, 255, 255, 0.12);
+		font-size: var(--text-body-lg);
+	}
+
+	.qcs-pricing dd {
+		margin: 0;
+		color: #bcc1bf;
+	}
+
+	.qcs-pricing__row.is-highlight dd {
+		color: var(--q-lime);
+	}
+
+	/* 07 Brand */
+	.qcs-brand {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 380px;
+		gap: 24px;
+	}
+
+	.qcs-brand__type {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 32px;
+		padding: 56px;
+		border: 1px solid #e5e5e0;
+		border-radius: 24px;
+		background: #ffffff;
+	}
+
+	.qcs-specimen {
+		font-family: 'Plus Jakarta Sans', var(--font-sans);
+		font-weight: 700;
+		font-size: clamp(2.25rem, 4.6vw, 4rem);
+		line-height: 1.05;
+		letter-spacing: -0.03em;
+		color: var(--q-ink);
+		max-width: 12em;
+	}
+
+	.qcs-specimen__accent {
+		display: inline-block;
+		font-family: 'Instrument Serif', serif;
+		font-style: italic;
+		font-weight: 400;
+		font-size: 1.12em;
+		letter-spacing: -0.01em;
+		color: var(--q-blue);
+	}
+
+	:global(.js) .qcs-brand__type .qcs-specimen__accent {
+		clip-path: inset(0 100% 0 0);
+		transition: clip-path 900ms cubic-bezier(0.65, 0, 0.35, 1) 450ms;
+	}
+
+	:global(.js) .qcs-brand__type.is-in .qcs-specimen__accent {
+		clip-path: inset(0 -0.2em 0 0);
+	}
+
+	.qcs-brand__note {
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	.qcs-brand__icon {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		gap: 32px;
+		padding: 56px 40px 40px;
+		border-radius: 24px;
+		background: var(--q-sky);
+		color: #1a2650;
+		font-size: var(--text-small);
+	}
+
+	.qcs-brand__icon img {
+		width: 180px;
+		height: 180px;
+		border-radius: 42px;
+		box-shadow: 0 20px 40px -6px rgba(26, 51, 153, 0.25);
+		animation: icon-float 4s ease-in-out infinite;
+	}
+
+	@keyframes icon-float {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-6px);
+		}
+	}
+
+	.qcs-swatches {
+		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 24px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.qcs-swatch {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 180px;
+		padding: 24px;
+		border-radius: 24px;
+		font-size: var(--text-small);
+		color: var(--q-ink);
+	}
+
+	.qcs-swatch span:first-child {
+		font-size: var(--text-body-lg);
+	}
+
+	:global(.js) .qcs-swatch[data-reveal] {
+		transform: scale(0.96);
+	}
+
+	:global(.js) .qcs-swatch[data-reveal].is-in {
+		transform: none;
+	}
+
+	.qcs-swatch--blue {
+		background: var(--q-blue);
+		color: #ffffff;
+	}
+
+	.qcs-swatch--lime {
+		background: var(--q-lime);
+	}
+
+	.qcs-swatch--sky {
+		background: var(--q-sky);
+	}
+
+	.qcs-swatch--glass {
+		background:
+			radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.9), transparent 55%),
+			linear-gradient(135deg, #e4edfd, #f3f7ff);
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+	}
+
+	/* 08 Landing: the live mini-site sits on a sky board. */
+	.qcs-live {
+		padding: 40px;
+		border-radius: 24px;
+		background: linear-gradient(180deg, #9ec7ff 0%, #d7e9ff 55%, #eef5ff 100%);
+	}
+
+	/* 09 Result */
+	.qcs-result {
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 100px;
+	}
+
+	.qcs-result__intro {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		flex: 0 1 480px;
+	}
+
+	.qcs-result__body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+		flex: 0 1 700px;
+	}
+
+	.qcs-roadmap ul {
+		margin: 12px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.qcs-roadmap__row {
+		display: flex;
+		justify-content: space-between;
+		gap: var(--space-4);
+		padding-block: 14px;
+		border-top: 1px solid var(--color-border);
+		font-size: var(--text-body-lg);
+	}
+
+	.qcs-roadmap__status {
+		flex-shrink: 0;
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	.qcs-roadmap__status.is-first {
+		position: relative;
+		color: var(--color-accent);
+	}
+
+	.qcs-roadmap__row.is-in .qcs-roadmap__status.is-first::before {
+		content: '';
+		position: absolute;
+		inset: -4px -10px;
+		border-radius: 99px;
+		box-shadow: 0 0 0 0 rgba(41, 79, 232, 0.35);
+		animation: first-pulse 1.4s var(--ease-out) 600ms 2;
+	}
+
+	@keyframes first-pulse {
+		to {
+			box-shadow: 0 0 0 10px rgba(41, 79, 232, 0);
+		}
+	}
+
+	.qcs-result__note {
+		font-size: var(--text-caption);
+		color: var(--color-text-secondary);
+	}
+
+	/* Next + close (same as the sheet case studies) */
+	.qcs-next {
+		display: block;
+		padding-block: 56px;
+		background: var(--color-bg-subtle);
+	}
+
+	.qcs-next__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-5);
+	}
+
+	.qcs-next__details {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.qcs-next__name {
+		font-size: clamp(2.25rem, 4vw, 3.5rem);
+		letter-spacing: -0.045em;
+		line-height: 1.1;
+	}
+
+	.qcs-next__line {
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+	}
+
+	.qcs-next__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--color-accent);
+	}
+
+	.qcs-next__cta img {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.qcs-next:hover .qcs-next__cta img {
+			transform: translate(2px, -2px);
+		}
+	}
+
+	.qcs-close {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-6);
+		padding-top: var(--space-9);
+	}
+
+	.qcs-close__copy {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	/* Tablet */
+	@media (max-width: 64rem) {
+		.qcs-split,
+		.qcs-business {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.qcs-business__demo {
+			justify-self: center;
+		}
+
+		.qcs-connect {
+			grid-template-columns: 1fr 1fr;
+			padding: 40px 32px;
+		}
+
+		.qcs-connect__studio {
+			grid-column: 1 / -1;
+		}
+
+		.qcs-connect__phone {
+			align-items: center;
+		}
+
+		.qcs-flow {
+			display: flex;
+			gap: 20px;
+			overflow-x: auto;
+			scroll-snap-type: x mandatory;
+			padding-bottom: var(--space-4);
+			scrollbar-width: none;
+		}
+
+		.qcs-flow__item {
+			flex: 0 0 220px;
+			scroll-snap-align: start;
+		}
+
+		.qcs-states {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.qcs-try {
+			grid-template-columns: minmax(0, 1fr);
+			padding: 40px 32px;
+		}
+
+		.qcs-brand {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.qcs-swatches {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.qcs-result {
+			flex-direction: column;
+			gap: var(--space-6);
+		}
+
+	}
+
+	/* Mobile */
+	@media (max-width: 47.99rem) {
+		.qcs-intro {
+			gap: var(--space-5);
+			padding-block: var(--space-5) var(--space-7);
+		}
+
+		.qcs-intro__title {
+			letter-spacing: -2px;
+		}
+
+		.qcs-credits {
+			flex-direction: column;
+			gap: var(--space-6);
+			padding-top: 0;
+		}
+
+		.qcs-credits__role,
+		.qcs-credits__tools {
+			flex-basis: auto;
+		}
+
+		.qcs-hero {
+			padding-bottom: var(--space-8);
+		}
+
+		.qcs-hero__frame {
+			border-radius: 16px;
+		}
+
+		.qcs-pair {
+			grid-template-columns: minmax(0, 1fr);
+			gap: var(--space-7);
+			padding-bottom: var(--space-8);
+		}
+
+		.qcs-section {
+			gap: var(--space-7);
+		}
+
+		.qcs-connect {
+			grid-template-columns: 1fr 1fr;
+			gap: 20px;
+			padding: 24px 16px;
+		}
+
+		.qcs-connect__studio {
+			min-width: 0;
+		}
+
+		.qcs-connect__scroll > :global(.sp) {
+			width: 640px;
+			max-width: none;
+		}
+
+		.qcs-connect__scroll {
+			overflow-x: auto;
+			margin-inline: -16px;
+			padding: 4px 16px 12px;
+			scrollbar-width: none;
+		}
+
+		.qcs-connect__phone :global(.scan),
+		.qcs-connect__phone :global(.qd) {
+			width: 100%;
+		}
+
+		.qcs-try {
+			padding: 32px 20px;
+		}
+
+		.qcs-states {
+			gap: 32px 16px;
+		}
+
+		.qcs-brand__type {
+			padding: 32px 24px;
+		}
+
+		.qcs-swatch {
+			height: 140px;
+			padding: 18px;
+			border-radius: 18px;
+		}
+
+		.qcs-swatches {
+			gap: 12px;
+		}
+
+		.qcs-live {
+			padding: 12px;
+			border-radius: 18px;
+		}
+
+		.qcs-next {
+			padding-block: 40px;
+		}
+
+		.qcs-next__inner {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.qcs-close {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.qcs-close :global(.ds-button) {
+			width: 100%;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.qcs-brand__icon img {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	// Section reveals: fade up once when 15% visible.
+	const reveals = document.querySelectorAll<HTMLElement>('[data-reveal]');
+	if (reduce) {
+		reveals.forEach((el) => el.classList.add('is-in'));
+	} else {
+		const io = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					entry.target.classList.add('is-in');
+					io.unobserve(entry.target);
+				}
+			},
+			{ threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
+		);
+		reveals.forEach((el) => io.observe(el));
+		// Fallback for fast jumps (anchors, scrollbar drags) that skip past an element entirely.
+		let pending = [...reveals];
+		const sweep = () => {
+			pending = pending.filter((el) => {
+				if (el.getBoundingClientRect().top < innerHeight) {
+					el.classList.add('is-in');
+					io.unobserve(el);
+					return false;
+				}
+				return true;
+			});
+			if (!pending.length) removeEventListener('scroll', onSweep);
+		};
+		let sweepQueued = false;
+		const onSweep = () => {
+			if (sweepQueued) return;
+			sweepQueued = true;
+			setTimeout(() => {
+				sweepQueued = false;
+				sweep();
+			}, 150);
+		};
+		addEventListener('scroll', onSweep, { passive: true });
+	}
+
+	// Scroll-linked motion: hero settle, pinned flow row, landing page auto-scroll.
+	const hero = document.querySelector<HTMLElement>('[data-hero]');
+	const pin = document.querySelector<HTMLElement>('[data-pin]');
+	const items = [...document.querySelectorAll<HTMLElement>('[data-flow-item]')];
+	const bar = document.querySelector<HTMLElement>('[data-pin-bar]');
+	const pinned = matchMedia('(min-width: 64rem) and (prefers-reduced-motion: no-preference)');
+
+	const clamp = (v: number) => Math.min(1, Math.max(0, v));
+	let ticking = false;
+
+	const update = () => {
+		ticking = false;
+		const vh = innerHeight;
+
+		if (hero) {
+			const r = hero.getBoundingClientRect();
+			const p = clamp(1 - r.top / vh);
+			hero.style.setProperty('--hero-scale', String(1.06 - 0.06 * p));
+		}
+
+		if (pin && pinned.matches) {
+			const r = pin.getBoundingClientRect();
+			const p = clamp(-r.top / (r.height - vh * 0.85));
+			const active = Math.min(items.length - 1, Math.floor(p * items.length));
+			items.forEach((el, i) => el.classList.toggle('is-active', i === active));
+			bar?.style.setProperty('--p', String(p));
+		} else {
+			items.forEach((el) => el.classList.remove('is-active'));
+		}
+	};
+
+	if (!reduce) {
+		addEventListener(
+			'scroll',
+			() => {
+				if (!ticking) {
+					ticking = true;
+					requestAnimationFrame(update);
+				}
+			},
+			{ passive: true },
+		);
+		addEventListener('resize', update);
+		update();
+	}
+</script>

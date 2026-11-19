@@ -1,0 +1,26 @@
+---
+/** 22 Lock screen — approvals arrive where you already look. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+---
+
+<div class="qa-screen qa-lock">
+	<span class="qa-lock__wall" aria-hidden="true"></span>
+	<StatusBar light time={false} />
+	<span class="qa-lock__lock"><Icon name="lock" size={22} stroke={2.4} /></span>
+	<p class="qa-lock__date">Friday, April 3</p>
+	<p class="qa-lock__time">9:41</p>
+	<div class="qa-notes">
+		<div class="qa-note">
+			<img src="/images/case/quillo/app-icon.webp" alt="" width="38" height="38" />
+			<span><strong>Priya needs your review<em>now</em></strong><span>“Catering for offices” is ready. Tap to approve and publish.</span></span>
+		</div>
+		<div class="qa-note">
+			<img src="/images/case/quillo/app-icon.webp" alt="" width="38" height="38" />
+			<span><strong>Easter pre-orders is live 🎉<em>9:00 AM</em></strong><span>Your scheduled post went out at 9:00 AM.</span></span>
+		</div>
+	</div>
+	<span class="qa-lock__btn qa-lock__btn--l"><Icon name="flashlight" size={22} /></span>
+	<span class="qa-lock__btn qa-lock__btn--r"><Icon name="camera" size={22} /></span>
+	<span class="qa-homebar qa-homebar--light" aria-hidden="true"></span>
+</div>

@@ -1,0 +1,32 @@
+{
+	"name": "Faruq So",
+	"short_name": "Faruq So",
+	"description": "UI/UX product designer. Websites that help startups look credible and convert.",
+	"start_url": "/",
+	"scope": "/",
+	"id": "/",
+	"display": "standalone",
+	"background_color": "#fafaf8",
+	"theme_color": "#294fe8",
+	"lang": "en",
+	"icons": [
+		{
+			"src": "/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		},
+		{
+			"src": "/apple-touch-icon.png",
+			"sizes": "180x180",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "/images/og/default.png",
+			"sizes": "1200x630",
+			"type": "image/png",
+			"purpose": "any"
+		}
+	]
+}

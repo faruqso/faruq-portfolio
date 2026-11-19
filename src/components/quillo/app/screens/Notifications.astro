@@ -1,0 +1,20 @@
+---
+/** 13 Notifications — the permission prompt over a blurred Home. */
+import Home from './Home.astro';
+---
+
+<div class="qa-screen qa-notif">
+	<div class="qa-notif__under"><Home /></div>
+	<span class="qa-notif__scrim"></span>
+	<section class="qa-prompt">
+		<img src="/images/case/quillo/photos/icon-bell.webp" alt="" width="88" height="88" class="qa-prompt__icon" />
+		<h3>Never miss a review</h3>
+		<p>Get a ping when a teammate needs approval, or when a scheduled post goes live.</p>
+		<div class="qa-prompt__preview">
+			<img src="/images/case/quillo/app-icon.webp" alt="" width="30" height="30" />
+			<span><strong>Priya needs your review</strong><span>“Catering for offices” · now</span></span>
+		</div>
+		<span class="qa-btn qa-btn--blue qa-btn--cta qa-prompt__cta">Turn on notifications</span>
+		<span class="qa-prompt__later">Maybe later</span>
+	</section>
+</div>

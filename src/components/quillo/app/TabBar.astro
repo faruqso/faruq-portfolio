@@ -1,0 +1,31 @@
+---
+import Icon from './Icon.astro';
+
+type Props = { active?: 'home' | 'content' | 'media' | 'inbox' };
+const { active = 'home' } = Astro.props;
+const items = [
+	{ id: 'home', label: 'Home', icon: 'home' },
+	{ id: 'content', label: 'Content', icon: 'file' },
+	{ id: 'plus' },
+	{ id: 'media', label: 'Media', icon: 'image' },
+	{ id: 'inbox', label: 'Inbox', icon: 'bell' },
+];
+---
+
+<nav class="qa-tabbar" aria-label="App">
+	{
+		items.map((item) =>
+			item.id === 'plus' ? (
+				<span class="qa-tabbar__plus">
+					<Icon name="plus" size={24} stroke={2.4} />
+				</span>
+			) : (
+				<span class:list={['qa-tabbar__item', { 'is-active': item.id === active }]}>
+					<Icon name={item.icon!} size={22} stroke={1.9} />
+					{item.label}
+				</span>
+			),
+		)
+	}
+</nav>
+<span class="qa-homebar" aria-hidden="true"></span>

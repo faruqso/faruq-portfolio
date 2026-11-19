@@ -14,22 +14,48 @@ export const site = {
 	title: 'Websites that help startups look credible and convert',
 	description:
 		'UI/UX product designer with 5+ years of experience. I design and build your website, from the first idea to launch.',
-	url: 'https://faruq-portfolio.faruqso.workers.dev',
+	url: 'https://faruqso.com',
 	tagline: 'Clear ideas. Considered design.',
 	availability: 'Open for work',
+} as const;
+
+/** Global SEO defaults — referenced by `src/lib/seo.ts` and `Layout.astro`. */
+export const seo = {
+	locale: 'en_US',
+	language: 'en',
+	twitterHandle: '@faruq_so',
+	jobTitle: 'UI/UX Product Designer',
+	defaultOgImage: '/images/og/default.png',
+	profileImage: '/images/faruq.jpg',
+	themeColor: '#fafaf8',
+	themeColorDark: '#181a1b',
+	keywords: [
+		'UI/UX designer',
+		'product designer',
+		'startup website',
+		'website design',
+		'Framer developer',
+		'Figma designer',
+		'landing page design',
+		'Faruq So',
+	],
 } as const;
 
 export const navItems: NavItem[] = [
 	{ label: 'Work', href: '#work' },
 	{ label: 'Services', href: '#services' },
 	{ label: 'Process', href: '#process' },
+	{ label: 'Resume', href: '/resume' },
 	{ label: 'About', href: '#about' },
 ];
 
 export const primaryCta = { label: 'Start a project', href: '/#contact' } as const;
 
 /** Nav for pages other than the homepage: same sections, linked back to it. */
-export const subpageNavItems: NavItem[] = navItems.map((item) => ({ ...item, href: `/${item.href}` }));
+export const subpageNavItems: NavItem[] = navItems.map((item) => ({
+	...item,
+	href: item.href.startsWith('/') ? item.href : `/${item.href}`,
+}));
 
 export const email = 'faruq.soremekun@gmail.com';
 
@@ -90,6 +116,18 @@ export const projects: Project[] = [
 			'Branding, the full SaaS dashboard UI in Figma, and the website, designed in Figma and built in Framer.',
 		image: '/images/work/mightyocto.png',
 		imageMobile: '/images/work/mightyocto-mobile.png',
+		href: '/work/mightyocto',
+	},
+	{
+		category: 'Self-initiated · Startup concept',
+		slug: 'quillo',
+		title: 'Quillo',
+		outcome: 'A mobile app for editing a headless-CMS website from your phone, designed from zero.',
+		scope:
+			'Product strategy, brand, 24 iOS app screens, the landing page and the Sanity Studio connect flow. Concept stage, not built yet.',
+		image: '/images/work/quillo.webp',
+		imageMobile: '/images/work/quillo-mobile.webp',
+		href: '/work/quillo',
 	},
 	{
 		category: 'Spa & beauty',
@@ -100,6 +138,7 @@ export const projects: Project[] = [
 			'Branding (2021), then the full ecommerce and appointment-booking website and admin dashboards, designed and built in Code.',
 		image: '/images/work/ishasplace.png',
 		imageMobile: '/images/work/ishasplace-mobile.png',
+		href: '/work/ishasplace',
 	},
 	{
 		category: 'Padel club business in Belgium',
@@ -109,6 +148,7 @@ export const projects: Project[] = [
 		scope: 'Website redesign and product design. The client’s team built it.',
 		image: '/images/work/padel-peer.png',
 		imageMobile: '/images/work/padel-peer-mobile.png',
+		href: '/work/padel-peer',
 	},
 	{
 		category: 'Digital payments',
@@ -118,6 +158,7 @@ export const projects: Project[] = [
 		scope: 'Website redesign and product design. The client’s team built it.',
 		image: '/images/work/reedo.png',
 		imageMobile: '/images/work/reedo-mobile.png',
+		href: '/work/reedo',
 	},
 ];
 

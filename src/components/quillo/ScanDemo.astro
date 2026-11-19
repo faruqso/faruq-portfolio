@@ -1,0 +1,102 @@
+---
+/** Scan to connect — coded screen; while visible, the scan line sweeps and the "Found" chip pops in, on loop. */
+import Device from './app/Device.astro';
+import Scan from './app/screens/Scan.astro';
+
+type Props = { width?: number };
+const { width = 220 } = Astro.props;
+---
+
+<div class="scan" data-scan>
+	<Device width={width} label="Quillo scanning the QR code shown in the Quillo tab of Sanity Studio">
+		<Scan />
+	</Device>
+</div>
+
+<style>
+	.scan :global(.qa-found) {
+		opacity: 0;
+		transform: translateY(10px) scale(0.92);
+	}
+
+	.scan.is-playing :global(.qa-scanline) {
+		animation: scan-sweep 3.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+	}
+
+	.scan.is-playing :global(.qa-found) {
+		animation: scan-found 3.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+	}
+
+	.scan.is-playing :global(.qa-brackets) {
+		animation: scan-lock 3.8s ease-out infinite;
+	}
+
+	@keyframes scan-sweep {
+		0% {
+			transform: translateY(0);
+			opacity: 0;
+		}
+		6% {
+			opacity: 1;
+		}
+		45% {
+			transform: translateY(166px);
+			opacity: 1;
+		}
+		52%,
+		100% {
+			transform: translateY(166px);
+			opacity: 0;
+		}
+	}
+
+	@keyframes scan-found {
+		0%,
+		48% {
+			opacity: 0;
+			transform: translateY(10px) scale(0.92);
+		}
+		58%,
+		90% {
+			opacity: 1;
+			transform: none;
+		}
+		100% {
+			opacity: 0;
+			transform: none;
+		}
+	}
+
+	@keyframes scan-lock {
+		0%,
+		48%,
+		100% {
+			transform: scale(1);
+		}
+		54% {
+			transform: scale(0.94);
+		}
+		62% {
+			transform: scale(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scan :global(.qa-found) {
+			opacity: 1;
+			transform: none;
+		}
+
+		.scan.is-playing :global(.qa-scanline),
+		.scan.is-playing :global(.qa-found),
+		.scan.is-playing :global(.qa-brackets) {
+			animation: none;
+		}
+	}
+</style>
+
+<script>
+	for (const el of document.querySelectorAll<HTMLElement>('[data-scan]')) {
+		new IntersectionObserver(([entry]) => el.classList.toggle('is-playing', entry.isIntersecting), { threshold: 0.35 }).observe(el);
+	}
+</script>

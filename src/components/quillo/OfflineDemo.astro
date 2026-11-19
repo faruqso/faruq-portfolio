@@ -1,0 +1,95 @@
+---
+/** Offline — coded content list with a working signal switch: off queues, on syncs. */
+import Device from './app/Device.astro';
+import Content from './app/screens/Content.astro';
+
+type Props = { width?: number };
+const { width = 260 } = Astro.props;
+---
+
+<div class="offline" data-offline data-online="false">
+	<Device width={width} label="Quillo content list while offline, with three changes queued">
+		<Content />
+	</Device>
+	<label class="offline__toggle">
+		<input type="checkbox" role="switch" data-signal />
+		<span class="offline__track" aria-hidden="true"><span></span></span>
+		<span class="offline__label" data-signal-label>Signal off</span>
+	</label>
+</div>
+
+<style>
+	.offline {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-5);
+	}
+
+	.offline__toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-3);
+		cursor: pointer;
+		font-size: var(--text-small);
+		color: var(--color-text);
+	}
+
+	.offline__toggle input {
+		position: absolute;
+		opacity: 0;
+		width: 1px;
+		height: 1px;
+	}
+
+	.offline__track {
+		position: relative;
+		width: 44px;
+		height: 26px;
+		border-radius: 99px;
+		background: #c9ccd3;
+		transition: background-color var(--duration-fast) var(--ease-out);
+	}
+
+	.offline__track span {
+		position: absolute;
+		top: 3px;
+		left: 3px;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: #ffffff;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+		transition: transform 240ms var(--ease-out);
+	}
+
+	.offline__toggle input:checked + .offline__track {
+		background: #1fb86a;
+	}
+
+	.offline__toggle input:checked + .offline__track span {
+		transform: translateX(18px);
+	}
+
+	.offline__toggle input:focus-visible + .offline__track {
+		outline: 2px solid var(--color-focus-ring);
+		outline-offset: 3px;
+	}
+
+	@media (hover: hover) {
+		.offline__toggle:hover .offline__track span {
+			box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+		}
+	}
+</style>
+
+<script>
+	for (const root of document.querySelectorAll<HTMLElement>('[data-offline]')) {
+		const input = root.querySelector<HTMLInputElement>('[data-signal]')!;
+		const label = root.querySelector<HTMLElement>('[data-signal-label]')!;
+		input.addEventListener('change', () => {
+			root.dataset.online = String(input.checked);
+			label.textContent = input.checked ? 'Signal on · synced' : 'Signal off';
+		});
+	}
+</script>

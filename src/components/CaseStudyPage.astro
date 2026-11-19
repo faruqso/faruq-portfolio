@@ -2,27 +2,26 @@
 import Button from './Button.astro';
 import type { CaseStudy as CaseStudyData } from '../data/caseStudies';
 import type { Project } from '../lib/types';
+import type { WorkNeighbor } from '../data/workNav';
 import { primaryCta } from '../data/site';
 
 type Props = {
 	study: CaseStudyData;
 	project: Project;
-	next: CaseStudyData;
+	next: WorkNeighbor;
 };
 
 const { study, project, next } = Astro.props;
-const headingId = `case-${study.slug}-title`;
 ---
 
-<article class="cs" data-case-panel={study.slug} aria-labelledby={headingId} hidden>
-	<!-- Introduction -->
+<article class="cs">
 	<header class="container cs-intro">
-		<button type="button" class="cs-back" data-sheet-close>
+		<a class="cs-back" href="/#work">
 			<img src="/icons/arrow-right.svg" alt="" width="24" height="24" />
 			Back to work
-		</button>
+		</a>
 		<p class="eyebrow">Selected work / {study.label}</p>
-		<h2 id={headingId} class="cs-intro__title">{study.title}</h2>
+		<h1 class="cs-intro__title">{study.title}</h1>
 		<p class="cs-intro__summary">{study.summary}</p>
 		{
 			study.facts && (
@@ -60,24 +59,29 @@ const headingId = `case-${study.slug}-title`;
 		</div>
 	</header>
 
-	<!-- Project visual -->
 	<div class="container cs-visual">
 		<picture>
 			<source media="(max-width: 47.99rem)" srcset={project.imageMobile} width="342" height="360" />
-			<img src={project.image} alt={`${study.title} — concept preview`} width="1280" height="570" loading="lazy" decoding="async" />
+			<img
+				src={project.image}
+				alt={`${study.title} — project preview`}
+				width="1280"
+				height="570"
+				fetchpriority="high"
+				decoding="async"
+			/>
 		</picture>
 	</div>
 
-	<!-- Problem and decision -->
 	<div class="container cs-pair">
 		{
 			[
-				{ label: '01 / The problem', title: 'The context', block: study.problem },
-				{ label: '02 / The decision', title: 'The design thinking', block: study.decision },
+				{ label: '01 / The problem', title: study.problemHeading ?? 'The context', block: study.problem },
+				{ label: '02 / The decision', title: study.decisionHeading ?? 'The design thinking', block: study.decision },
 			].map((item) => (
 				<section class="cs-pair__item">
 					<p class="eyebrow">{item.label}</p>
-					<h3 class="text-display">{item.title}</h3>
+					<h2 class="text-display">{item.title}</h2>
 					<p class="text-lead">{item.block.text}</p>
 					{item.block.pending && (
 						<div class="cs-pending">
@@ -90,19 +94,18 @@ const headingId = `case-${study.slug}-title`;
 		}
 	</div>
 
-	<!-- Delivered work -->
 	<section class="cs-work">
 		<div class="container cs-work__inner">
 			<div class="section-intro">
 				<p class="eyebrow">The work</p>
-				<h3 class="text-display">What I delivered</h3>
+				<h2 class="text-display">What I delivered</h2>
 			</div>
 			<ol class="cs-deliverables" style={`--cols: ${study.deliverables.length}`}>
 				{
 					study.deliverables.map((item, index) => (
 						<li class="cs-deliverable">
 							<span class="cs-deliverable__number">{String(index + 1).padStart(2, '0')}</span>
-							<h4 class="cs-deliverable__title">{item.title}</h4>
+							<h3 class="cs-deliverable__title">{item.title}</h3>
 							<p class="cs-deliverable__text">{item.description}</p>
 						</li>
 					))
@@ -131,11 +134,10 @@ const headingId = `case-${study.slug}-title`;
 		</div>
 	</section>
 
-	<!-- Result -->
 	<section class="container cs-result">
 		<div class="cs-result__intro">
 			<p class="eyebrow">03 / The result</p>
-			<h3 class="text-display">Delivered, not overstated.</h3>
+			<h2 class="text-display">{study.resultHeading ?? 'Delivered, not overstated.'}</h2>
 		</div>
 		<div class="cs-result__body">
 			<p class="text-lead">{study.result.text}</p>
@@ -151,13 +153,22 @@ const headingId = `case-${study.slug}-title`;
 		</div>
 	</section>
 
-	<!-- Next project -->
-	<a class="cs-next" href={`#case-${next.slug}`} data-case-study={next.slug}>
+	{
+		study.reflection && (
+			<section class="container cs-reflect">
+				<p class="eyebrow">04 / Reflection</p>
+				<h2 class="text-display">{study.reflectionHeading ?? 'What I would do differently'}</h2>
+				<p class="text-lead">{study.reflection}</p>
+			</section>
+		)
+	}
+
+	<a class="cs-next" href={next.href}>
 		<span class="container cs-next__inner">
 			<span class="cs-next__details">
 				<span class="eyebrow">Next project</span>
 				<span class="cs-next__name">{next.title}</span>
-				<span class="cs-next__line">{next.nextLine}</span>
+				<span class="cs-next__line">{next.line}</span>
 			</span>
 			<span class="cs-next__cta">
 				View case study
@@ -166,15 +177,12 @@ const headingId = `case-${study.slug}-title`;
 		</span>
 	</a>
 
-	<!-- Close -->
 	<div class="container cs-close">
 		<div class="cs-close__copy">
-			<h3 class="text-display">Have a launch coming up?</h3>
+			<h2 class="text-display">Have a launch coming up?</h2>
 			<p class="text-lead">Tell me about your project.</p>
 		</div>
-		<span data-sheet-cta>
-			<Button href={primaryCta.href}>{primaryCta.label}</Button>
-		</span>
+		<Button href={primaryCta.href}>{primaryCta.label}</Button>
 	</div>
 </article>
 
@@ -183,7 +191,6 @@ const headingId = `case-${study.slug}-title`;
 		padding-bottom: 40px;
 	}
 
-	/* Intro */
 	.cs-intro {
 		display: flex;
 		flex-direction: column;
@@ -203,6 +210,7 @@ const headingId = `case-${study.slug}-title`;
 		font: inherit;
 		font-size: var(--text-small);
 		color: var(--color-text);
+		text-decoration: none;
 		cursor: pointer;
 	}
 
@@ -221,6 +229,7 @@ const headingId = `case-${study.slug}-title`;
 		font-size: clamp(3rem, 7vw, 6.25rem);
 		line-height: 1.02;
 		letter-spacing: -0.055em;
+		margin: 0;
 	}
 
 	.cs-intro__summary {
@@ -229,6 +238,7 @@ const headingId = `case-${study.slug}-title`;
 		line-height: 1.12;
 		letter-spacing: -0.04em;
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
 	.cs-credits {
@@ -259,20 +269,22 @@ const headingId = `case-${study.slug}-title`;
 		text-transform: uppercase;
 		line-height: normal;
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
 	.cs-credits__text {
 		font-size: var(--text-body-lg);
 		line-height: var(--leading-relaxed);
+		margin: 0;
 	}
 
 	.cs-credits__note {
 		font-size: var(--text-small);
 		line-height: var(--leading-body);
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
-	/* Pending box */
 	.cs-pending {
 		display: flex;
 		flex-direction: column;
@@ -290,14 +302,15 @@ const headingId = `case-${study.slug}-title`;
 		letter-spacing: 0.07em;
 		text-transform: uppercase;
 		line-height: normal;
+		margin: 0;
 	}
 
 	.cs-pending__text {
 		font-size: var(--text-small);
 		line-height: 1.5;
+		margin: 0;
 	}
 
-	/* Visual */
 	.cs-visual {
 		padding-bottom: var(--space-9);
 	}
@@ -307,7 +320,6 @@ const headingId = `case-${study.slug}-title`;
 		height: auto;
 	}
 
-	/* Problem / decision */
 	.cs-pair {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -321,7 +333,6 @@ const headingId = `case-${study.slug}-title`;
 		gap: var(--space-5);
 	}
 
-	/* Delivered work */
 	.cs-work {
 		padding-block: var(--space-9);
 		background: var(--color-bg-subtle);
@@ -368,9 +379,9 @@ const headingId = `case-${study.slug}-title`;
 		font-size: var(--text-body);
 		line-height: var(--leading-relaxed);
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
-	/* Facts */
 	.cs-facts {
 		display: flex;
 		flex-wrap: wrap;
@@ -390,7 +401,6 @@ const headingId = `case-${study.slug}-title`;
 		line-height: normal;
 	}
 
-	/* Gallery */
 	.cs-gallery {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -422,7 +432,6 @@ const headingId = `case-${study.slug}-title`;
 		color: var(--color-text-secondary);
 	}
 
-	/* Result */
 	.cs-result {
 		display: flex;
 		gap: 100px;
@@ -448,13 +457,23 @@ const headingId = `case-${study.slug}-title`;
 		font-size: var(--text-caption);
 		line-height: var(--leading-body);
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
-	/* Next project */
+	.cs-reflect {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+		padding-bottom: var(--space-10);
+		max-width: 52rem;
+	}
+
 	.cs-next {
 		display: block;
 		padding-block: 56px;
 		background: var(--color-bg-subtle);
+		text-decoration: none;
+		color: inherit;
 	}
 
 	.cs-next__inner {
@@ -503,7 +522,6 @@ const headingId = `case-${study.slug}-title`;
 		}
 	}
 
-	/* Close */
 	.cs-close {
 		display: flex;
 		align-items: center;
@@ -519,7 +537,6 @@ const headingId = `case-${study.slug}-title`;
 		max-width: 850px;
 	}
 
-	/* Tablet */
 	@media (max-width: 64rem) {
 		.cs-pair {
 			gap: var(--space-7);
@@ -539,7 +556,6 @@ const headingId = `case-${study.slug}-title`;
 		}
 	}
 
-	/* Mobile */
 	@media (max-width: 47.99rem) {
 		.cs-intro {
 			gap: var(--space-5);

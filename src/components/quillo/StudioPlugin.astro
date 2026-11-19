@@ -1,0 +1,542 @@
+---
+/**
+ * The Quillo tool inside Sanity Studio (Figma "Desktop/Studio plugin — Quillo tool", 52:3023),
+ * coded at 1280×600 and scaled to fit. Interactive: datasets, live QR countdown, copy, revoke.
+ */
+import Icon from './app/Icon.astro';
+import { qrPattern } from './app/qr';
+import '@fontsource/plus-jakarta-sans/500.css';
+import '@fontsource/plus-jakarta-sans/600.css';
+import '@fontsource/plus-jakarta-sans/700.css';
+import '../../styles/quillo-app.css';
+
+const qr = qrPattern(19);
+---
+
+<div class="sp" data-studio role="group" aria-label="The Quillo tool inside Sanity Studio">
+	<div class="sp__canvas qa">
+		<header class="sp-top">
+			<span class="sp-ws"><i></i>Crumb &amp; Co. Studio<Icon name="chevron-down" size={16} stroke={2.4} /></span>
+			<nav class="sp-tabs">
+				<span>Structure</span><span>Presentation</span><span>Vision</span>
+				<span class="is-on"><img src="/images/case/quillo/app-icon.webp" alt="" width="18" height="18" />Quillo</span>
+			</nav>
+			<span class="sp-search"><Icon name="search" size={15} stroke={2.4} />Search</span>
+			<span class="sp-me"></span>
+		</header>
+
+		<main class="sp-main">
+			<section class="sp-left">
+				<h3>Put Crumb &amp; Co. on your phone</h3>
+				<p class="sp-sub">Scan this code with the Quillo app. Each phone gets its own editor token, and you can revoke it anytime.</p>
+				<div class="sp-card">
+					<div class="sp-qr">
+						<span class="sp-qr__code" data-qr>
+							<svg viewBox="0 0 25 25" fill="#0b1020" set:html={qr} />
+							<img src="/images/case/quillo/app-icon.webp" alt="" width="34" height="34" />
+						</span>
+						<p class="sp-refresh"><Icon name="refresh" size={14} stroke={2.4} />Code refreshes in <b data-countdown>4:58</b></p>
+					</div>
+					<div class="sp-opts">
+						<p class="sp-label">Datasets</p>
+						<div class="sp-chips" data-datasets>
+							<button type="button" class="sp-chip is-on" aria-pressed="true"><Icon name="check" size={13} stroke={3} />production</button>
+							<button type="button" class="sp-chip" aria-pressed="false"><Icon name="check" size={13} stroke={3} />staging</button>
+						</div>
+						<p class="sp-label">Access level</p>
+						<p class="sp-access"><Icon name="lock" size={15} stroke={2.4} />Editor: can edit &amp; publish, can’t change settings</p>
+						<p class="sp-label">Document types on mobile</p>
+						<div class="sp-chips sp-chips--plain">
+							<span>Posts</span><span>Menu items</span><span>Pages</span><span>Team</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<aside class="sp-right">
+				<section class="sp-panel">
+					<p class="sp-panel__head"><strong>Connected phones</strong><span data-phone-count>2 of 5</span></p>
+					<ul class="sp-phones">
+						<li><i><Icon name="file" size={16} /></i><span><strong>Amara’s iPhone</strong><span>Active 2 min ago</span></span><button type="button" data-revoke>Revoke</button></li>
+						<li><i><Icon name="file" size={16} /></i><span><strong>Tobi’s Pixel 8</strong><span>Active yesterday</span></span><button type="button" data-revoke>Revoke</button></li>
+					</ul>
+				</section>
+				<section class="sp-panel">
+					<p class="sp-deployed"><i><Icon name="check" size={14} stroke={3} /></i>Schema deployed</p>
+					<p class="sp-sub sp-sub--sm">6 document types · updated Nov 12. Quillo rebuilds the phone editor whenever you redeploy.</p>
+					<button type="button" class="sp-cmd" data-copy="npx sanity schema deploy">
+						<span><em>&gt;_</em> npx sanity schema deploy</span>
+						<span class="sp-cmd__copy" data-copy-label>Copy</span>
+					</button>
+				</section>
+				<p class="sp-note"><Icon name="list" size={16} />Custom input components show as read-only previews on mobile.</p>
+			</aside>
+		</main>
+	</div>
+</div>
+
+<style>
+	.sp {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 1280 / 600;
+		overflow: hidden;
+		border-radius: 14px;
+		background: #f6f8fc;
+		box-shadow: 0 30px 60px -30px rgba(13, 18, 38, 0.35), 0 0 0 1px rgba(13, 18, 38, 0.06);
+	}
+
+	.sp__canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1280px;
+		height: 600px;
+		transform: scale(var(--k, 0.55));
+		transform-origin: 0 0;
+		user-select: auto;
+	}
+
+	.sp-top {
+		display: flex;
+		align-items: center;
+		gap: 30px;
+		height: 56px;
+		padding: 0 14px 0 14px;
+		background: #fff;
+		border-bottom: 1px solid #e6e9f2;
+		font-size: 15px;
+	}
+
+	.sp-ws {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-weight: 500;
+	}
+
+	.sp-ws i {
+		width: 28px;
+		height: 28px;
+		border-radius: 8px;
+		background: #f7a928;
+	}
+
+	.sp-tabs {
+		display: flex;
+		gap: 6px;
+		color: #2a3045;
+	}
+
+	.sp-tabs span {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 14px;
+		border-radius: 10px;
+	}
+
+	.sp-tabs .is-on {
+		background: #eef2ff;
+		color: #2f5bff;
+	}
+
+	.sp-tabs img {
+		border-radius: 5px;
+	}
+
+	.sp-search {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-left: auto;
+		width: 170px;
+		height: 36px;
+		padding: 0 12px;
+		border-radius: 10px;
+		background: #f6f8fc;
+		color: #a3aabd;
+		font-size: 14px;
+	}
+
+	.sp-me {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		background: #c9d6ff;
+	}
+
+	.sp-main {
+		display: grid;
+		grid-template-columns: 1fr 340px;
+		gap: 18px;
+		padding: 30px 40px 0 40px;
+	}
+
+	.sp-left h3 {
+		font-size: 30px;
+		font-weight: 700;
+		letter-spacing: -0.04em;
+	}
+
+	.sp-sub {
+		margin-top: 6px !important;
+		max-width: 420px;
+		font-size: 14.5px;
+		line-height: 1.5;
+		color: #5f6780;
+	}
+
+	.sp-sub--sm {
+		max-width: none;
+		font-size: 13px;
+	}
+
+	.sp-card {
+		display: flex;
+		gap: 22px;
+		margin-top: 18px;
+		padding: 20px;
+		border-radius: 20px;
+		background: #fff;
+		box-shadow: 0 10px 30px -20px rgba(13, 18, 38, 0.25);
+	}
+
+	.sp-qr {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.sp-qr__code {
+		position: relative;
+		display: block;
+		width: 170px;
+		height: 170px;
+		padding: 10px;
+		border-radius: 16px;
+		box-shadow: inset 0 0 0 1px #e6e9f2;
+		transition: opacity 220ms ease;
+	}
+
+	.sp-qr__code.is-refresh {
+		opacity: 0.2;
+	}
+
+	.sp-qr__code svg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.sp-qr__code img {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: -17px 0 0 -17px;
+		border-radius: 9px;
+		box-shadow: 0 0 0 4px #fff;
+	}
+
+	.sp-refresh {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 13px;
+		color: #5f6780;
+	}
+
+	.sp-refresh b {
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		color: #2a3045;
+	}
+
+	.sp-opts {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.sp-label {
+		margin-top: 6px !important;
+		font-size: 13px;
+		color: #5f6780;
+	}
+
+	.sp-label:first-child {
+		margin-top: 0 !important;
+	}
+
+	.sp-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.sp-chip {
+		display: inline-flex !important;
+		align-items: center;
+		gap: 6px;
+		height: 32px;
+		padding: 0 14px !important;
+		border-radius: 99px;
+		background: #f6f8fc !important;
+		font-size: 14px !important;
+		font-weight: 500;
+		color: #2a3045 !important;
+		transition:
+			background-color 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.sp-chip .qa-icon {
+		display: none;
+	}
+
+	.sp-chip.is-on {
+		background: #eef2ff !important;
+		box-shadow: inset 0 0 0 1.5px #2f5bff;
+		color: #2f5bff !important;
+	}
+
+	.sp-chip.is-on .qa-icon {
+		display: block;
+	}
+
+	.sp-chips--plain span {
+		padding: 6px 12px;
+		border-radius: 99px;
+		background: #f6f8fc;
+		font-size: 13.5px;
+	}
+
+	.sp-access {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 14px;
+		border-radius: 12px;
+		background: #f6f8fc;
+		font-size: 14px;
+	}
+
+	.sp-access .qa-icon {
+		color: #1fb86a;
+	}
+
+	.sp-right {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-top: 0;
+	}
+
+	.sp-panel {
+		padding: 16px;
+		border-radius: 18px;
+		background: #fff;
+		box-shadow: 0 10px 30px -20px rgba(13, 18, 38, 0.25);
+	}
+
+	.sp-panel__head {
+		display: flex;
+		justify-content: space-between;
+		padding-bottom: 8px;
+		border-bottom: 1px solid #e6e9f2;
+		font-size: 15px;
+	}
+
+	.sp-panel__head span {
+		font-size: 13px;
+		color: #5f6780;
+	}
+
+	.sp-phones li {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 0;
+		transition:
+			opacity 300ms ease,
+			transform 300ms ease;
+	}
+
+	.sp-phones li + li {
+		border-top: 1px solid #e6e9f2;
+	}
+
+	.sp-phones li.is-gone {
+		opacity: 0.4;
+	}
+
+	.sp-phones i {
+		display: grid;
+		place-items: center;
+		width: 34px;
+		height: 34px;
+		border-radius: 10px;
+		background: #f6f8fc;
+	}
+
+	.sp-phones li > span {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.sp-phones strong {
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	.sp-phones span span {
+		font-size: 12px;
+		color: #5f6780;
+	}
+
+	.sp-phones button {
+		font-size: 13px !important;
+		font-weight: 600;
+		color: #f5a524 !important;
+	}
+
+	.sp-phones li.is-gone button {
+		color: #5f6780 !important;
+	}
+
+	.sp-deployed {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 16px;
+		font-weight: 500;
+	}
+
+	.sp-deployed i {
+		display: grid;
+		place-items: center;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		background: #1fb86a;
+		color: #fff;
+	}
+
+	.sp-cmd {
+		display: flex !important;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		height: 42px;
+		margin-top: 12px;
+		padding: 0 12px 0 14px !important;
+		border-radius: 12px;
+		background: #0b1020 !important;
+		color: #fff !important;
+		font: 13px ui-monospace, 'SFMono-Regular', Menlo, monospace !important;
+	}
+
+	.sp-cmd em {
+		color: #c8f25a;
+		font-style: normal;
+		margin-right: 4px;
+	}
+
+	.sp-cmd__copy {
+		padding: 4px 10px;
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.12);
+		font-family: 'Plus Jakarta Sans', sans-serif;
+		font-size: 12px;
+		transition: background-color 200ms ease;
+	}
+
+	.sp-cmd.is-copied .sp-cmd__copy {
+		background: #1fb86a;
+	}
+
+	.sp-note {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 12px 14px;
+		border-radius: 14px;
+		background: #eef2ff;
+		font-size: 12.5px;
+		color: #2a3045;
+	}
+
+	.sp-note .qa-icon {
+		color: #2f5bff;
+	}
+
+	.sp button:focus-visible {
+		outline: 2px solid #2f5bff;
+		outline-offset: 2px;
+	}
+</style>
+
+<script>
+	for (const root of document.querySelectorAll<HTMLElement>('[data-studio]')) {
+		const canvas = root.querySelector<HTMLElement>('.sp__canvas')!;
+		new ResizeObserver(([e]) => canvas.style.setProperty('--k', String(e.contentRect.width / 1280))).observe(root);
+
+		// Datasets: toggle, but keep at least one on.
+		root.querySelectorAll<HTMLButtonElement>('[data-datasets] .sp-chip').forEach((chip, _, all) =>
+			chip.addEventListener('click', () => {
+				const on = !chip.classList.contains('is-on');
+				if (!on && [...all].filter((c) => c.classList.contains('is-on')).length === 1) return;
+				chip.classList.toggle('is-on', on);
+				chip.setAttribute('aria-pressed', String(on));
+			}),
+		);
+
+		// QR countdown: ticks while visible; refreshes at zero.
+		const count = root.querySelector<HTMLElement>('[data-countdown]')!;
+		const code = root.querySelector<HTMLElement>('[data-qr]')!;
+		let left = 298;
+		let timer = 0;
+		const tick = () => {
+			left = left <= 0 ? 300 : left - 1;
+			if (left === 300) {
+				code.classList.add('is-refresh');
+				setTimeout(() => code.classList.remove('is-refresh'), 260);
+			}
+			count.textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+		};
+		new IntersectionObserver(([e]) => {
+			clearInterval(timer);
+			if (e.isIntersecting) timer = window.setInterval(tick, 1000);
+		}).observe(root);
+
+		// Copy the deploy command.
+		const copy = root.querySelector<HTMLButtonElement>('[data-copy]')!;
+		const copyLabel = copy.querySelector<HTMLElement>('[data-copy-label]')!;
+		copy.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(copy.dataset.copy!);
+			} catch {
+				/* Clipboard may be blocked; the visual confirmation still shows. */
+			}
+			copy.classList.add('is-copied');
+			copyLabel.textContent = 'Copied';
+			setTimeout(() => {
+				copy.classList.remove('is-copied');
+				copyLabel.textContent = 'Copy';
+			}, 1600);
+		});
+
+		// Revoke / undo a phone.
+		const countEl = root.querySelector<HTMLElement>('[data-phone-count]')!;
+		root.querySelectorAll<HTMLButtonElement>('[data-revoke]').forEach((b) =>
+			b.addEventListener('click', () => {
+				const li = b.closest('li')!;
+				li.classList.toggle('is-gone');
+				b.textContent = li.classList.contains('is-gone') ? 'Undo' : 'Revoke';
+				const active = root.querySelectorAll('.sp-phones li:not(.is-gone)').length;
+				countEl.textContent = `${active} of 5`;
+			}),
+		);
+	}
+</script>

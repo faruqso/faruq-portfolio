@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import { navItems, site } from '../data/site';
+import { webPageJsonLd, absoluteUrl } from '../lib/seo';
+
+const title = 'Page not found';
+const description = 'That page does not exist. Head back to the homepage or start a project.';
+
+const jsonLd = webPageJsonLd({
+	title,
+	description,
+	url: absoluteUrl('/404'),
+});
+---
+
+<Layout
+	title={title}
+	description={description}
+	navItems={navItems}
+	noindex
+	jsonLd={jsonLd}
+>
+	<div class="container not-found">
+		<p class="eyebrow">404</p>
+		<h1 class="text-display">This page is not here.</h1>
+		<p class="text-lead">The link may be outdated. Try the homepage or reach out if you need something specific.</p>
+		<div class="not-found__actions">
+			<Button href="/">{site.name} homepage</Button>
+			<Button href="/#contact" variant="secondary">Contact</Button>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.not-found {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-4);
+		padding-block: var(--space-10);
+		max-width: 36rem;
+	}
+
+	.not-found__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-top: var(--space-2);
+	}
+</style>

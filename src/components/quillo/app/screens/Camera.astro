@@ -1,0 +1,28 @@
+---
+/** 16 Camera — shoot straight into the open field. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+const p = '/images/case/quillo/photos';
+---
+
+<div class="qa-screen qa-camera">
+	<StatusBar light />
+	<header class="qa-camera__top">
+		<span class="qa-circle qa-circle--glass" data-act="back"><Icon name="x" size={20} stroke={2.6} /></span>
+		<span class="qa-camera__pill"><Icon name="feather" size={16} />Adding to Spring menu launch</span>
+		<span class="qa-circle qa-circle--glass qa-camera__flash"><Icon name="bolt" size={20} /></span>
+	</header>
+	<div class="qa-viewfinder">
+		<img src={`${p}/pastries.webp`} alt="" width="960" height="768" />
+		<span class="qa-viewfinder__grid" aria-hidden="true"></span>
+		<span class="qa-viewfinder__focus" aria-hidden="true"></span>
+		<span class="qa-viewfinder__chip"><Icon name="sparkle" size={14} />Auto-resize · alt text on</span>
+	</div>
+	<p class="qa-modes"><span>Video</span><span class="is-on">Photo</span><span>Square</span></p>
+	<div class="qa-camera__controls">
+		<span class="qa-camera__thumb"><img src={`${p}/pastries.webp`} alt="" width="48" height="48" /><i>2</i></span>
+		<button type="button" class="qa-shutter" data-act="shutter"><span class="sr-only">Take photo</span></button>
+		<span class="qa-circle qa-circle--grey"><Icon name="refresh" size={22} /></span>
+	</div>
+	<span class="qa-homebar qa-homebar--light" aria-hidden="true"></span>
+</div>

@@ -23,6 +23,8 @@ export type Project = {
 	scope: string;
 	image: string;
 	imageMobile: string;
+	/** Standalone case-study page. When set, the card links here instead of opening the sheet. */
+	href?: string;
 };
 
 export type Service = {

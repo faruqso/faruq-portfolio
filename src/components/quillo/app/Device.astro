@@ -1,0 +1,85 @@
+---
+/**
+ * iPhone-style device that renders a coded Quillo screen at its true size (393×852)
+ * and scales it to fit. Screens are real HTML — crisp at any size, and interactive.
+ */
+import '@fontsource/plus-jakarta-sans/400.css';
+import '@fontsource/plus-jakarta-sans/500.css';
+import '@fontsource/plus-jakarta-sans/600.css';
+import '@fontsource/plus-jakarta-sans/700.css';
+import '@fontsource/plus-jakarta-sans/800.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '../../../styles/quillo-app.css';
+
+type Props = {
+	/** Rendered screen width in px (the bezel adds ~5%). The device also shrinks to fit its container. */
+	width?: number;
+	/** Static showcases are inert: no focus, no clicks. */
+	interactive?: boolean;
+	label?: string;
+	class?: string;
+};
+
+const { width = 286, interactive = false, label, class: className = '' } = Astro.props;
+---
+
+<div
+	class:list={['qd', className]}
+	style={`--qd-w:${width}px;--k:${(width / 393).toFixed(4)}`}
+	role={label ? 'img' : undefined}
+	aria-label={label}
+>
+	<div class="qd__screen" data-qd-screen>
+		<div class="qa" inert={!interactive}>
+			<slot />
+		</div>
+	</div>
+</div>
+
+<style>
+	.qd {
+		--bezel: calc(var(--qd-w) * 0.026);
+		position: relative;
+		width: calc(var(--qd-w) + var(--bezel) * 2);
+		max-width: 100%;
+		padding: var(--bezel);
+		border-radius: calc(var(--qd-w) * 0.155);
+		background: linear-gradient(145deg, #2a2d33, #0f1114 40%, #1b1e23);
+		box-shadow:
+			0 40px 70px -28px rgba(13, 18, 38, 0.45),
+			0 2px 6px rgba(13, 18, 38, 0.12),
+			inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+		flex-shrink: 0;
+	}
+
+	.qd__screen {
+		position: relative;
+		aspect-ratio: 393 / 852;
+		overflow: hidden;
+		border-radius: calc(var(--qd-w) * 0.13);
+		background: #f6f8fc;
+		/* Promote once so scaled text stays sharp. */
+		isolation: isolate;
+	}
+
+	.qa {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 393px;
+		height: 852px;
+		transform: scale(var(--k));
+		transform-origin: 0 0;
+	}
+</style>
+
+<script>
+	// Keep each screen scaled to its rendered width.
+	const ro = new ResizeObserver((entries) => {
+		for (const entry of entries) {
+			const el = entry.target as HTMLElement;
+			el.closest<HTMLElement>('.qd')!.style.setProperty('--k', String(entry.contentRect.width / 393));
+		}
+	});
+	document.querySelectorAll('[data-qd-screen]').forEach((el) => ro.observe(el));
+</script>

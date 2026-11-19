@@ -1,0 +1,63 @@
+---
+/** 05 Editor — a menu item with a real, editable Title field. */
+import Icon from '../Icon.astro';
+import StatusBar from '../StatusBar.astro';
+
+type Props = { title?: string };
+const { title = 'Spring menu launch' } = Astro.props;
+const p = '/images/case/quillo/photos';
+---
+
+<div class="qa-screen qa-editor">
+	<StatusBar />
+	<header class="qa-bar">
+		<span class="qa-circle" data-act="back"><Icon name="chevron-left" size={22} stroke={2.4} /></span>
+		<p class="qa-bar__title">
+			<strong>Menu item</strong>
+			<span class="qa-saved"><Icon name="cloud" size={14} stroke={2.4} />Saved · Sanity</span>
+		</p>
+		<span class="qa-circle"><Icon name="more" size={22} /></span>
+	</header>
+
+	<p class="qa-label" style="top:123px"><span>Cover image</span><em>image · required</em></p>
+	<div class="qa-cover">
+		<img src={`${p}/pastries.webp`} alt="Spring pastries on a blue table" width="960" height="768" data-cover />
+		<button type="button" class="qa-cover__replace" data-act="replace"><Icon name="image" size={16} />Replace</button>
+		<span class="qa-cover__alt"><Icon name="sparkle" size={14} />Alt text added: “Spring pastries”</span>
+	</div>
+
+	<p class="qa-label" style="top:340px"><span>Title</span><em>string</em></p>
+	<label class="qa-field qa-field--focus" style="top:364px">
+		<span class="sr-only">Title</span>
+		<input type="text" value={title} data-title maxlength="40" autocomplete="off" spellcheck="false" />
+	</label>
+
+	<p class="qa-label" style="top:434px;width:171px"><span>Price</span></p>
+	<p class="qa-label" style="top:434px;left:202px;width:171px"><span>Featured</span></p>
+	<span class="qa-field qa-field--price">$ 4.50</span>
+	<span class="qa-field qa-field--toggle">On homepage<i class="qa-toggle is-on"></i></span>
+
+	<p class="qa-label" style="top:527px"><span>Description</span><em>portable text</em></p>
+	<div class="qa-rich">
+		<div class="qa-rich__tools">
+			<Icon name="heading" size={18} />
+			<span class="is-on"><Icon name="bold" size={18} stroke={2.4} /></span>
+			<Icon name="italic" size={18} />
+			<Icon name="link" size={18} />
+			<Icon name="list" size={18} />
+			<Icon name="image" size={18} />
+			<em><Icon name="sparkle" size={15} />Polish</em>
+		</div>
+		<p>
+			Our spring menu is here: <b>rhubarb custard danish, pistachio croissant</b> and a lemon-thyme bun. Available every morning from 7am until it is gone.
+		</p>
+	</div>
+
+	<footer class="qa-dock">
+		<span class="qa-btn qa-btn--soft qa-btn--lg"><Icon name="eye" size={20} />Preview</span>
+		<button type="button" class="qa-btn qa-btn--blue qa-btn--lg qa-btn--grow" data-act="publish">
+			Publish to site<i class="qa-btn__arrow"><Icon name="arrow" size={16} stroke={2.4} /></i>
+		</button>
+	</footer>
+	<span class="qa-homebar" aria-hidden="true"></span>
+</div>

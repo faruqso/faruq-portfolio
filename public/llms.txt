@@ -1,0 +1,23 @@
+# Faruq So — faruqso.com
+
+> UI/UX product designer. I design and build startup websites from idea to launch (Figma, Framer, Next.js when needed).
+
+## Main pages
+- https://faruqso.com/ — portfolio, services, process, contact
+- https://faruqso.com/work/mightyocto — MightyOcto case study
+- https://faruqso.com/work/quillo — Quillo case study (mobile CMS editing concept)
+- https://faruqso.com/work/ishasplace — Ishasplace case study
+- https://faruqso.com/work/padel-peer — Padel Peer case study
+- https://faruqso.com/work/reedo — Reedo case study
+- https://faruqso.com/sprint — Launch Website Sprint offer
+- https://faruqso.com/checklist — Free AI startup homepage checklist
+- https://faruqso.com/audit — Free 5-minute homepage audit
+
+## Contact
+- Email: faruq.soremekun@gmail.com
+- LinkedIn: https://www.linkedin.com/in/faruq-so
+- X: https://x.com/faruq_so
+
+## Optional
+- humans.txt: https://faruqso.com/humans.txt
+- Sitemap: https://faruqso.com/sitemap-index.xml
