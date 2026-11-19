@@ -1,0 +1,1951 @@
+---
+/**
+ * Live landing page — a working, scrollable build of the Quillo landing page inside a
+ * desktop browser or a phone. Autoplays a guided tour with a cursor; any scroll, tap or
+ * keypress hands control to the visitor. Copy from Figma "🌐 Landing page".
+ */
+import Device from './app/Device.astro';
+import Home from './app/screens/Home.astro';
+
+const cms = [
+	{ id: 'sanity', l: 'S', name: 'Sanity', kind: 'Headless · Portable Text', has: 'Posts · Pages · Media', status: 'Live in beta', tone: 'live', cat: 'headless' },
+	{ id: 'contentful', l: 'C', name: 'Contentful', kind: 'Headless · Rich text', has: 'Entries · Assets · Locales', status: 'Next up', tone: 'next', cat: 'headless' },
+	{ id: 'strapi', l: 'S', name: 'Strapi', kind: 'Headless · Open source', has: 'Collections · Media · Drafts', status: 'Next up', tone: 'next', cat: 'headless' },
+	{ id: 'storyblok', l: 'S', name: 'Storyblok', kind: 'Headless · Visual editor', has: 'Stories · Blocks · Assets', status: 'Planned', tone: 'planned', cat: 'headless' },
+	{ id: 'payload', l: 'P', name: 'Payload', kind: 'Headless · Open source', has: 'Collections · Globals', status: 'Planned', tone: 'planned', cat: 'headless' },
+	{ id: 'prismic', l: 'P', name: 'Prismic', kind: 'Headless · Slices', has: 'Documents · Slices', status: 'Planned', tone: 'planned', cat: 'headless' },
+	{ id: 'hygraph', l: 'H', name: 'Hygraph', kind: 'Headless · GraphQL', has: 'Models · Assets', status: 'Planned', tone: 'planned', cat: 'headless' },
+	{ id: 'keystone', l: 'K', name: 'Keystone', kind: 'Headless · Open source', has: 'Lists · Fields · Images', status: 'Planned', tone: 'planned', cat: 'headless' },
+];
+const detail: Record<string, string> = {
+	live: 'is live in beta. Your developer adds the Quillo plugin to the Studio once, then you scan a QR code and you’re in.',
+	next: 'is next up. Join the waitlist and you’ll get it first.',
+	planned: 'is planned. Vote for it and we’ll prioritise it.',
+};
+const faqs = [
+	['Does Quillo change anything in my CMS?', 'No. Quillo uses Sanity’s official APIs with an editor token you control and can revoke anytime. Your schema, content and hosting stay where they are.'],
+	['Which CMSs are supported?', 'Sanity is live in beta. Contentful and Strapi are next, then Storyblok, Payload, Prismic, Hygraph and Keystone.'],
+	['What about custom fields and plugins?', 'Standard fields get native mobile editors. Custom Studio input components show as read-only previews on your phone.'],
+	['Can I limit what clients can edit?', 'Yes. Your CMS roles and permissions still apply, and the Agency plan adds client-safe roles so clients edit only what they should.'],
+];
+const plans = [
+	{ name: 'Solo', price: '$0', per: 'forever', blurb: 'For one site and one editor getting started.', cta: 'Join the waitlist', items: ['1 site · 1 editor', 'Edit text, images & rich text', 'Camera uploads', 'Sanity today, more CMSs as they launch'] },
+	{ name: 'Pro', price: '$12', per: 'per site / month', blurb: 'For small teams who publish every week.', cta: 'Join the waitlist', items: ['Unlimited editors', 'Approvals & push notifications', 'AI polish & alt text', 'Offline drafts', 'Scheduled publishing'], hot: true },
+	{ name: 'Agency', price: '$8', per: 'per client site / month', blurb: 'For studios managing 5 or more client sites.', cta: 'Book an agency demo', items: ['Everything in Pro', 'White-label app & icon', 'Client dashboard for all sites', 'Client-safe roles', 'Priority support'] },
+];
+---
+
+<div class="ld" data-ld data-device="desktop" data-view="overview" data-tour="idle">
+	<div class="ld__bar">
+		<div class="ld__seg ld__seg--view" role="radiogroup" aria-label="Preview mode">
+			<button type="button" role="radio" aria-checked="true" data-view-btn="overview">
+				Full page
+			</button>
+			<button type="button" role="radio" aria-checked="false" data-view-btn="interactive">
+				Interactive
+			</button>
+			<span class="ld__seg-thumb ld__seg-thumb--view" aria-hidden="true"></span>
+		</div>
+		<div class="ld__seg" role="radiogroup" aria-label="Preview device">
+			<button type="button" role="radio" aria-checked="true" data-device-btn="desktop">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
+				Desktop
+			</button>
+			<button type="button" role="radio" aria-checked="false" data-device-btn="mobile">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"></rect><path d="M11 18h2"></path></svg>
+				Mobile
+			</button>
+			<span class="ld__seg-thumb" aria-hidden="true"></span>
+		</div>
+		<p class="ld__status" aria-live="polite">
+			<span class="ld__dot" aria-hidden="true"></span>
+			<span data-tour-label>Autoplay tour</span>
+		</p>
+		<button type="button" class="ld__tourbtn" data-tour-toggle>
+			<svg class="ld__ic-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
+			<svg class="ld__ic-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"></path></svg>
+			<span data-tour-btn-label>Pause tour</span>
+		</button>
+	</div>
+
+	<div class="ld__stage" data-stage>
+		<div class="ld__frame">
+			<div class="ld__chrome" aria-hidden="true">
+				<i></i><i></i><i></i>
+				<span>
+					<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2.5"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+					Quillo · landing page (concept)
+				</span>
+			</div>
+			<div class="ld__notch" aria-hidden="true"></div>
+
+			<!-- The mini site. Its own scroll container, styled with container queries. -->
+			<div class="ld-site" data-site tabindex="0" aria-label="Interactive Quillo landing page">
+				<div class="ld-in">
+					<header class="ls-nav">
+						<span class="ls-logo"><img src="/images/case/quillo/app-icon.webp" alt="" width="26" height="26" />Quillo</span>
+						<nav class="ls-links">
+							<a href="#ls-features" data-jump>Product</a>
+							<a href="#ls-demo" data-jump>Community</a>
+							<a href="#ls-cms" data-jump>Developers</a>
+							<a href="#ls-pricing" data-jump>Pricing</a>
+							<a href="#ls-faq" data-jump>Blog</a>
+						</nav>
+						<a class="ls-btn ls-btn--dark ls-btn--sm" href="#ls-join" data-jump>Get started</a>
+					</header>
+
+					<section class="ls-hero">
+						<p class="ls-badge"><em>New</em>Beta now open for Sanity teams · Contentful &amp; Strapi next</p>
+						<h2 class="ls-hero__title">Your website, edited right from your <span>pocket.</span></h2>
+						<p class="ls-hero__sub">
+							Quillo turns your headless CMS into a beautiful native app, starting with Sanity. Fix a typo, swap a photo or approve a post in seconds, no laptop needed.
+						</p>
+						<div class="ls-hero__ctas">
+							<a class="ls-btn ls-btn--dark" href="#ls-join" data-jump data-tour-id="hero-cta">Get started for free<i>→</i></a>
+							<a class="ls-btn ls-btn--light" href="#ls-demo" data-jump>Watch mobile demo</a>
+						</div>
+						<div class="ls-hero__phone">
+							<Device width={230}><Home /></Device>
+						</div>
+						<span class="ls-float ls-float--l" aria-hidden="true">
+							<img src="/images/case/quillo/photos/icon-camera.webp" alt="" width="40" height="40" />Photo uploaded<small>Spring menu launch · Sanity</small>
+						</span>
+						<span class="ls-float ls-float--r" aria-hidden="true">
+							<img src="/images/case/quillo/photos/icon-check.webp" alt="" width="40" height="40" />Published to crumbandco.com<small>Spring menu launch</small>
+						</span>
+					</section>
+
+					<section class="ls-sec" id="ls-cms">
+						<p class="ls-eyebrow">Integrations</p>
+						<h3 class="ls-h">Which CMS runs <span>your website?</span></h3>
+						<p class="ls-lead">Quillo connects through each CMS’s official API. Sanity is live in beta, and the rest are on the way.</p>
+						<div class="ls-tabs" role="tablist" aria-label="Filter CMSs">
+							<button type="button" role="tab" aria-selected="true" data-filter="all">All CMSs</button>
+							<button type="button" role="tab" aria-selected="false" data-filter="headless">Headless</button>
+							<button type="button" role="tab" aria-selected="false" data-filter="builder">Website builders</button>
+							<button type="button" role="tab" aria-selected="false" data-filter="commerce">Commerce</button>
+						</div>
+						<div class="ls-cms">
+							{
+								cms.map((c) => (
+									<button
+										type="button"
+										class:list={['ls-cmscard', `is-${c.tone}`, { 'is-on': c.id === 'sanity' }]}
+										data-cms={c.id}
+										data-cat={c.cat}
+										data-name={c.name}
+										data-detail={detail[c.tone]}
+										aria-pressed={c.id === 'sanity' ? 'true' : 'false'}
+									>
+										<span class="ls-cmscard__top">
+											<i>{c.l}</i>
+											<em>{c.status}</em>
+										</span>
+										<strong>{c.name}</strong>
+										<span>{c.kind}</span>
+										<small>{c.has}</small>
+									</button>
+								))
+							}
+							<p class="ls-cms__empty">No commerce integrations yet. Tell us which one you use.</p>
+						</div>
+						<p class="ls-cms__detail" data-cms-detail aria-live="polite">
+							<strong>Sanity</strong> {detail.live}
+						</p>
+					</section>
+
+					<section class="ls-sec ls-sec--demo" id="ls-demo">
+						<p class="ls-eyebrow">Product demo</p>
+						<h3 class="ls-h">See Quillo in <span>60 seconds.</span></h3>
+						<p class="ls-lead">A quick walkthrough of connecting Sanity and publishing from your phone.</p>
+						<div class="ls-demo">
+							<div class="ls-demo__frame" role="img" aria-label="Video placeholder for the 60-second Quillo demo">
+								<button type="button" class="ls-demo__play" data-toast="The 60-second demo video is in production." aria-label="Play demo">
+									<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"></path></svg>
+								</button>
+							</div>
+						</div>
+					</section>
+
+					<section class="ls-sec ls-sec--tint" id="ls-features">
+						<p class="ls-eyebrow">Why Quillo</p>
+						<h3 class="ls-h">The little website jobs, finally <span>phone-sized.</span></h3>
+						<div class="ls-bento">
+							<article class="ls-tile ls-tile--wide">
+								<strong>Reads your content model</strong>
+								<p>Quillo looks at your schema and builds native forms for every document type: text, images, references, rich text and custom fields.</p>
+								<pre><code>defineType(&#123;
+  name: 'menuItem',
+  fields: [
+    &#123; name: 'title', type: 'string' &#125;,
+    &#123; name: 'cover', type: 'image' &#125;,
+    &#123; name: 'price', type: 'number' &#125;,
+  ],
+&#125;)</code></pre>
+							</article>
+							<article class="ls-tile">
+								<img src="/images/case/quillo/photos/icon-camera.webp" alt="" width="56" height="56" />
+								<strong>Snap. Upload. Live.</strong>
+								<p>Shoot on your phone. Quillo resizes it, writes alt text and drops it into your post.</p>
+							</article>
+							<article class="ls-tile">
+								<img src="/images/case/quillo/photos/icon-bell.webp" alt="" width="56" height="56" />
+								<strong>Approvals on the go</strong>
+								<p>Review, comment and approve from a push notification. Your CMS roles still apply.</p>
+							</article>
+							<article class="ls-tile">
+								<img src="/images/case/quillo/photos/icon-plane.webp" alt="" width="56" height="56" />
+								<strong>Works offline</strong>
+								<p>Quillo queues your changes and syncs them the moment you’re back online.</p>
+							</article>
+							<article class="ls-tile ls-tile--polish">
+								<strong>AI polish &amp; alt text</strong>
+								<p class="ls-polish" data-polish>
+									<span class="ls-polish__before">“our new croisant is realy good”</span>
+									<span class="ls-polish__after">“Meet our new croissant: flaky, buttery and gone by noon.”</span>
+								</p>
+								<button type="button" class="ls-chipbtn" data-polish-btn data-tour-id="polish">✦ Polish</button>
+							</article>
+						</div>
+					</section>
+
+					<section class="ls-sec" id="ls-how">
+						<p class="ls-eyebrow">How Quillo works</p>
+						<h3 class="ls-h">Up and running in <span>three steps.</span></h3>
+						<ol class="ls-steps">
+							<li><i>1</i><strong>Connect your CMS</strong><span>Your developer adds the Quillo plugin to Sanity Studio once. Then you scan a QR code and you’re in.</span></li>
+							<li><i>2</i><strong>Quillo maps your content</strong><span>Your schema becomes native screens: lists, forms, image pickers and rich text, all automatically.</span></li>
+							<li><i>3</i><strong>Edit &amp; publish anywhere</strong><span>Fix it, snap it, approve it. Changes go straight to your CMS and your live site.</span></li>
+						</ol>
+					</section>
+
+					<section class="ls-sec ls-sec--tint" id="ls-pricing">
+						<p class="ls-eyebrow">Pricing</p>
+						<h3 class="ls-h">Simple pricing. <span>Free while you’re small.</span></h3>
+						<div class="ls-plans">
+							{
+								plans.map((p) => (
+									<article class:list={['ls-plan', { 'is-hot': p.hot }]} data-tour-id={p.hot ? 'pro' : undefined}>
+										<p class="ls-plan__name">
+											{p.name}
+											{p.hot && <em>Most popular</em>}
+										</p>
+										<p class="ls-plan__price">
+											<strong>{p.price}</strong>
+											<span>{p.per}</span>
+										</p>
+										<p class="ls-plan__blurb">{p.blurb}</p>
+										<a class="ls-btn ls-btn--block" href="#ls-join" data-jump>
+											{p.cta}
+										</a>
+										<ul>
+											{p.items.map((it) => (
+												<li>{it}</li>
+											))}
+										</ul>
+									</article>
+								))
+							}
+						</div>
+					</section>
+
+					<section class="ls-sec" id="ls-faq">
+						<p class="ls-eyebrow">FAQ</p>
+						<h3 class="ls-h">Questions, <span>answered.</span></h3>
+						<div class="ls-faq">
+							{
+								faqs.map(([q, a], i) => (
+									<details class="ls-qa" open={i === 0} data-tour-id={i === 2 ? 'faq' : undefined}>
+										<summary>
+											{q}
+											<i aria-hidden="true" />
+										</summary>
+										<p>{a}</p>
+									</details>
+								))
+							}
+						</div>
+					</section>
+
+					<section class="ls-cta" id="ls-join">
+						<h3>Your website is one tap <span>away.</span></h3>
+						<p>Be first in line. Sanity teams get beta access first, more CMSs soon.</p>
+						<form class="ls-form" data-join novalidate>
+							<label class="sr-only" for="ls-email">Email</label>
+							<input id="ls-email" type="email" placeholder="you@yourwebsite.com" autocomplete="off" data-email />
+							<button type="submit" class="ls-btn ls-btn--dark" data-tour-id="join">Join the waitlist</button>
+						</form>
+						<p class="ls-form__msg" data-join-msg aria-live="polite">iOS &amp; Android · Free for 1 site · No credit card</p>
+					</section>
+
+					<footer class="ls-foot">
+						<span class="ls-logo"><img src="/images/case/quillo/app-icon.webp" alt="" width="22" height="22" />Quillo</span>
+						<span>© 2026 Quillo. A product concept by Faruq So.</span>
+					</footer>
+				</div>
+			</div>
+			<span class="ld__toast" data-ld-toast role="status"></span>
+		</div>
+		<span class="ld__cursor" data-cursor aria-hidden="true">
+			<svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.6L10 19z" fill="#0b1020" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+		</span>
+	</div>
+	<p class="ld__note">
+		<strong>Full page</strong> shows the whole landing at once (read-only). <strong>Interactive</strong> is the scrollable mockup with desktop/mobile frames, autoplay tour and live controls.
+	</p>
+</div>
+
+<style>
+	/* ---------- Shell: toolbar, stage, frames ---------- */
+	.ld {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
+	}
+
+	.ld__bar {
+		display: flex;
+		align-items: center;
+		gap: var(--space-4);
+		flex-wrap: wrap;
+	}
+
+	.ld__seg {
+		position: relative;
+		display: inline-grid;
+		grid-template-columns: 1fr 1fr;
+		padding: 4px;
+		border-radius: 99px;
+		background: rgba(255, 255, 255, 0.7);
+		box-shadow: inset 0 0 0 1px rgba(13, 26, 77, 0.08);
+	}
+
+	.ld__seg button {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		padding: 9px 18px;
+		border: 0;
+		background: none;
+		font: inherit;
+		font-size: var(--text-small);
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		transition: color var(--duration-fast) var(--ease-out);
+	}
+
+	.ld__seg button[aria-checked='true'] {
+		color: #ffffff;
+	}
+
+	.ld__seg button:focus-visible {
+		outline: 2px solid var(--color-focus-ring);
+		border-radius: 99px;
+	}
+
+	.ld__seg-thumb {
+		position: absolute;
+		top: 4px;
+		bottom: 4px;
+		left: 4px;
+		width: calc(50% - 4px);
+		border-radius: 99px;
+		background: #0b1020;
+		transition: transform 420ms var(--ease-out);
+	}
+
+	[data-device='mobile'] .ld__seg:not(.ld__seg--view) > .ld__seg-thumb {
+		transform: translateX(100%);
+	}
+
+	[data-view='interactive'] .ld__seg--view > .ld__seg-thumb--view {
+		transform: translateX(100%);
+	}
+
+	.ld__seg--view .ld__seg-thumb--view {
+		background: #2f5bff;
+	}
+
+	.ld__status {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		margin-left: auto;
+		font-size: var(--text-small);
+		color: #1a2650;
+	}
+
+	.ld__dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #a3aabd;
+	}
+
+	[data-tour='playing'] .ld__dot {
+		background: #1fb86a;
+		box-shadow: 0 0 0 0 rgba(31, 184, 106, 0.5);
+		animation: ld-live 1.6s ease-out infinite;
+	}
+
+	@keyframes ld-live {
+		to {
+			box-shadow: 0 0 0 8px rgba(31, 184, 106, 0);
+		}
+	}
+
+	.ld__tourbtn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 9px 16px;
+		border: 0;
+		border-radius: 99px;
+		background: #ffffff;
+		box-shadow: 0 4px 14px -6px rgba(13, 26, 77, 0.25);
+		font: inherit;
+		font-size: var(--text-small);
+		color: #0b1020;
+		cursor: pointer;
+		transition: transform var(--duration-instant) var(--ease-out);
+	}
+
+	.ld__tourbtn:active {
+		transform: scale(0.97);
+	}
+
+	.ld__ic-play,
+	[data-tour='playing'] .ld__ic-pause {
+		display: block;
+	}
+
+	.ld__ic-pause,
+	[data-tour='playing'] .ld__ic-play {
+		display: none;
+	}
+
+	.ld__stage {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		min-height: 660px;
+	}
+
+	.ld__frame {
+		position: relative;
+		width: 100%;
+		max-width: 1440px;
+		height: 640px;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		border-radius: 16px;
+		background: #ffffff;
+		box-shadow:
+			0 40px 80px -30px rgba(13, 26, 77, 0.35),
+			0 0 0 1px rgba(13, 26, 77, 0.06);
+		transition:
+			max-width 700ms cubic-bezier(0.65, 0, 0.35, 1),
+			height 700ms cubic-bezier(0.65, 0, 0.35, 1),
+			border-radius 700ms cubic-bezier(0.65, 0, 0.35, 1),
+			padding 700ms cubic-bezier(0.65, 0, 0.35, 1),
+			background-color 400ms ease;
+	}
+
+	.ld__chrome {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		height: 44px;
+		padding: 0 16px;
+		background: #f4f4f2;
+		flex-shrink: 0;
+		transition:
+			height 500ms ease,
+			opacity 300ms ease;
+	}
+
+	.ld__chrome i {
+		width: 11px;
+		height: 11px;
+		border-radius: 50%;
+		background: #ff5f57;
+	}
+
+	.ld__chrome i:nth-child(2) {
+		background: #febc2e;
+	}
+
+	.ld__chrome i:nth-child(3) {
+		background: #28c840;
+	}
+
+	.ld__chrome span {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin: 0 auto;
+		padding: 4px 14px;
+		border-radius: 8px;
+		background: #ffffff;
+		font-size: var(--text-caption);
+		color: var(--color-text-secondary);
+		transform: translateX(-28px);
+	}
+
+	.ld__notch {
+		display: none;
+	}
+
+	/* Mobile: the same frame becomes a phone. */
+	[data-device='mobile'] .ld__frame {
+		--ld-screen-w: 366px;
+		--ld-r-outer: calc(var(--ld-screen-w) * 0.153);
+		--ld-r-screen: calc(var(--ld-screen-w) * 0.1196);
+		max-width: 390px;
+		height: 760px;
+		padding: 12px;
+		border-radius: calc(var(--ld-r-outer) + 12px);
+		background: linear-gradient(145deg, #2a2d33, #0f1114 40%, #1b1e23);
+	}
+
+	[data-device='mobile'] .ld__stage {
+		min-height: 780px;
+	}
+
+	[data-device='mobile'] .ld__chrome {
+		height: 0;
+		opacity: 0;
+		overflow: hidden;
+	}
+
+	[data-device='mobile'] .ld__notch {
+		display: block;
+		position: absolute;
+		top: 22px;
+		left: 50%;
+		width: 110px;
+		height: 30px;
+		margin-left: -55px;
+		border-radius: 20px;
+		background: #000;
+		z-index: 5;
+	}
+
+	[data-device='mobile'] .ld-site {
+		border-radius: var(--ld-r-screen);
+		padding-top: 44px;
+	}
+
+	.ld__cursor {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 20;
+		pointer-events: none;
+		opacity: 0;
+		transform: translate(var(--cx, 50%), var(--cy, 40%));
+		transition:
+			transform 900ms cubic-bezier(0.65, 0, 0.35, 1),
+			opacity 300ms ease;
+		filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+	}
+
+	[data-tour='playing'] .ld__cursor {
+		opacity: 1;
+	}
+
+	.ld__cursor.is-click svg {
+		animation: ld-click 260ms ease;
+	}
+
+	@keyframes ld-click {
+		50% {
+			transform: scale(0.82);
+		}
+	}
+
+	.ld__toast {
+		position: absolute;
+		left: 50%;
+		bottom: 22px;
+		z-index: 10;
+		padding: 10px 16px;
+		border-radius: 99px;
+		background: #0b1020;
+		color: #fff;
+		font-size: 13px;
+		white-space: nowrap;
+		transform: translate(-50%, 8px);
+		opacity: 0;
+		transition:
+			opacity 220ms ease,
+			transform 320ms var(--ease-out);
+		pointer-events: none;
+	}
+
+	.ld__toast.is-on {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+
+	.ld__note {
+		font-size: var(--text-small);
+		color: #1a2650;
+		opacity: 0.8;
+		text-align: center;
+	}
+
+	/* ---------- The mini site ---------- */
+	/* Custom scroll track — only in interactive mode */
+	.ld-site {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(15, 20, 40, 0.22) transparent;
+	}
+
+	.ld-site::-webkit-scrollbar {
+		width: 8px;
+	}
+
+	.ld-site::-webkit-scrollbar-track {
+		margin: 6px 0;
+		background: transparent;
+	}
+
+	.ld-site::-webkit-scrollbar-thumb {
+		border: 2px solid transparent;
+		border-radius: 99px;
+		background: rgba(15, 20, 40, 0.18);
+		background-clip: padding-box;
+	}
+
+	[data-view='overview'] .ld-site {
+		overflow: hidden;
+		scrollbar-width: none;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	[data-view='overview'] .ld-site::-webkit-scrollbar {
+		display: none;
+	}
+
+	[data-view='overview'] .ld-in {
+		transform-origin: top center;
+		transform: scale(var(--ld-fit, 1));
+	}
+
+	[data-view='overview'] .ld__cursor,
+	[data-view='overview'] .ld__tourbtn,
+	[data-view='overview'] .ld__status {
+		opacity: 0.35;
+		pointer-events: none;
+	}
+
+	.ld-site {
+		--ls-blue: #2f5bff;
+		--ls-ink: #0b1020;
+		--ls-muted: #5f6780;
+		--ls-line: #e6e9f2;
+		--ls-tint: #f6f8fc;
+		position: relative;
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
+		overscroll-behavior: contain;
+		scroll-behavior: smooth;
+		container-type: inline-size;
+		background: #ffffff;
+		font-family: 'Plus Jakarta Sans', var(--font-sans);
+		color: var(--ls-ink);
+		outline: none;
+	}
+
+	.ld-site:focus-visible {
+		box-shadow: inset 0 0 0 3px var(--color-focus-ring);
+	}
+
+	.ld-in {
+		min-height: 100%;
+		width: 1440px;
+		max-width: none;
+		margin-inline: auto;
+	}
+
+	[data-device='mobile'] .ld-in {
+		width: 390px;
+	}
+
+	.ld-site h2,
+	.ld-site h3,
+	.ld-site p,
+	.ld-site ul,
+	.ld-site ol,
+	.ld-site pre {
+		margin: 0;
+	}
+
+	.ls-nav {
+		position: sticky;
+		top: 0;
+		z-index: 4;
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		margin: 14px 18px 0;
+		padding: 8px 8px 8px 16px;
+		border-radius: 99px;
+		background: rgba(255, 255, 255, 0.78);
+		backdrop-filter: blur(14px);
+		box-shadow: 0 6px 20px -12px rgba(13, 26, 77, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+	}
+
+	.ls-logo {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-weight: 800;
+		font-size: 17px;
+		letter-spacing: -0.03em;
+	}
+
+	.ls-logo img {
+		border-radius: 7px;
+	}
+
+	.ls-links {
+		display: flex;
+		gap: 22px;
+		margin: 0 auto;
+		font-size: 13px;
+		color: var(--ls-ink);
+	}
+
+	.ls-links a {
+		transition: color 160ms ease;
+	}
+
+	.ls-links a:hover {
+		color: var(--ls-blue);
+	}
+
+	.ls-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		height: 44px;
+		padding: 0 20px;
+		border: 0;
+		border-radius: 99px;
+		font: 600 14px/1 'Plus Jakarta Sans', var(--font-sans);
+		background: var(--ls-tint);
+		color: var(--ls-ink);
+		cursor: pointer;
+		white-space: nowrap;
+		transition:
+			transform 160ms var(--ease-out),
+			box-shadow 200ms var(--ease-out),
+			background-color 200ms ease;
+	}
+
+	.ls-btn:active {
+		transform: scale(0.97);
+	}
+
+	.ls-btn i {
+		font-style: normal;
+		display: grid;
+		place-items: center;
+		width: 26px;
+		height: 26px;
+		margin-right: -10px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.16);
+	}
+
+	.ls-btn--dark {
+		background: var(--ls-ink);
+		color: #fff;
+	}
+
+	.ls-btn--light {
+		background: #fff;
+		box-shadow: 0 6px 18px -10px rgba(13, 26, 77, 0.4);
+	}
+
+	.ls-btn--sm {
+		height: 38px;
+		padding: 0 16px;
+		font-size: 13px;
+	}
+
+	.ls-btn--block {
+		width: 100%;
+	}
+
+	@media (hover: hover) {
+		.ls-btn--dark:hover {
+			box-shadow: 0 10px 24px -10px rgba(11, 16, 32, 0.6);
+		}
+	}
+
+	/* Hero */
+	.ls-hero {
+		position: relative;
+		margin: -60px 0 0;
+		padding: 110px 24px 0;
+		height: 720px;
+		overflow: hidden;
+		text-align: center;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0) 62%, #ffffff 100%),
+			url('/images/case/quillo/photos/sky.webp') 50% 100% / cover no-repeat,
+			linear-gradient(180deg, #1c6be0 0%, #4a9bf5 45%, #9ccbff 100%);
+		color: #fff;
+	}
+
+	.ls-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 5px 12px 5px 5px;
+		border-radius: 99px;
+		background: rgba(11, 16, 32, 0.85);
+		font-size: 12px;
+	}
+
+	.ls-badge em {
+		padding: 3px 9px;
+		border-radius: 99px;
+		background: #c8f25a;
+		color: #0b1020;
+		font-style: normal;
+		font-weight: 700;
+	}
+
+	.ls-hero__title {
+		max-width: 760px;
+		margin: 22px auto 0 !important;
+		font-weight: 800;
+		font-size: clamp(34px, 6.4cqi, 66px);
+		line-height: 1.02;
+		letter-spacing: -0.045em;
+		text-wrap: balance;
+	}
+
+	.ls-hero__title span,
+	.ls-h span,
+	.ls-cta h3 span {
+		font-family: 'Instrument Serif', serif;
+		font-style: italic;
+		font-weight: 400;
+		letter-spacing: -0.01em;
+	}
+
+	.ls-hero__sub {
+		max-width: 520px;
+		margin: 16px auto 0 !important;
+		font-size: 15px;
+		line-height: 1.55;
+		opacity: 0.92;
+	}
+
+	.ls-hero__ctas {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-top: 22px;
+	}
+
+	/* 60s demo */
+	.ls-sec--demo {
+		text-align: center;
+	}
+
+	.ls-demo {
+		margin-top: 28px;
+	}
+
+	.ls-demo__frame {
+		position: relative;
+		margin-inline: auto;
+		max-width: 960px;
+		aspect-ratio: 16 / 9;
+		border-radius: 24px;
+		overflow: hidden;
+		background:
+			linear-gradient(145deg, rgba(11, 16, 32, 0.08), rgba(47, 91, 255, 0.12)),
+			linear-gradient(180deg, #dceeff, #f6f8fc);
+		box-shadow: 0 32px 64px -24px rgba(13, 26, 77, 0.28);
+	}
+
+	.ls-demo__play {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		color: #ffffff;
+		background: radial-gradient(circle at 50% 50%, rgba(11, 16, 32, 0.35), rgba(11, 16, 32, 0.55));
+		cursor: pointer;
+		transition: background-color 200ms ease;
+	}
+
+	.ls-demo__play svg {
+		width: 72px;
+		height: 72px;
+		padding: 22px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.92);
+		color: var(--ls-blue);
+		box-shadow: 0 16px 40px -12px rgba(11, 16, 32, 0.45);
+	}
+
+	.ls-hero__phone {
+		display: flex;
+		justify-content: center;
+		margin-top: 30px;
+		animation: ls-float 6s ease-in-out infinite;
+	}
+
+	@keyframes ls-float {
+		50% {
+			transform: translateY(-8px);
+		}
+	}
+
+	.ls-float {
+		position: absolute;
+		display: grid;
+		grid-template-columns: 40px auto;
+		column-gap: 10px;
+		align-items: center;
+		padding: 10px 16px 10px 10px;
+		border-radius: 18px;
+		background: rgba(255, 255, 255, 0.86);
+		backdrop-filter: blur(12px);
+		box-shadow: 0 18px 40px -18px rgba(13, 26, 77, 0.45);
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--ls-ink);
+		text-align: left;
+	}
+
+	.ls-float img {
+		grid-row: span 2;
+	}
+
+	.ls-float small {
+		font-size: 11px;
+		font-weight: 400;
+		color: var(--ls-muted);
+	}
+
+	.ls-float--l {
+		left: 7%;
+		top: 470px;
+		animation: ls-float 7s ease-in-out infinite;
+	}
+
+	.ls-float--r {
+		right: 7%;
+		top: 540px;
+		animation: ls-float 8s ease-in-out 1s infinite;
+	}
+
+	/* Sections */
+	.ls-sec {
+		padding: 72px 40px;
+		text-align: center;
+	}
+
+	.ls-sec--tint {
+		background: var(--ls-tint);
+	}
+
+	.ls-eyebrow {
+		display: inline-block;
+		padding: 5px 12px;
+		border-radius: 99px;
+		background: #e8edff;
+		color: var(--ls-blue);
+		font-size: 12px;
+		font-weight: 600;
+	}
+
+	.ls-h {
+		max-width: 620px;
+		margin: 14px auto 0 !important;
+		font-weight: 800;
+		font-size: clamp(28px, 4.4cqi, 44px);
+		line-height: 1.05;
+		letter-spacing: -0.04em;
+		text-wrap: balance;
+	}
+
+	.ls-h span,
+	.ls-cta h3 span {
+		color: var(--ls-blue);
+	}
+
+	.ls-lead {
+		max-width: 520px;
+		margin: 12px auto 0 !important;
+		font-size: 15px;
+		line-height: 1.55;
+		color: var(--ls-muted);
+	}
+
+	/* CMS picker */
+	.ls-tabs {
+		display: inline-flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 6px;
+		margin-top: 26px;
+		padding: 4px;
+		border-radius: 99px;
+		background: var(--ls-tint);
+	}
+
+	.ls-tabs button {
+		padding: 8px 14px;
+		border: 0;
+		border-radius: 99px;
+		background: none;
+		font: 600 13px/1 'Plus Jakarta Sans', var(--font-sans);
+		color: var(--ls-muted);
+		cursor: pointer;
+		transition:
+			background-color 200ms ease,
+			color 200ms ease;
+	}
+
+	.ls-tabs button[aria-selected='true'] {
+		background: #fff;
+		color: var(--ls-ink);
+		box-shadow: 0 2px 8px -3px rgba(13, 26, 77, 0.25);
+	}
+
+	.ls-cms {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 22px;
+		text-align: left;
+	}
+
+	.ls-cmscard {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 14px;
+		border: 0;
+		border-radius: 18px;
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--ls-line);
+		font: inherit;
+		color: inherit;
+		text-align: left;
+		cursor: pointer;
+		transition:
+			transform 220ms var(--ease-out),
+			box-shadow 220ms var(--ease-out),
+			opacity 260ms ease;
+	}
+
+	.ls-cmscard[hidden] {
+		display: none;
+	}
+
+	@media (hover: hover) {
+		.ls-cmscard:hover {
+			transform: translateY(-3px);
+			box-shadow: inset 0 0 0 1px var(--ls-line), 0 14px 28px -18px rgba(13, 26, 77, 0.4);
+		}
+	}
+
+	.ls-cmscard.is-on {
+		box-shadow: inset 0 0 0 2px var(--ls-blue), 0 14px 28px -18px rgba(47, 91, 255, 0.5);
+	}
+
+	.ls-cmscard__top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.ls-cmscard i {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 10px;
+		background: #ff5a36;
+		color: #fff;
+		font-style: normal;
+		font-weight: 800;
+		font-size: 14px;
+	}
+
+	.ls-cmscard.is-next i {
+		background: #2f5bff;
+	}
+
+	.ls-cmscard.is-planned i {
+		background: #8b93ab;
+	}
+
+	.ls-cmscard em {
+		padding: 3px 8px;
+		border-radius: 99px;
+		font-style: normal;
+		font-size: 10.5px;
+		font-weight: 700;
+	}
+
+	.ls-cmscard.is-live em {
+		background: #e3f6ec;
+		color: #13945a;
+	}
+
+	.ls-cmscard.is-next em {
+		background: #e8edff;
+		color: var(--ls-blue);
+	}
+
+	.ls-cmscard.is-planned em {
+		background: var(--ls-tint);
+		color: var(--ls-muted);
+	}
+
+	.ls-cmscard strong {
+		font-size: 15px;
+	}
+
+	.ls-cmscard span {
+		font-size: 12px;
+		color: var(--ls-muted);
+	}
+
+	.ls-cmscard small {
+		margin-top: 6px;
+		font-size: 11px;
+		color: #a3aabd;
+	}
+
+	.ls-cms__empty {
+		display: none;
+		grid-column: 1 / -1;
+		padding: 28px;
+		border-radius: 18px;
+		background: var(--ls-tint);
+		color: var(--ls-muted);
+		font-size: 14px;
+		text-align: center;
+	}
+
+	.ls-cms.is-empty .ls-cms__empty {
+		display: block;
+	}
+
+	.ls-cms__detail {
+		max-width: 560px;
+		margin: 20px auto 0 !important;
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--ls-muted);
+		min-height: 3em;
+	}
+
+	.ls-cms__detail strong {
+		color: var(--ls-ink);
+	}
+
+	/* Bento */
+	.ls-bento {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 30px;
+		text-align: left;
+	}
+
+	.ls-tile {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 20px;
+		border-radius: 22px;
+		background: #fff;
+		box-shadow: 0 1px 0 var(--ls-line);
+		transition: transform 240ms var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.ls-tile:hover {
+			transform: translateY(-3px);
+		}
+	}
+
+	.ls-tile--wide {
+		grid-column: span 2;
+		grid-row: span 2;
+		background: linear-gradient(160deg, #eaf3ff, #ffffff 60%);
+	}
+
+	.ls-tile img {
+		width: 56px;
+		height: 56px;
+		margin: -6px 0 2px -6px;
+	}
+
+	.ls-tile strong {
+		font-size: 16px;
+		letter-spacing: -0.02em;
+	}
+
+	.ls-tile p {
+		font-size: 13px;
+		line-height: 1.5;
+		color: var(--ls-muted);
+	}
+
+	.ls-tile pre {
+		margin-top: auto !important;
+		padding: 16px;
+		border-radius: 14px;
+		background: #0b1020;
+		color: #c8f25a;
+		font: 12px/1.6 ui-monospace, 'SFMono-Regular', Menlo, monospace;
+		overflow: auto;
+	}
+
+	.ls-tile--polish {
+		grid-column: span 2;
+	}
+
+	.ls-polish {
+		position: relative;
+		min-height: 2.6em;
+		color: var(--ls-ink) !important;
+		font-size: 15px !important;
+	}
+
+	.ls-polish span {
+		display: block;
+		transition:
+			opacity 300ms ease,
+			transform 400ms var(--ease-out),
+			filter 300ms ease;
+	}
+
+	.ls-polish__before {
+		text-decoration: underline wavy #ff7a59 1px;
+		text-underline-offset: 4px;
+	}
+
+	.ls-polish__after {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		transform: translateY(6px);
+		filter: blur(4px);
+	}
+
+	.ls-polish.is-done .ls-polish__before {
+		opacity: 0;
+		transform: translateY(-6px);
+		filter: blur(4px);
+	}
+
+	.ls-polish.is-done .ls-polish__after {
+		opacity: 1;
+		transform: none;
+		filter: none;
+	}
+
+	.ls-chipbtn {
+		align-self: flex-start;
+		margin-top: 4px;
+		padding: 8px 14px;
+		border: 0;
+		border-radius: 99px;
+		background: #e8edff;
+		color: var(--ls-blue);
+		font: 600 13px/1 'Plus Jakarta Sans', var(--font-sans);
+		cursor: pointer;
+	}
+
+	/* Steps */
+	.ls-steps {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 30px !important;
+		padding: 0;
+		list-style: none;
+		text-align: left;
+	}
+
+	.ls-steps li {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 20px;
+		border-radius: 22px;
+		background: var(--ls-tint);
+	}
+
+	.ls-steps i {
+		display: grid;
+		place-items: center;
+		width: 30px;
+		height: 30px;
+		margin-bottom: 8px;
+		border-radius: 50%;
+		background: var(--ls-blue);
+		color: #fff;
+		font-style: normal;
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.ls-steps strong {
+		font-size: 15px;
+	}
+
+	.ls-steps span {
+		font-size: 13px;
+		line-height: 1.5;
+		color: var(--ls-muted);
+	}
+
+	/* Pricing */
+	.ls-plans {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 30px;
+		text-align: left;
+	}
+
+	.ls-plan {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 22px;
+		border-radius: 24px;
+		background: #fff;
+		box-shadow: inset 0 0 0 1px var(--ls-line);
+		transition:
+			transform 260ms var(--ease-out),
+			box-shadow 260ms var(--ease-out);
+	}
+
+	@media (hover: hover) {
+		.ls-plan:hover,
+		.ls-plan.is-hover {
+			transform: translateY(-4px);
+			box-shadow: inset 0 0 0 1px var(--ls-line), 0 24px 40px -24px rgba(13, 26, 77, 0.4);
+		}
+	}
+
+	.ls-plan.is-hot {
+		background: linear-gradient(160deg, #2f5bff, #1e3fd6);
+		color: #fff;
+		box-shadow: 0 24px 40px -22px rgba(47, 91, 255, 0.8);
+	}
+
+	.ls-plan__name {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-weight: 700;
+		font-size: 15px;
+	}
+
+	.ls-plan__name em {
+		padding: 3px 9px;
+		border-radius: 99px;
+		background: #c8f25a;
+		color: #0b1020;
+		font-style: normal;
+		font-size: 11px;
+	}
+
+	.ls-plan__price {
+		display: flex;
+		align-items: baseline;
+		gap: 6px;
+	}
+
+	.ls-plan__price strong {
+		font-size: 38px;
+		letter-spacing: -0.04em;
+	}
+
+	.ls-plan__price span,
+	.ls-plan__blurb {
+		font-size: 12.5px;
+		opacity: 0.7;
+	}
+
+	.ls-plan.is-hot .ls-btn {
+		background: #fff;
+	}
+
+	.ls-plan ul {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 0;
+		list-style: none;
+		font-size: 13px;
+	}
+
+	.ls-plan li::before {
+		content: '✓';
+		margin-right: 8px;
+		color: var(--ls-blue);
+		font-weight: 700;
+	}
+
+	.ls-plan.is-hot li::before {
+		color: #c8f25a;
+	}
+
+	/* FAQ */
+	.ls-faq {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		max-width: 640px;
+		margin: 28px auto 0;
+		text-align: left;
+	}
+
+	.ls-qa {
+		border-radius: 18px;
+		background: var(--ls-tint);
+		transition: background-color 200ms ease;
+	}
+
+	.ls-qa[open] {
+		background: #eef2ff;
+	}
+
+	.ls-qa summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 16px 18px;
+		font-weight: 600;
+		font-size: 15px;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.ls-qa summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.ls-qa summary i {
+		position: relative;
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		background: #fff;
+		flex-shrink: 0;
+	}
+
+	.ls-qa summary i::before,
+	.ls-qa summary i::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 10px;
+		height: 2px;
+		margin: -1px 0 0 -5px;
+		border-radius: 2px;
+		background: var(--ls-ink);
+		transition: transform 260ms var(--ease-out);
+	}
+
+	.ls-qa summary i::after {
+		transform: rotate(90deg);
+	}
+
+	.ls-qa[open] summary i::after {
+		transform: rotate(0);
+	}
+
+	.ls-qa p {
+		padding: 0 18px 18px;
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--ls-muted);
+	}
+
+	/* Final CTA */
+	.ls-cta {
+		margin: 0 18px;
+		padding: 64px 28px;
+		border-radius: 30px;
+		text-align: center;
+		background:
+			linear-gradient(180deg, rgba(11, 16, 32, 0) 40%, rgba(11, 16, 32, 0.15)),
+			url('/images/case/quillo/photos/sky.webp') 50% 100% / cover no-repeat,
+			#3b8ff2;
+		color: #fff;
+	}
+
+	.ls-cta h3 {
+		font-weight: 800;
+		font-size: clamp(28px, 4.6cqi, 46px);
+		line-height: 1.05;
+		letter-spacing: -0.04em;
+	}
+
+	.ls-cta h3 span {
+		color: #fff;
+	}
+
+	.ls-cta > p {
+		margin-top: 10px !important;
+		font-size: 15px;
+		opacity: 0.92;
+	}
+
+	.ls-form {
+		display: flex;
+		gap: 8px;
+		max-width: 440px;
+		margin: 24px auto 0;
+		padding: 6px;
+		border-radius: 99px;
+		background: #fff;
+		box-shadow: 0 18px 40px -20px rgba(11, 16, 32, 0.5);
+	}
+
+	.ls-form input {
+		flex: 1;
+		min-width: 0;
+		padding: 0 14px;
+		border: 0;
+		outline: none;
+		background: none;
+		font: 500 14px 'Plus Jakarta Sans', var(--font-sans);
+		color: var(--ls-ink);
+	}
+
+	.ls-form.is-error {
+		box-shadow: 0 0 0 2px #ff7a59, 0 18px 40px -20px rgba(11, 16, 32, 0.5);
+		animation: ls-shake 360ms ease;
+	}
+
+	@keyframes ls-shake {
+		25% {
+			transform: translateX(-5px);
+		}
+		75% {
+			transform: translateX(5px);
+		}
+	}
+
+	.ls-form.is-done {
+		background: #c8f25a;
+	}
+
+	.ls-form__msg {
+		margin-top: 14px !important;
+		font-size: 12.5px;
+		opacity: 0.9;
+	}
+
+	.ls-foot {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 12px;
+		padding: 28px 28px 32px;
+		font-size: 12px;
+		color: var(--ls-muted);
+	}
+
+	/* Narrow site (mobile device mode, or a small browser): reflow by container width. */
+	@container (max-width: 640px) {
+		.ls-links {
+			display: none;
+		}
+
+		.ls-nav {
+			justify-content: space-between;
+			margin: 10px 12px 0;
+		}
+
+		.ls-hero {
+			height: 700px;
+			padding: 96px 18px 0;
+		}
+
+		.ls-float {
+			display: none;
+		}
+
+		.ls-sec {
+			padding: 56px 20px;
+		}
+
+		.ls-cms {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.ls-bento,
+		.ls-steps,
+		.ls-plans {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.ls-tile--wide,
+		.ls-tile--polish {
+			grid-column: auto;
+			grid-row: auto;
+		}
+
+		.ls-cta {
+			margin: 0 12px;
+			padding: 48px 20px;
+		}
+
+		.ls-form {
+			flex-direction: column;
+			border-radius: 24px;
+		}
+
+		.ls-form input {
+			height: 44px;
+		}
+
+		.ls-foot {
+			flex-direction: column;
+		}
+	}
+
+	@media (max-width: 64rem) {
+		.ld__frame {
+			height: 560px;
+		}
+
+		.ld__stage {
+			min-height: 580px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ld-site {
+			scroll-behavior: auto;
+		}
+
+		.ls-hero__phone,
+		.ls-float {
+			animation: none;
+		}
+
+		.ld__cursor {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-ld]')) {
+		const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+		const stage = $('[data-stage]');
+		const site = $('[data-site]');
+		const cursor = $('[data-cursor]');
+		const toastEl = $('[data-ld-toast]');
+		const tourLabel = $('[data-tour-label]');
+		const tourBtnLabel = $('[data-tour-btn-label]');
+		const detail = $('[data-cms-detail]');
+		const inner = site.querySelector<HTMLElement>('.ld-in')!;
+		const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		let toastTimer = 0;
+
+		const fitOverview = () => {
+			if (root.dataset.view !== 'overview') {
+				inner.style.removeProperty('--ld-fit');
+				return;
+			}
+			site.scrollTop = 0;
+			const scale = Math.min(
+				1,
+				(site.clientWidth - 8) / inner.offsetWidth,
+				(site.clientHeight - 8) / inner.scrollHeight,
+			);
+			inner.style.setProperty('--ld-fit', String(scale));
+		};
+
+		let stopTour = (_byUser = false) => {};
+
+		const setView = (view: 'overview' | 'interactive') => {
+			root.dataset.view = view;
+			root.querySelectorAll<HTMLElement>('[data-view-btn]').forEach((b) =>
+				b.setAttribute('aria-checked', String(b.dataset.viewBtn === view)),
+			);
+			if (view === 'overview') stopTour(true);
+			fitOverview();
+		};
+
+		new ResizeObserver(() => fitOverview()).observe(site);
+		window.addEventListener('resize', fitOverview, { passive: true });
+		setView(root.dataset.view === 'interactive' ? 'interactive' : 'overview');
+
+		const toast = (text: string) => {
+			toastEl.textContent = text;
+			toastEl.classList.add('is-on');
+			clearTimeout(toastTimer);
+			toastTimer = window.setTimeout(() => toastEl.classList.remove('is-on'), 2200);
+		};
+
+		/* ---- Device switch ---- */
+		const setDevice = (d: 'desktop' | 'mobile') => {
+			root.dataset.device = d;
+			root.querySelectorAll<HTMLElement>('[data-device-btn]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.deviceBtn === d)));
+			fitOverview();
+		};
+		root.querySelectorAll<HTMLElement>('[data-device-btn]').forEach((b) =>
+			b.addEventListener('click', () => {
+				stopTour(true);
+				setDevice(b.dataset.deviceBtn as 'desktop' | 'mobile');
+			}),
+		);
+		if (matchMedia('(max-width: 47.99rem)').matches) setDevice('mobile');
+
+		/* ---- In-site behaviour ---- */
+		const scrollToEl = (el: Element) => {
+			const top = (el as HTMLElement).offsetTop - 70;
+			site.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+		};
+
+		site.addEventListener('click', (event) => {
+			const t = event.target as Element;
+			const jump = t.closest<HTMLAnchorElement>('[data-jump]');
+			if (jump) {
+				event.preventDefault();
+				const el = site.querySelector(jump.getAttribute('href')!);
+				if (el) scrollToEl(el);
+			}
+			const msg = t.closest<HTMLElement>('[data-toast]');
+			if (msg) toast(msg.dataset.toast!);
+
+			const card = t.closest<HTMLElement>('[data-cms]');
+			if (card) {
+				site.querySelectorAll('[data-cms]').forEach((c) => {
+					c.classList.toggle('is-on', c === card);
+					c.setAttribute('aria-pressed', String(c === card));
+				});
+				detail.innerHTML = `<strong>${card.dataset.name}</strong> ${card.dataset.detail}`;
+			}
+
+			const tab = t.closest<HTMLElement>('[data-filter]');
+			if (tab) {
+				const f = tab.dataset.filter!;
+				site.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-selected', String(b === tab)));
+				let shown = 0;
+				site.querySelectorAll<HTMLElement>('[data-cms]').forEach((c) => {
+					const on = f === 'all' || c.dataset.cat === f;
+					c.hidden = !on;
+					if (on) shown++;
+				});
+				site.querySelector('.ls-cms')!.classList.toggle('is-empty', shown === 0);
+			}
+
+			if (t.closest('[data-polish-btn]')) {
+				const p = site.querySelector('[data-polish]')!;
+				p.classList.toggle('is-done');
+				(t.closest('[data-polish-btn]') as HTMLElement).textContent = p.classList.contains('is-done') ? '↺ Undo' : '✦ Polish';
+			}
+		});
+
+		const form = site.querySelector<HTMLFormElement>('[data-join]')!;
+		const email = form.querySelector<HTMLInputElement>('[data-email]')!;
+		const joinMsg = site.querySelector<HTMLElement>('[data-join-msg]')!;
+		form.addEventListener('submit', (event) => {
+			event.preventDefault(); // Demo only: nothing is sent anywhere.
+			form.classList.remove('is-error', 'is-done');
+			void form.offsetWidth;
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+				form.classList.add('is-error');
+				joinMsg.textContent = 'That doesn’t look like an email address yet.';
+				return;
+			}
+			form.classList.add('is-done');
+			joinMsg.textContent = 'You’re on the list. (This is a demo, so nothing was sent.)';
+		});
+
+		/* ---- Autoplay tour ---- */
+		let token = 0;
+		let playing = false;
+		let visible = false;
+		let userTook = false;
+
+		const setTourState = (s: 'playing' | 'paused' | 'idle') => {
+			root.dataset.tour = s;
+			playing = s === 'playing';
+			tourLabel.textContent = s === 'playing' ? 'Autoplay tour' : userTook ? 'You’re in control' : 'Tour paused';
+			tourBtnLabel.textContent = s === 'playing' ? 'Pause tour' : 'Play tour';
+		};
+
+		const moveCursor = (el: Element) => {
+			const s = stage.getBoundingClientRect();
+			const r = el.getBoundingClientRect();
+			cursor.style.setProperty('--cx', `${r.left - s.left + r.width * 0.55}px`);
+			cursor.style.setProperty('--cy', `${r.top - s.top + r.height * 0.55}px`);
+		};
+
+		const click = async (el: HTMLElement, my: number) => {
+			moveCursor(el);
+			await sleep(950);
+			if (my !== token) return false;
+			cursor.classList.remove('is-click');
+			void cursor.offsetWidth;
+			cursor.classList.add('is-click');
+			el.click();
+			await sleep(350);
+			return my === token;
+		};
+
+		const typeInto = async (input: HTMLInputElement, text: string, my: number) => {
+			input.value = '';
+			for (const ch of text) {
+				if (my !== token) return false;
+				input.value += ch;
+				await sleep(70);
+			}
+			return true;
+		};
+
+		const q = <T extends HTMLElement>(s: string) => site.querySelector<T>(s)!;
+
+		const tour = async () => {
+			const my = ++token;
+			setTourState('playing');
+			const ok = () => my === token;
+			while (ok()) {
+				site.scrollTo({ top: 0, behavior: 'smooth' });
+				q('[data-polish]').classList.remove('is-done');
+				q('[data-polish-btn]').textContent = '✦ Polish';
+				await sleep(1200);
+				if (!ok()) return;
+				moveCursor(q('[data-tour-id="hero-cta"]'));
+				await sleep(1500);
+				if (!ok()) return;
+
+				scrollToEl(q('#ls-cms'));
+				await sleep(1100);
+				if (!(await click(q('[data-cms="contentful"]'), my))) return;
+				await sleep(1300);
+				if (!(await click(q('[data-filter="builder"]'), my))) return;
+				await sleep(900);
+				if (!(await click(q('[data-filter="all"]'), my))) return;
+				if (!(await click(q('[data-cms="sanity"]'), my))) return;
+				await sleep(1000);
+
+				scrollToEl(q('#ls-features'));
+				await sleep(1100);
+				q('[data-polish-btn]').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+				await sleep(700);
+				if (!(await click(q('[data-polish-btn]'), my))) return;
+				await sleep(1500);
+
+				scrollToEl(q('#ls-pricing'));
+				await sleep(1100);
+				const pro = q('[data-tour-id="pro"]');
+				moveCursor(pro);
+				pro.classList.add('is-hover');
+				await sleep(1500);
+				pro.classList.remove('is-hover');
+				if (!ok()) return;
+
+				scrollToEl(q('#ls-faq'));
+				await sleep(1100);
+				const faq = q<HTMLDetailsElement>('[data-tour-id="faq"]');
+				if (!(await click(faq.querySelector('summary')!, my))) return;
+				await sleep(1800);
+
+				scrollToEl(q('#ls-join'));
+				await sleep(1100);
+				moveCursor(email);
+				await sleep(900);
+				if (!(await typeInto(email, 'you@crumbandco.com', my))) return;
+				if (!(await click(q('[data-tour-id="join"]'), my))) return;
+				await sleep(2600);
+				if (!ok()) return;
+
+				// Reset for the next loop.
+				email.value = '';
+				form.classList.remove('is-done');
+				joinMsg.textContent = 'iOS & Android · Free for 1 site · No credit card';
+				faq.open = false;
+				setDevice(root.dataset.device === 'desktop' ? 'mobile' : 'desktop');
+				await sleep(900);
+			}
+		};
+
+		stopTour = (byUser = false) => {
+			token++;
+			if (byUser) userTook = true;
+			site.querySelectorAll('.is-hover').forEach((e) => e.classList.remove('is-hover'));
+			setTourState(byUser ? 'paused' : 'idle');
+		};
+
+		root.querySelectorAll<HTMLElement>('[data-view-btn]').forEach((b) =>
+			b.addEventListener('click', () => {
+				userTook = true;
+				setView(b.dataset.viewBtn as 'overview' | 'interactive');
+			}),
+		);
+
+		// Any real interaction inside the stage hands control to the visitor.
+		const takeOver = (event: Event) => {
+			if (!playing || !event.isTrusted) return;
+			stopTour(true);
+		};
+		['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach((type) => stage.addEventListener(type, takeOver, { passive: true }));
+
+		$('[data-tour-toggle]').addEventListener('click', () => {
+			if (playing) stopTour(true);
+			else {
+				userTook = false;
+				tour();
+			}
+		});
+
+		if (reduce) {
+			setTourState('idle');
+			tourLabel.textContent = 'Explore it yourself';
+		} else {
+			new IntersectionObserver(
+				([entry]) => {
+					visible = entry.isIntersecting;
+					if (visible && !userTook && !playing) tour();
+					if (!visible && playing) stopTour(false);
+				},
+				{ threshold: 0.45 },
+			).observe(stage);
+		}
+	}
+</script>
